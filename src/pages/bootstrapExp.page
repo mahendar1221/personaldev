@@ -1,0 +1,59 @@
+<apex:page controller="bootClass" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0" language="en-US" applyHTMLTag="false">
+<html lang="en">
+  <head>
+    
+    <title>Anup's Bootstrap example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap -->
+    <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap/css/bootstrap.min.css')}" />
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+   
+  </head>
+  
+  <body>
+    <apex:outputPanel styleClass="navbar navbar-inverse navbar-fixed-top" layout="block"  html-role="navigation">
+      <apex:outputPanel styleClass="container" layout="block">
+        <apex:outputPanel styleClass="navbar-header" layout="block">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <apex:outputPanel styleClass="sr-only">Toggle navigation</apex:outputPanel>
+            <apex:outputPanel styleClass="icon-bar"></apex:outputPanel>
+            <apex:outputPanel styleClass="icon-bar"></apex:outputPanel>
+            <apex:outputPanel styleClass="icon-bar"></apex:outputPanel>
+          </button>
+          <a class="navbar-brand" >Login page:</a>
+        </apex:outputPanel>
+        <apex:outputPanel styleClass="navbar-collapse collapse" layout="block">
+          <apex:form styleclass="navbar-form navbar-right" >
+            <apex:outputPanel styleClass="form-group" layout="block">
+              <apex:inputtext styleclass="form-control" value="{!inputVal}" html-placeholder="Username"/>
+            </apex:outputPanel>
+            <apex:outputPanel styleClass="form-group" layout="block">
+              <apex:inputsecret styleClass="form-control" value="{!Password}" html-placeholder="Password"/>
+            </apex:outputPanel>
+            <apex:commandbutton styleclass="btn btn-success" value="sign in" action="{!BtnSign}"></apex:commandbutton>
+          </apex:form>
+        </apex:outputPanel><!--/.navbar-collapse -->
+      </apex:outputPanel>
+    </apex:outputPanel>
+    
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    
+    <apex:outputPanel styleClass="jumbotron" layout="block">
+      <apex:outputPanel styleClass="container" layout="block">
+        <h1>Hello, User!</h1>
+        <p>{!output}</p>
+        
+        <!--<p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>--->
+      </apex:outputPanel>
+    </apex:outputPanel>
+ 
+    
+ 
+    
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <apex:includeScript value="{!URLFOR($Resource.bootstrap, '/js/bootstrap.min.js')}"></apex:includeScript>
+  </body>
+</html>
+</apex:page>

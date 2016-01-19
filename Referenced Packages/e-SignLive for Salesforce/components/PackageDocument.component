@@ -1,0 +1,167 @@
+<apex:component controller="ESL.PackageDocumentController" allowDML="true">
+    <apex:attribute name="masterobject" description="Master Obj Id" type="sObject" required="true" assignTo="{!masterSObj}"/>
+    <apex:attribute name="childobjectname" description="Master Obj Id" type="String" required="true" assignTo="{!sObjName}"/>
+    <apex:attribute name="title" description="Pass in the title of the Page Block" type="String" required="true"/>
+    <apex:attribute name="readonly" description="Pass in true or false" type="Boolean" required="true" assignTo="{!isReadOnly}"/>
+    <apex:attribute name="tableId" description="Unique Id for the table" type="String" required="true"/>
+    <apex:attribute name="validateComponent" description="Validate data" type="boolean" assignTo="{!validate}"/>
+    
+    <script type="text/javascript">
+    var pkgDocObjName = "{!sObjName}";
+    </script>
+    <apex:form >
+      <div id="blockDoc" style="display:none;">
+          <div class="sectionCurtain">
+              <div class="sectionBox">
+                  <img src="/img/loading24.gif" class="savingImg"/>
+                  <span id="docActionText">{!$Label.Please_Wait}</span>
+              </div>
+          </div>
+      </div>
+        <apex:pageBlock title="{!title}" mode="detail" id="pbDoc">
+        <!-- DO NOT DELETE THE DIV THIS SIMULATING A CLICK BEFORE Save Action-->
+        <div id="simulateSaveDocClick"></div>
+        <!-- DO NOT DELETE THE DIV THIS SIMULATING A CLICK BEFORE Save Action-->
+            <apex:outputPanel id="pgDocMessages">
+                <!--<apex:pageMessages escape="false"/>-->
+                <!-- joel.ojeda - 04-02-2015 - Show messages from the message handler-->
+                <apex:repeat value="{!messages}" var="msg" rendered="{!hasMessages}">
+                    <apex:pageMessage title="{!msg.title}" detail="{!msg.detail}" summary="{!msg.summary}" severity="{!msg.severity}" strength="{!msg.strength}" escape="false" >
+                        <!-- <apex:outputPanel layout="block" rendered="{!msg.confirmation}" style="text-align:right;">
+                            <button onclick="confirmContinueJS('{!msg.confirmationAction}');" type="button" label="{!$Label.ContinueBtn}"
+                                style="background: #ffc; padding: 7.5px 15px; font-size: 14px;">{!$Label.ContinueBtn}</button>
+                            <button onclick="confirmCancelJS('{!msg.confirmationAction}');" type="button" label="{!$Label.CancelBtn}"
+                                style="background: #ffc; padding: 7.5px 15px; font-size: 14px;">{!$Label.CancelBtn}</button>
+                        </apex:outputPanel> -->
+                    </apex:pageMessage>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:pageBlockButtons location="top" id="pckDocButtons">
+                <apex:outputPanel id="pgDocBtnsPanel" layout="block" rendered="{!NOT(readOnly)}">
+                    <!-- juan.mora C093558 - 02/25/2015 now we added a new component to add docs -->
+                    <apex:commandButton id="addDocs" value="{!$Label.esl__AddDocumentBtn}" onclick="openSelecDocPopupJS(); return false;" disabled="{!disableAddFilesButton}" title="{!$Label.esl__AddDocumentBtn}"/>
+                    <!-- <apex:commandButton id="newDoc" value="{!$Label.esl__AddDocumentBtn}" action="{!addDocument}" reRender="pbtDoc,enforceDocOrder,pgDocMessages" status="processAddDoc" onclick="onDocActionClick('{!$Label.Adding}');"/>  -->
+    
+                    <apex:commandButton id="saveDocs" action="{!save}" value="{!$Label.esl__SaveDocumentsBtn}" onclick="onDocActionClick('{!$Label.esl__Saving}'); j$('#simulateSaveDocClick').trigger('click');" style="display: none; color:white; background:#f96302" status="processDoc" reRender="pbtDoc,enforceDocOrder,pgDocMessages" />
+                    <apex:inputHidden id="isValid" value="{!isValid}" html-class="isValidHidden" />
+
+	                <apex:actionFunction action="{!save}" name="saveDocAction" status="processDoc" reRender="pbtDoc,enforceDocOrder,pgDocMessages"/>
+	                <apex:actionFunction action="{!reorderDocs}" name="reorderDocAction" status="processDoc" reRender="pbtDoc,enforceDocOrder,pgDocMessages"/>
+	                <apex:actionFunction action="{!validate}" name="validateActionDoc" status="processDoc" reRender="pbtDoc,enforceDocOrder,pgDocMessages"/>
+	                <apex:actionFunction action="{!updateMasterSObj}" name="pkgDocUpdateMasterSObj" reRender="pbtDoc,enforceDocOrder,pgDocMessages" status="processDoc"/>
+	                <apex:actionFunction action="{!reRenderAct}" name="reRenderActDoc" reRender="pbtDoc,enforceDocOrder,pgDocMessages,pgAddFilesCmpnt,pgDocBtnsPanel" oncomplete="documentListChanged('add');sortableDocuments();" onbeforedomupdate="" status="processDoc"/>
+	                <!-- juan.mora C093558 - 03/02/2015 now we added a new component to add docs -->
+	                <apex:actionFunction action="{!reRenderBasic}" name="reRenderBasicJS" reRender="pbtDoc,enforceDocOrder,pgDocMessages,pgAddFilesCmpnt,pgDocBtnsPanel" oncomplete="documentListChanged('add');sortableDocuments();" status="processDoc"/>
+	                <apex:actionFunction action="{!deleteDocument}" name="delDocumentId" reRender="pbtDoc,enforceDocOrder,pgDocMessages,pgDocBtnsPanel,selectLocalFilesComp" status="processDoc" oncomplete="documentListChanged('delete');">
+	                    <apex:param name="pkgDocId" assignTo="{!delDocument}" value=""/>
+	                </apex:actionFunction>
+                    <apex:actionFunction action="{!checkParentStatus}" name="openSelecDocPopupJS" reRender="pbtDoc,enforceDocOrder,pgDocMessages,pgAddFilesCmpnt,pgDocBtnsPanel" oncomplete="openDocumentDialog();return false;" status="loader"/>
+	
+	                <apex:actionstatus id="processDoc" onstart="onStartDocProcessing();" onstop="onStopDocProcessing('false'); showHideSendButton();" />
+	                <apex:actionstatus id="processAddDoc" onstart="onStartDocProcessing();" onstop="onStopDocProcessing('true');" />
+	                <apex:actionstatus id="loader" onstart="onStartDocProcessing();" onstop="onStopDocProcessing();" />
+                </apex:outputPanel>
+
+                <apex:outputPanel id="pgDocCompletedBtnsPanel" layout="block" rendered="{!readOnly}">
+                    <apex:commandLink action="{!openEvidenceSummary}" value="{!$Label.esl__Evidence_Summary}"  rendered="{!HasEvidenceSummary}" styleClass="btn" style="text-decoration: none;" target="_blank" />
+                    <apex:commandLink action="{!openPackageZip}" value="{!$Label.esl__Download_Package}" rendered="{!HasPackageZip}" styleClass="btn" style="text-decoration: none;" target="_blank" oncomplete="close();"/>
+                </apex:outputPanel>
+            </apex:pageBlockButtons>
+
+
+        <div class="dataTables_wrapper">
+        <!--Dont remove this, this fix an inline edit issue where the save button would not display if the table was first rendered without any rows-->
+        <apex:outputField id="accountName" value="{!a.Name}">
+        	<apex:inlineEditSupport showOnEdit="saveDocs" />
+        </apex:outputField> 
+        <!-- End of fix -->
+        <apex:pageBlockSection columns="1">
+            <apex:pageblockTable value="{!docWrapList}" var="dw" id="pbtDoc" rendered="{!NOT(readOnly)}" rowClasses="rowDoc">
+            <!-- <apex:inlineEditSupport event="ondblclick" showOnEdit="saveDocs" hideOnEdit="SendToESignLiveBtn"/> -->
+            <apex:inlineEditSupport event="ondblclick" showOnEdit="saveDocs"/>
+                <apex:column headerValue="{!$Label.esl__ActionLbl}" style="min-width: 50px">
+                    <apex:commandLink onclick="onSgnActionClick('{!$Label.esl__Please_Wait}');delDoc('{!dw.sObj['Id']}'); return false;">
+                        <apex:image value="/img/func_icons/remove12_on.gif" width="15" height="15"/>
+                    </apex:commandLink>
+                    <apex:image url="{!URLFOR($Resource.ESL__Silanis, 'images/move.png')}" width="15" height="15" style="padding-left:10px;cursor:move;" title="{!$Label.esl__DragAndDropDocToolTipLbl}"/>
+                    <apex:inputHidden id="docOrder" value="{!dw.sObj['Document_Order__c']}" />
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__NameLbl}">
+                    <apex:outputField id="pkgDocName" value="{!dw.sObj['Name']}" >
+                        <apex:inlineEditSupport showOnEdit="saveDocs" disabled="{!IF(dw.sObj['Signed__c'] == true, true, false)}"/>
+                    </apex:outputField>
+                    <apex:outputPanel id="callResult">
+                        <div class="loading" style="display: none;">
+                            <span>{!$Label.Please_Wait}</span>
+                            <img src="/img/loading24.gif" style="width:16px;height=16px"/>
+                        </div>
+                        <div class="success" style="display: none;">
+                            <img src="/img/msg_icons/confirm16.png" style="width:11px;height=11px;"/>
+                            <span class="successText"></span>
+                        </div>
+                        <div class="failure" style="display: none;">
+                            <img src="/img/msg_icons/error16.png" style="width:11px;height=11px"/>
+                            <span class="failureText"></span>
+                            <button class="okayBtn" style="display:none" onclick="resetToInpuFile('{!$Component.callResult}','{!$Component.inputFile}'); return false;">{!$Label.OkBtn}</button>
+                        </div>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__AcceptOnlyLbl}" title="{!$Label.esl__Accept_Only_Tooltip}" styleClass="acceptOnlyToolTip">
+                    <apex:inputField value="{!dw.sObj['Accept_Only__c']}" rendered="{!IF(dw.sObj['Accept_Only__c'] == '' || dw.sObj['Accept_Only__c'] == null, true, false)}" onchange="showSaveDocsBtn();"/>
+                    <apex:outputField value="{!dw.sObj['Accept_Only__c']}" rendered="{!IF(dw.sObj['Accept_Only__c'] != '' || dw.sObj['Accept_Only__c'] != null, true, false)}" >
+                        <apex:inlineEditSupport showOnEdit="saveDocs" disabled="{!IF(dw.sObj['Signed__c'] == true, true, false)}"/>
+                    </apex:outputField>
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__DocumentOrderLbl}" rendered="{!masterSObj['Enforce_Document_Order__c']}">
+                    <apex:outputText value="{!dw.sObj['Document_Order__c']}"/>
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__OriginalDocumentLbl}" >
+                    <apex:outputLink value="{!URLFOR($Action.Attachment.Download, dw.originalAtt.id)}" target="_blank" rendered="{!IF(dw.originalAtt.Id != null, true, false)}">
+                        <apex:image url="{!URLFOR($Resource.ESL__Silanis, 'images/originalDL.png')}" width="15" height="15" title="{!$Label.esl__DownloadOriginalDocumentLbl}"/>
+                    </apex:outputLink>
+                </apex:column>
+            </apex:pageblockTable>
+            </apex:pageBlockSection>
+        </div>
+        <div class="dataTables_wrapper">
+            <apex:pageblockTable value="{!docWrapList}" var="dw" rendered="{!readOnly}" id="pbtDocReadOnly" rowClasses="rowDoc">
+                <apex:column headerValue="Type">
+                    <apex:outputField value="{!dw.sObj['Location__c']}" />
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__NameLbl}">
+                    <apex:outputField value="{!dw.sObj['Name']}" />
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__AcceptOnlyLbl}" styleClass="acceptOnlyToolTip">
+                    <apex:outputField value="{!dw.sObj['Accept_Only__c']}"  title="{!$Label.esl__Accept_Only_Tooltip}" html-alt="{!$Label.esl__Accept_Only_Tooltip}"/>
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__DocumentOrderLbl}" rendered="{!masterSObj['Enforce_Document_Order__c']}">
+                    <apex:outputField value="{!dw.sObj['Document_Order__c']}"/>
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__OriginalDocumentLbl}">
+                    <apex:outputLink value="{!URLFOR($Action.Attachment.Download, dw.originalAtt.id)}" rendered="{!IF(dw.originalAtt.Id != null, true, false)}" target="_blank">
+                        <apex:image url="{!URLFOR($Resource.ESL__Silanis, 'images/originalDL.png')}" width="15" height="15" title="{!$Label.esl__DownloadOriginalDocumentLbl}"/>
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="{!$Label.esl__SignedDocumentLbl}" rendered="{!IF(NOT(CONTAINS(childobjectname, 'Package_Template_Document__c')), true, false)}">
+                    <apex:outputLink value="{!URLFOR($Action.Attachment.Download, dw.signedAtt.id)}" rendered="{!IF(dw.signedAtt.Id != null, true, false)}" target="_blank">
+                        <apex:image url="{!URLFOR($Resource.ESL__Silanis, 'images/signedDL.png')}" width="15" height="15" title="{!$Label.esl__DownloadSignedDocumentLbl}"/>
+                    </apex:outputLink>
+                </apex:column>
+            </apex:pageblockTable>
+        </div>
+        </apex:pageBlock>
+        
+        <script type="text/javascript">
+            j$( document ).ready(function() {
+                if('{!validate}' == 'true'){
+                    validateActionDoc(); 
+                }
+                initializeDocComp();
+            });
+        </script>
+    </apex:form>
+
+    <div id="dialog-form" title="{!$Label.Select_Documents_from_Salesforce}" style="display: none;">
+        <c:DocumentsFromSalesforce masterobjectId="{!masterSObj.id}" />
+    </div>
+</apex:component>

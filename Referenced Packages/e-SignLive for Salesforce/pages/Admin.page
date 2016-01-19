@@ -1,0 +1,285 @@
+<apex:page docType="html-5.0" controller="ESL.AdminController"
+    tabStyle="e_SignLive_Admin__tab" action="{!Init}">
+
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/admin.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/jQuery.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/admin.js')}" />
+
+    <apex:sectionHeader title="{!$Label.esl__AdminSectionHeaderLbl}" />
+    <apex:form id="config">
+<!--         <apex:pageMessages /> -->
+            <apex:outputPanel id="pgAdminMessages">                
+                <input type="hidden" value="{!hasErrors}" id="hasErrorsOnSave" />                
+                <!-- joel.ojeda - 04-02-2015 - Show messages from the message handler-->
+                <apex:repeat value="{!messages}" var="msg" rendered="{!hasMessages}">
+                    <apex:pageMessage title="{!msg.title}" detail="{!msg.detail}" summary="{!msg.summary}" severity="{!msg.severity}" strength="{!msg.strength}" escape="false" >
+                        <apex:outputPanel layout="block" rendered="{!msg.confirmation}" style="text-align:right;">
+                            <apex:outputPanel layout="block" rendered="{!msg.showContinue}">
+                                <button onclick="confirmContinueJS('{!msg.confirmationAction}');" type="button" label="{!$Label.ContinueBtn}"
+                                    class="confirmButton">{!$Label.ContinueBtn}</button>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" rendered="{!msg.showCancel}">
+                                <button onclick="confirmCancelJS('{!msg.confirmationAction}');" type="button" label="{!$Label.CancelBtn}"
+                                    class="confirmButton">{!$Label.CancelBtn}</button>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageMessage>
+                </apex:repeat>
+            </apex:outputPanel>
+                <!-- joel.ojeda - 04-02-2015 - Actions that will process the confirmation message -->
+                <apex:actionFunction name="confirmCancelJS" action="{!confirmCancel}" reRender="pgAdminMessages, eSignLive_ConfigureBlock">
+<!--                     <apex:param id="actionTypeCancel" name="actionType" value="" assignTo="{!confirmActionType}"/> -->
+                </apex:actionFunction>
+                <apex:actionFunction name="confirmContinueJS" action="{!confirmContinue}" reRender="pgAdminMessages, eSignLive_ConfigureBlock">
+<!--                     <apex:param id="actionTypeContinue" name="actionType" value="" assignTo="{!confirmActionType}"/> -->
+                </apex:actionFunction>            
+            
+            
+        <apex:tabPanel switchType="client" selectedTab="adminpage"
+            id="ConfigTab" tabClass="activeTab" inactiveTabClass="inactiveTab">
+            <apex:tab label="{!$Label.esl__Configuration}" name="adminpage"
+                id="adminpage">
+                <apex:pageBlock title="{!$Label.esl__e_SignLive}" mode="edit" id="eSignLive_ConfigureBlock">
+                    <apex:pageBlockButtons location="top">
+                        <apex:commandButton id="connectConnection"
+                            value="{!$Label.esl__Connect}"
+                            action="{!connect}" rendered="{!NOT(eSLConfigObj.ESL__Connected__c)}"/>                            
+                        <apex:commandButton id="disconnectConnection"
+                            value="{!$Label.esl__Disconnect}"
+                            action="{!activateDisconnectConfirm}" rendered="{!eSLConfigObj.ESL__Connected__c}" rerender="eSignLive_ConfigureBlock,pgAdminMessages"/>                            
+                            
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="1">
+
+                        <apex:pageBlockSectionItem rendered="{!NOT(eSLConfigObj.ESL__Connected__c)}" id="ConnectionMethods">
+                            <apex:outputLabel value="{!$Label.esl__Connection_Method}"/>
+                            <apex:selectList value="{!selectedConnectionMethod}" multiselect="false" size="1" >
+                                <apex:actionSupport event="onchange" 
+                                action="{!changeConnectionMethod}" 
+                                rerender="eSignLive_ConfigureBlock"/>
+                                <apex:selectOptions value="{!ConnectionMethods}" />
+                            </apex:selectList>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem id="UserNameSI" helpText="{!$Label.esl__User_name_tool_tip}" rendered="{!displayESLCredentials}">
+                            <apex:outputLabel value="{!$Label.esl__e_SignLive_username}"/>
+                            <apex:inputText value="{!userName}" disabled="true" id="usernameInput"/>                         
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem id="PasswordSI" helpText="{!$Label.esl__Password_tool_tip}" rendered="{!displayESLCredentials}">
+                            <apex:outputLabel value="{!$Label.esl__e_SignLive_password}"/>
+                            <apex:inputSecret value="{!password}" disabled="false" id="passwordInput"/>                         
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem helpText="{!$ObjectType.ESL__eSL_Config__c.Fields.ESL__API_Key__c.inlineHelpText}" rendered="{!NOT(displayESLCredentials)}">
+                            <apex:outputLabel id="enterApiKeyInput" for="apiKeyInput"
+                                value="{!$Label.esl__enterAPIKey}" />
+                            <apex:inputSecret id="apiKeyInput" size="40" maxLength="255"
+                                value="{!eSLConfigWrapper.API_Key}" disabled="{!eSLConfigObj.ESL__Connected__c}"/>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem rendered="{!NOT(displayESLCredentials)}">
+                            <apex:outputLabel value=""></apex:outputLabel>
+                            <apex:outputLink target="_blank"
+                                value="{!eSLConfigWrapper.GetAPIKey_URL}"
+                                id="eSignLiveSignUpLink">{!$Label.esl__GetSilanisAPIKeyLbl}</apex:outputLink>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Admin_Environment}">
+                            <apex:outputLabel value="{!$Label.esl__Environment}" />
+                            <apex:selectList value="{!environment}" multiselect="false"
+                                size="1" disabled="{!eSLConfigObj.ESL__Connected__c}">
+                                <apex:actionSupport event="onchange" 
+                                action="{!changedEnpoint}" 
+                                rerender="endpointinput,IpRestriction,CustomUrlLabel,CustomUrlValue"/>
+                                <apex:selectOptions value="{!envOptions}" />
+                            </apex:selectList>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="{!$Label.esl__Endpoint_Url}"/>
+                            <apex:inputText value="{!eSLConfigWrapper.Endpoint_URL}" disabled="{!OR(eSLConfigObj.ESL__Connected__c,environment != 'Configurable')}" size="40" id="endpointinput"/>                         
+                        </apex:pageBlockSectionItem>
+						<apex:pageBlockSectionItem >
+                            <apex:outputLabel value="{!$Label.esl__Admin_IP_Restriction}"/>
+                            <apex:outputPanel id="IpRestriction">
+                                {!$Label.Admin_IP_Restriction_Message}
+                                <a href="{!$Label.Admin_IP_Restriction_Link}"  target="_blank">{!$Label.Admin_IP_Restriction_Link_Label}</a>
+                                {!$Label.Admin_IP_Restriction_Suffix}
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+                    
+                        <apex:pageBlockSectionItem >
+                            <apex:outputPanel id="CustomUrlLabel">
+                                <apex:outputLabel value="{!$Label.esl__Admin_Remote_site_settings}"  rendered="{!environment ='Configurable'}" />
+                            </apex:outputPanel>
+                            <apex:outputPanel id="CustomUrlValue">
+                                <apex:outputPanel rendered="{!environment ='Configurable'}">
+                                    {!$Label.Admin_Remote_site_settings_message}<br/>
+                                    <a href="/0rp/e?SiteName=eSignlive%20Custom" target="_blank">{!$Label.Admin_Remote_site_settings_link}</a>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+                        
+                        <apex:pageBlockSectionItem rendered="{!eSLConfigObj.ESL__Connected__c == true}">
+                            <apex:outputLabel value="{!$Label.esl__ConnectedByLbl}" />
+                            <apex:outputPanel >
+                                <apex:outputLink value="/{!eSLConfigObj.ESL__Connected_By_Id__c}">{!eSLConfigObj.ESL__Connected_By_Name__c}</apex:outputLink>
+                                <span style="padding-right: 5px">,</span>
+                                <apex:outputField value="{!eSLConfigObj.ESL__Connected_Date__c}" />
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                    </apex:pageBlockSection> 
+                </apex:pageBlock>            
+                <!-- C094591 -->
+                <apex:pageBlock mode="edit" title="{!$Label.esl__Package_Section}" id="reminders"
+                rendered="{!eSLConfigObj != null}">
+                    <apex:pageBlockButtons >
+                      <apex:commandButton value="{!$Label.esl__SaveBtn}"
+                          action="{!saveReminders}" styleClass="pbButton" />
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="2">
+
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Show_Reminders_Help}">  
+                            <apex:outputLabel value="{!$Label.esl__Show_Reminders}"/>                         
+	                        <apex:inputCheckbox value="{!eSLConfigObj.ESL__Show_Reminders__c}"/>
+	                    </apex:pageBlockSectionItem>
+
+                        <!-- C099356 - Redmine Epi10 - Story Admin Changes -->
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Enable_package_zip_creation}">  
+                            <apex:outputLabel value="{!$Label.esl__Enable_package_zip_creation}"/>                         
+                            <apex:inputCheckbox value="{!eSLConfigObj.ESL__AllowZipDownload__c}"/>
+                        </apex:pageBlockSectionItem>
+
+
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Enabled_by_default_Help_Admin}">  
+                            <apex:outputLabel value="{!$Label.esl__Enabled_by_default}"/>	                    
+	                        <apex:inputCheckbox value="{!eslConfigObj.ESL__Reminders_enabled_by_default__c}"/>
+	                    </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >  
+                        </apex:pageBlockSectionItem>
+
+	                    <apex:pageBlockSectionItem helpText="{!$Label.esl__Send_reminder_in_N_days_Help_Admin}">  
+                            <apex:outputLabel value="{!$Label.esl__Send_reminders_default_value}"/>
+	                        <apex:inputField type="number" html-min="0" html-max="1000"
+	                            value="{!eslConfigObj.ESL__Send_reminders_default_value__c}"/>
+	                    </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >  
+                        </apex:pageBlockSectionItem>
+
+	                    <apex:pageBlockSectionItem helpText="{!$Label.esl__Repeat_reminder_Help_Admin}">  
+                            <apex:outputLabel value="{!$Label.esl__Repeat_reminders_default_value}"/>
+	                        <apex:inputField type="number" html-min="0" html-max="1000"
+	                            value="{!eslConfigObj.ESL__Repeat_reminders_default_value__c}"/>
+	                    </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >  
+                        </apex:pageBlockSectionItem>
+
+	                    <apex:pageBlockSectionItem helpText="{!$Label.esl__Repetitions_Help_Admin}">  
+                            <apex:outputLabel value="{!$Label.esl__Repetitions_default_value}"/>
+	                        <apex:inputField type="number" html-min="0" html-max="1000"
+	                            value="{!eslConfigObj.ESL__Reminders_Repetitions_default_value__c}"/>
+	                    </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>   
+                </apex:pageBlock>   
+
+            </apex:tab>
+            <!-- C094591 -->
+            <!-- C092464 -->
+            <apex:tab label="{!$Label.esl__Instructions}" name="instructions"
+                id="instructions" rendered="{!eSLConfigObj != null}">
+                <apex:pageBlock mode="edit">
+                    <apex:panelGrid columns="1" rowClasses="rowCls">
+                        <apex:commandLink action="{!displayRelatedListDetails}"
+                            value="{!$Label.esl__Related_list}" id="RelatedListLink"
+                            reRender="details" />
+                        <apex:commandLink action="{!displayCustomButtonDetails}"
+                            value="{!$Label.esl__Custom_Button}" id="CustomButtonLink"
+                            reRender="details" />
+    
+                        <apex:outputPanel id="details">
+                            <apex:outputPanel id="RelatedListDetails"
+                                rendered="{!displateRelatedListDetails}">
+                                <h1>
+                                    <apex:outputLabel value="{!$Label.esl__Related_list}" escape="false" />
+                                </h1>
+                                <p>
+                                    <apex:outputLabel value="{!$Label.esl__Related_list_Details}"
+                                        escape="false" />
+                                </p>
+                                <p>
+                                    <apex:outputLabel value="{!$Label.esl__PageLayoutHdrLbl}"
+                                        escape="false" />
+                                </p>
+                            </apex:outputPanel>
+    
+                            <apex:outputPanel id="CustomButtonsDetails"
+                                rendered="{!displateCustomButtonsDetails}">
+                                <h1>
+                                    <apex:outputLabel value="{!$Label.esl__Custom_Button}" escape="false" />
+                                </h1>
+                                	
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_1}"
+                                        escape="false" />
+                                
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_2}"
+                                        escape="false" />
+
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_10}"
+                                        escape="false" />
+                                
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_5}"
+                                        escape="false" />
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_11}{!$Label.esl__Create_Custom_Button_2_5}"
+                                        escape="false" />
+                               
+                    
+
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_2_6}"
+                                        escape="false" />
+                               
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_3}"
+                                        escape="false" />
+                                
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_4}"
+                                        escape="false" />
+                              		<apex:outputLabel value="{!$Label.esl__Create_Custom_Button_6}"
+                                        escape="false" />
+                              		<apex:outputLabel value="{!$Label.esl__Create_Custom_Button_12}"
+                                        escape="false" />
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_7}"
+                                            escape="false" />
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_13}"
+                                            escape="false" />
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_8}"
+                                            escape="false" />
+                                 <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_8_5}"
+                                            escape="false" />
+                                 <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_8_6}"
+                                            escape="false" />
+                                <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_14}"
+                                            escape="false" />
+                                <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_15}"
+                                            escape="false" />
+                                    <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_9}"
+                                            escape="false" />
+                                <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_9_1}"
+                                            escape="false" />
+                                <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_9_2}"
+                                            escape="false" />
+                                <apex:outputLabel value="{!$Label.esl__Create_Custom_Button_Full}" escape="false"/>
+                            </apex:outputPanel> 
+                        </apex:outputPanel> 
+                    </apex:panelGrid>
+                </apex:pageBlock>
+            </apex:tab>
+            <!-- C092464 -->
+
+        </apex:tabPanel>
+
+    </apex:form>
+</apex:page>

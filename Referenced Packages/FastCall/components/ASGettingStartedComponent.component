@@ -1,0 +1,237 @@
+<apex:component id="fcGettingStartedComponent" controller="FastCall.ASGettingStartedController" allowDML="true">
+
+<div class="main-pane tab-pane" id="fcGettingStarted">      
+				
+				<!-- Ready to get started -->
+                <apex:outputPanel id="readyToGetStartedPanel" layout="block" styleClass="fc-container w-help">
+                    <table>
+                    <tr>
+                    <td class="white callResults">
+                        <div class="inner">
+                            <h1 class="fc-container-header">Thank you for installing the {!fastCallEdition} Edition of FastCall</h1>
+                            <h2>FastCall is easy to use and easy to setup.</h2>
+                            <div class="item odd">
+                            	<div class="roundedNumber">1</div>
+                            	<div class="itemContent contentSingleLine">
+                            		<span style="text-decoration: line-through;">Install FastCall.</span> <span style="color:red;">Done. Great Job !</span>
+                            	</div>
+							</div>
+							<div class="item even">	
+								<div class="roundedNumber">2</div> 
+								<div class="itemContent">
+									Setup your users: assign licenses, add call center files, permission sets <br/><br/>
+									<div class="optionsContainer">
+										Need to add more users? Go to <a href="https://appexchange.salesforce.com/myaccount" target="_blank">My Account</a> in the AppExchange
+									</div>
+								</div>
+							</div>
+							<div class="item odd">
+								<div class="roundedNumber">3</div>
+								<div class="itemContent"> 
+									Edit page layouts for lead, contact and task
+								</div>                   	
+                            </div>
+                            <div class="item even">	
+								<div class="roundedNumber">4</div>
+								<div class="itemContent contentSingleLine"> 
+									Log a test call !     
+								</div>                  	
+                            </div>
+                            <div class="item odd">
+								<div class="roundedNumber">5</div>
+								<div class="itemContent contentSingleLine"> 
+									OPTIONAL: Go to <a href="#" id="goToTelcoTab" title="Go to Telecom tab">Telecom tab</a> to setup Twilio
+								</div>
+								<script>
+									$j('#goToTelcoTab').click(function (e) {
+										e.preventDefault();
+										$j('#settingsTab a[href="#VoIP"]').trigger('click');
+										$j.scrollTo('#scrollTo5', {duration:'slow'});
+									});
+								</script>                           	
+                            </div>
+		                	<!-- Open a case with FastCall -->
+		                	
+		                	<!-- Function to handle case opening -->
+					        <apex:actionFunction status="overlayStatus" name="openCaseWithFastCall" rerender="fcOpenCaseSection" action="{!openCaseWithFastCall}">
+					        	<apex:param name="caseParams" assignTo="{!fcCaseParams}" value=""/>
+					        </apex:actionFunction>
+		                	
+		               		
+		                    <h1 class="fc-container-header" id="scrollToCase" style="margin-top:60px">Open a Case with FastCall</h1>
+		                    
+		                    <apex:outputPanel id="fcOpenCaseSection">
+			                    <apex:outputPanel rendered="{!NOT(ISBLANK(openCaseMessage)) && NOT(ISBLANK(openCaseMessage.text))}" layout="block">
+			                            <fieldset class="alert alert-{!openCaseMessage.messageType}">
+			                                <apex:outputPanel styleClass="icon-{!openCaseMessage.messageType}-sign" />
+			                                <apex:outputLabel styleClass="settings first last" value="{!openCaseMessage.text}" />
+			                            </fieldset>
+			                     </apex:outputPanel>
+			                    <fieldset>
+			                        <div class="settings first last">
+			                            <div id="fcCaseForm" style="background-color:#FFFFFF">
+			
+			                                <input type="hidden" name="orgid" value="00D30000000j4bz" />
+			                                <input type="hidden" name="retURL" value="" />
+			                                
+			                                <input  id="name" maxlength="80" name="name" size="20" type="hidden" value="{!$User.FirstName + ' ' + $User.LastName}" />
+			                                <input type="hidden" name="origin" value="FastCall App" />
+			                                <input type="hidden" name="type" value="FastCall App Support" />
+			                                
+			                                <label class="first settings" for="subject">Subject</label>
+			                                <input class="textbox last settings required" id="subject" maxlength="80" name="subject" size="60" type="text" />
+			                                <br/><br/>
+			                                <label class="first settings" for="reason">Case Reason</label>
+			                                <select class="textbox last settings"  id="reason" name="reason">
+			                                    <option value="App - FastCall application setup">FastCall application setup</option>
+			                                    <option value="App - Twilio setup">Twilio setup</option>
+			                                    <option value="App - User setup">User setup</option>
+			                                    <option value="App - Request FastCall Console">Request FastCall Console</option>
+			                                    <option value="App - Problem when calling record">Problem when calling record</option>
+			                                    <option value="App - Call quality issues">Call quality issues</option>
+			                                    <option value="App - Other">Other</option>
+			                                </select>
+			                                <br/><br/>
+			                                <label class="first settings" for="browser">Browser</label>
+			                                <select id="browser" size="1" class="textbox last settings" name="browser"> 
+			                                    <option value="Google Chrome">Google Chrome</option>
+			                                    <option value="Internet Explorer">Internet Explorer</option>
+			                                    <option value="Mozilla Firefox">Mozilla Firefox</option>
+			                                    <option value="Opera">Opera</option>
+			                                    <option value="Safari">Safari</option>
+			                                </select>
+			                                <br/><br/>
+			                                <label class="first settings" for="callingDevice">Phone Used</label>
+			                                <select id="callingDevice" size="1" class="textbox last settings" name="callingDevice"> 
+			                                    <option value="Softphone">Softphone</option>
+			                                    <option value="Office Phone">Office Phone</option>
+			                                    <option value="Mobile Phone">Mobile Phone</option>
+			                                    <option value="Personal Phone">Personal Phone</option>
+			                                    <option value="Only log task">Only log task</option>
+			                                </select>
+			                                <br/><br/>
+			                                <label for="email" class="first settings">Contact Email</label>
+			                                <input class="textbox last settings required" id="email" maxlength="80" name="email" size="30" type="text" value="{!$User.Email}" />
+			                                <br/><br/>
+			                                <label class="first settings" for="description" style="position: absolute;">Description</label>
+			                                <textarea id="caseDescription" class="textbox last settings required" name="caseDescription" style="width:380px;height:200px;margin-left: 185px;"></textarea>
+			                                <textarea id="submitBody" class="textbox last settings" name="description" style="display:none;"></textarea>
+			                                <input type="hidden"  id="external" name="external" value="1" />
+			                                <br/><br/>
+			                                <a id="submitFcCaseForm" class="btn settings-btn" style="margin-left: 10px;">Submit Case</a>
+			                            </div>
+			                        </div>
+			                    </fieldset>                         
+			                    <script>
+			                            /* Handle Submit of Open Case Form */
+			                            $j("#submitFcCaseForm").on('click', function(e) {
+			                                
+			                                e.preventDefault();
+			                                
+			                                /* Form Validation */
+			                                var fieldValidation = true;                                 
+			                                $j("#fcCaseForm").find('label.error').each(function () {
+			                                    $j(this).text($j(this).text().replace(' *', ''));
+			                                });
+			                                $j("#fcCaseForm").find('.error').removeClass('error');
+			                                $j("#fcCaseForm").find('.errorText').remove();
+			                                $j('.required').each( function() {
+			                                    if ($j.trim($j(this).val()) == '') {
+			                                        if (!$j(this).hasClass('error')) {
+			                                            $j(this).addClass('error');
+			                                            $j(this).prev().addClass('error').append(' *');
+			                                            $j(this).focus();
+			                                        }
+			                                    } else if ($j(this).attr('name') == 'email') {
+			                                        var emailPattern = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i;
+			                                        if (!emailPattern.test($j(this).val())) {
+			                                            $j(this).addClass('error');
+			                                            $j(this).prev().addClass('error');
+			                                            $j(this).after('<span class="errorText">Please enter a valid email<'+'/span>');
+			                                            $j(this).focus();
+			                                        }
+			                                    }
+			                                });
+			                                if ($j("#fcCaseForm").find('.error').length > 0) {
+			                                    fieldValidation = false;
+			                                }
+			                                /* /Form Validation */
+			                                
+			                                if (fieldValidation) {
+			                                    $j('.overlay').show();
+			                                    // Set complementary info to description
+			                                    var desc = "\nSalesforce Edition: {!orgEdition}\n";
+			                                    desc += "\nBrowser: " + $j("#browser").val() + "\n";
+			                                    desc += "Calling Device: " + $j("#callingDevice").val() + "\n\n";
+			                                    desc += "Description: \n" + $j("#caseDescription").val() + "\n\n";
+			                                    desc += 'FastCall Settings\n {!orgWideSettingsDescription}';
+			                                    $j("#submitBody").val(desc);
+			                                    
+			                                    openCaseWithFastCall(buildUrlParamsFromForm());
+			                                }
+			                                
+			                            });
+			                            
+			                            function buildUrlParamsFromForm() {
+			                            	return $j('#fcCaseForm > input, #fcCaseForm > textarea, #fcCaseForm > select').serialize();
+			                            }
+			                    </script>
+		                    </apex:outputPanel> 
+		                    
+		                    <!-- / Open a case with FastCall -->
+		                    
+	                    	</div>
+	                    </td>
+	                    <td class="green">
+	                         <div class="inner"> 
+	                            <fieldset>
+	                                <h1>FastCall Help Resources</h1>      
+	                                <table class="helpresourcesTable">
+	                                	<tr>
+	                                		<td><a href="http://fastcall.com/products/click-to-call/installation-guide/" target="_blank">Install Guide</a></td>
+	                                		<td><a href="http://fastcall.com/products/click-to-call/user-guide/" target="_blank">User Guide</a></td>
+	                                	</tr>
+	                                	<tr>
+	                                		<td><a href="http://fastcall.com/products/click-to-call/faq/" target="_blank">FAQs</a></td>
+	                                		<td><a href="http://fastcall.com/products/pricing/" target="_blank">Pricing</a></td>
+	                                	</tr>
+	                                	<tr>
+	                                		<td colspan="2">
+	                                			<a href="javascript:$j.scrollTo('#scrollToCase',{duration:'slow'});">Contact Us</a>
+	                                		</td>
+	                                	</tr>
+	                                </table>
+	                            	<p>
+	                            		Other resources:
+	                            	</p>
+	                            	<p>
+	                            		<a href="http://fastcall.com/products/fastcall-inbound-call-tracking/" target="_blank">FastCall inbound call routing</a>
+	                            	</p>
+	                            	<p>
+	                            		<a href="http://fastcall.com/products/salesforce-sales-console/" target="_blank">Salesforce Sales Console</a>
+	                            	</p>
+	                            	<p>
+	                            		<a href="http://fastcall.com/products/fastcall-softphone/" target="_blank">FastCall softphone</a>
+	                            	</p>
+	                            	<p>
+	                            		<a href="http://fastcall.com/resources/how-to-add-users/" target="_blank">How to add users</a>
+	                            	</p>
+	                            	<p>
+	                            		<a href="http://fastcall.com/products/call-recording/" target="_blank">FastCall call recording</a>
+	                            	</p>
+	                            	<p>
+	                            		Your Salesforce Edition is <dfn>{!orgEdition}</dfn>.
+	                            	</p>
+	                            	<p class="note">
+	                                	FastCall TIP !!  <br/>Before you jump to Twilio, please give the call logger a few tries. We want you to be delighted with how FastCall logs and scores calls.
+	                            	</p>                                
+	                            </fieldset>
+	                         </div>   
+                    </td>
+                    </tr>
+                    </table>
+             </apex:outputPanel> 
+             <!-- / Ready to get started -->
+</div>
+
+</apex:component>

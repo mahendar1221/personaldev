@@ -1,0 +1,6 @@
+<apex:page >
+    {!$Label.test123}
+    <apex:form >
+    <apex:commandButton value="Save"/>
+    </apex:form>    
+</apex:page>

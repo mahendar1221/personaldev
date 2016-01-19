@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <content>DeletePackage</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>EditPackage</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <content>Package</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>Package</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Custom object to hold the package details.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Account__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Action_Required_Signer__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Action Required Signer</label>
+        <referenceTo>Package_Signer__c</referenceTo>
+        <relationshipLabel>Packages (Action Required Signer)</relationshipLabel>
+        <relationshipName>Packages2</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>AutoPrepare__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>E07</description>
+        <externalId>false</externalId>
+        <label>Auto-prepare with Text Tags</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Case__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Case</label>
+        <referenceTo>Case</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Contract__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Contract</label>
+        <referenceTo>Contract</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Convention__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>e-SignLive Convention</label>
+        <referenceTo>Convention__c</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CreatedFromTemplate__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>CreatedFromTemplate</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Created_from__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Field to track Parent Template</description>
+        <externalId>false</externalId>
+        <label>Created from</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Declined__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicate if the Package has been declined</description>
+        <externalId>false</externalId>
+        <label>Declined</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Description</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Document_Counter__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Document Counter</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Due_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>On this date the Package will automatically expire. (Deprecated, use Expiry_Date__c)</inlineHelpText>
+        <label>Expiry Date (Deprecated)</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Email_Message__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Email Message</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Enforce_Document_Order__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Enforce Document Order</label>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Enforce_Signing_Order__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Enforce Signing Order</label>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>EvidenceSummary__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>EvidenceSummary</label>
+        <length>15</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Expired__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicate if the Package has expired</description>
+        <externalId>false</externalId>
+        <label>Expired</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Expiry_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Expiry Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>From_Package_Template__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>From Package Template</label>
+        <referenceTo>Package_Template__c</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>InView_Error_Message__c</fullName>
+        <deprecated>false</deprecated>
+        <description>FU06.002</description>
+        <externalId>false</externalId>
+        <label>InView Error Message</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>In_Person_Signing__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>In Person Signing</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Insert__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>E07</description>
+        <externalId>false</externalId>
+        <label>Insert Salesforce Values</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Language__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Language</label>
+        <picklist>
+            <picklistValues>
+                <fullName>en</fullName>
+                <default>true</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Lead__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Lead</label>
+        <referenceTo>Lead</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Locked__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>FU06.002</description>
+        <externalId>false</externalId>
+        <label>Locked</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Number_Of_Locked_Signers__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Rollup summary field that represent the number of signers where Locked is true.</description>
+        <externalId>false</externalId>
+        <label>Number Of Locked Signers</label>
+        <summaryFilterItems>
+            <field>Package_Signer__c.Locked__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Package_Signer__c.Package__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Number_Of_Signature_Not_Required_Signers__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Rollup summary field that represent the number of signers where  Number_of_Signature_required is 0.</description>
+        <externalId>false</externalId>
+        <label>Number Of Signature Not Required Signers</label>
+        <summaryFilterItems>
+            <field>Package_Signer__c.Number_of_signature_required__c</field>
+            <operation>equals</operation>
+            <value>0</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Package_Signer__c.Package__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Number_Of_Signed_Signers__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Rollup summary field that represent the number of signers where SignatureCompleted is true.</description>
+        <externalId>false</externalId>
+        <label>Number Of Signed Signers</label>
+        <summaryFilterItems>
+            <field>Package_Signer__c.SignatureCompleted__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Package_Signer__c.Package__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Opted_Out__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicate if the Package has been opted out</description>
+        <externalId>false</externalId>
+        <label>Opted Out</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>PackageZip__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>PackageZip</label>
+        <length>15</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Package_Id_Synced__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>True if salesforce package id is synced with E-Silanis.</description>
+        <externalId>false</externalId>
+        <label>Package Id Synced</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Parent_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Parent Id</label>
+        <length>20</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Parent_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Related object type</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Reason__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Reason why a signer opted out or declined to sign a document</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Reason why a signer opted out or declined to sign a document</inlineHelpText>
+        <label>Reason</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Related_object_type_field__c</fullName>
+        <deprecated>false</deprecated>
+        <description>API Name of the Related object type field, useful to know which lookup was used if there is more than one related to the same object</description>
+        <externalId>false</externalId>
+        <label>Related object type field</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Related_object_type_link__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(OR(ISBLANK(Parent_Id__c),ISBLANK(Parent_Type__c),Parent_Type__c == &apos;Blank&apos;), IF(NOT(ISBLANK(Opportunity__c)),HYPERLINK(&apos;/&apos;+Opportunity__c,&apos;Opportunity&apos;), IF(NOT(ISBLANK(Account__c)),HYPERLINK(&apos;/&apos;+Account__c, &apos;Account&apos;),&apos;&apos;)), HYPERLINK(&apos;/&apos;+Parent_Id__c, Parent_Type__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Related object type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ReminderConfiguration__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>ReminderConfiguration</label>
+        <referenceTo>ReminderConfiguration__c</referenceTo>
+        <relationshipLabel>Packages</relationshipLabel>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Restore_Pending__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>FU06.002</description>
+        <externalId>false</externalId>
+        <label>Restore Pending</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Review_Before_Completing__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Review Before Completing</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Sent_To_Signature_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Sent To Signature Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Sent__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Sent</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Signature_Completion_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Signature Completion Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Signer_Counter__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Signer Counter</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Signer_Status_Link__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(&quot;/&quot; + Id + &quot;?relatedList=1&quot;, Signer_Status__c , &quot;_self&quot;)</formula>
+        <label>Status of Signers</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Signer_Status__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(AND(Sent__c = false, OR(ISPICKVAL(Status__c, &quot;Prepared&quot;), ISPICKVAL(Status__c, &quot;Draft&quot;))), &quot;Not Signed&quot;,
+IF(Number_Of_Locked_Signers__c = 1 ,
+Action_Required_Signer__r.First_Name__c + &quot; &quot; + Action_Required_Signer__r.Last_Name__c + &quot; is locked.&quot;,
+IF(Number_Of_Locked_Signers__c &gt; 1 ,
+TEXT(Number_Of_Locked_Signers__c) + &quot; signers are locked.&quot;,
+IF((Total_Number_Of_Signers__c - Number_Of_Signed_Signers__c - Number_Of_Signature_Not_Required_Signers__c) = 1,
+Action_Required_Signer__r.First_Name__c + &quot; &quot;+ Action_Required_Signer__r.Last_Name__c+&quot; must sign.&quot;,
+IF(
+AND((Total_Number_Of_Signers__c-Number_Of_Signed_Signers__c-Number_Of_Signature_Not_Required_Signers__c)&gt;1,
+Enforce_Signing_Order__c = true),
+Action_Required_Signer__r.First_Name__c + &quot; &quot;+ Action_Required_Signer__r.Last_Name__c+&quot; must sign.&quot;,
+IF((Total_Number_Of_Signers__c-Number_Of_Signed_Signers__c-Number_Of_Signature_Not_Required_Signers__c)&gt;1,
+TEXT(Total_Number_Of_Signers__c-Number_Of_Signed_Signers__c-Number_Of_Signature_Not_Required_Signers__c)+&quot;/&quot;+TEXT(Total_Number_Of_Signers__c)+&quot; signers must sign.&quot;,
+IF((Total_Number_Of_Signers__c-Number_Of_Signed_Signers__c-Number_Of_Signature_Not_Required_Signers__c)=0,
+&quot;All signers have signed.&quot;,&quot;&quot;
+)
+)
+)
+)
+)
+)
+)</formula>
+        <label>Status of Signers</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Silanis_Package_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>true</externalId>
+        <label>Silanis Package Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Silanis_Template_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>true</externalId>
+        <label>Silanis Template Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status_Link__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(&quot;/&quot; + Id + &quot;?relatedList=1&quot;, TEXT(Status__c), &quot;_self&quot;  )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Package Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Package Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Draft</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sent</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Total_Number_Of_Signers__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Rollup summary field that represent the total number of signers.</description>
+        <externalId>false</externalId>
+        <label>Total Number Of Signers</label>
+        <summaryForeignKey>Package_Signer__c.Package__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>User__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>User</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Packages</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Writeback__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>E07</description>
+        <externalId>false</externalId>
+        <label>Write Back to Salesforce Fields</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>e-SignLive Package</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>Related_object_type_link__c</columns>
+        <columns>Signature_Completion_Date__c</columns>
+        <columns>CREATEDBY_USER</columns>
+        <columns>UPDATEDBY_USER</columns>
+        <columns>Expiry_Date__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Package Name</label>
+        <trackHistory>true</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>e-SignLive Packages</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Signer_Status_Link__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Related_object_type_link__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Expiry_Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CREATEDBY_USER</customTabListAdditionalFields>
+        <customTabListAdditionalFields>UPDATEDBY_USER</customTabListAdditionalFields>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Signer_Status_Link__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Parent_Type__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Expiry_Date__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>UPDATEDBY_USER</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>LAST_UPDATE</lookupDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Status__c</searchFilterFields>
+        <searchFilterFields>Signer_Status_Link__c</searchFilterFields>
+        <searchFilterFields>Parent_Type__c</searchFilterFields>
+        <searchFilterFields>Expiry_Date__c</searchFilterFields>
+        <searchFilterFields>UPDATEDBY_USER</searchFilterFields>
+        <searchFilterFields>LAST_UPDATE</searchFilterFields>
+        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Signer_Status_Link__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Parent_Type__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Expiry_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>UPDATEDBY_USER</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>LAST_UPDATE</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Expiry_Date_Should_Not_Be_In_Past</fullName>
+        <active>true</active>
+        <description>Prevents user from selecting a previous date as expiry date</description>
+        <errorConditionFormula>NOT(ISBLANK( Expiry_Date__c )) &amp;&amp; (Expiry_Date__c &lt;=  TODAY()) &amp;&amp;  NOT(ISPICKVAL(Status__c , &apos;Expired&apos;)) &amp;&amp; (ISBLANK( From_Package_Template__c ) &amp;&amp; Locked__c = false &amp;&amp;  NOT(ISCHANGED(Restore_Pending__c)) &amp;&amp; Restore_Pending__c=false)</errorConditionFormula>
+        <errorMessage>You cannot update this package because the Expiry Date is today or in the past, select a future expiry date.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Opportunity_Validation</fullName>
+        <active>true</active>
+        <description>Validate whether the Account and Opportunity is related</description>
+        <errorConditionFormula>NOT(ISBLANK(Opportunity__c)) &amp;&amp; NOT(ISBLANK(Account__c)) &amp;&amp; Opportunity__r.AccountId != Account__c</errorConditionFormula>
+        <errorDisplayField>Opportunity__c</errorDisplayField>
+        <errorMessage>Opportunity and Account are not related.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Package_Status_Validation</fullName>
+        <active>true</active>
+        <description>The Status of the package cannot be reverted back.</description>
+        <errorConditionFormula>ISPICKVAL(Status__c, &apos;Draft&apos;) &amp;&amp; (ISPICKVAL(PRIORVALUE(Status__c), &apos;Sent&apos;) || ISPICKVAL(PRIORVALUE(Status__c), &apos;Completed&apos;))</errorConditionFormula>
+        <errorMessage>This package is either Sent or Completed and cannot be moved back to Draft.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Validation_User_First_Name</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISBLANK($User.FirstName)</errorConditionFormula>
+        <errorMessage>We detected you don&apos;t have a First Name vale in your Salesforce settings. Please Set a First Name to use this feature</errorMessage>
+    </validationRules>
+</CustomObject>

@@ -1,0 +1,161 @@
+<apex:component id="asUserPhoneTabComponent" controller="FastCall.ASUserPhoneTabController" allowDML="true">
+
+	<apex:outputPanel layout="block" id="userPhonePanel" styleClass="fc-container w-help">
+		<table>
+	        <tr>
+	            <td class="white">
+	                <div class="inner">
+						<script type="text/javascript">
+							$j(FastCall.Utils.VF2JQ('{!$Component.asUserPhoneTabComponent.userPhonePanel}')).on('change', FastCall.Utils.VF2JQ('{!$Component.asUserPhoneTabComponent.deviceType}'), function () {
+				            		if ($j(this).val() == 'SIP') {
+				            			$j('#sipAtributesPanel').show();
+				            			$j('#phoneExtensionPanel').hide();
+				            		} else {
+				            			$j('#sipAtributesPanel').hide();
+				            			$j('#phoneExtensionPanel').show();
+				            		}	
+				            });
+				            
+				            function validateACDEnabled() {
+				        
+					            var hasPermission = {!acdAvailable};
+					            
+					            if (!hasPermission) {
+					            
+					                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+					                                                'Inbound call distribution is available in the FastCall Sales+ Edition. <br/>Check out our upgrades.');
+					            }
+					            else {
+					                saveExtensionAutoDial();
+					            }
+					            
+					            return hasPermission;
+				        	}
+						</script>
+						
+				        <apex:outputPanel rendered="{!NOT(ISBLANK(userPhoneMessage)) && NOT(ISBLANK(userPhoneMessage.text))}" layout="block">
+				
+				            <fieldset class="alert alert-{!userPhoneMessage.messageType}">
+				                <apex:outputPanel styleClass="icon-{!userPhoneMessage.messageType}-sign" />
+				                <apex:outputText escape="false" styleClass="settings first last" value="{!userPhoneMessage.text}" />
+				            </fieldset>
+				
+				        </apex:outputPanel>
+				        
+				        <apex:actionFunction name="updateUserACDCallReceiver" status="overlayStatus" rerender="fcUserPhoneConfig" action="{!updateUserACDCallReceiver}">
+				        	<apex:param name="userId" assignto="{!userToUpdateACDReceiver}" value=""/>
+				        </apex:actionFunction>
+				        
+				        <span class="fc-sub-header">Add new phone number</span>
+				
+				        <label class="setting-caption subheader" style="margin-bottom: 8px;">
+				            If you don't enter a name for the new phone, the phone number will be used as label.
+				        </label>
+				        
+				        <fieldset>
+				        	<apex:outputLabel styleClass="first settings"
+				                value="User"
+				                for="userToAssignPhone"/>
+							<apex:selectList id="userToAssignPhone" styleClass="textbox first settings adminUserPhonePicklist" size="1" value="{!userToAssignPhone}">
+				            	<apex:selectOptions value="{!fcUsersOptions}"/>  
+				            </apex:selectList>
+				            <br/>
+				            <apex:outputLabel styleClass="first settings"
+				                value="Label for new number"
+				                for="newPhoneName"/>
+				            <apex:inputText styleClass="textbox first settings"
+				                maxLength="30"
+				                value="{!newPhoneName}"
+				                id="newPhoneName"/>
+				            <br/>
+				            <apex:outputLabel styleClass="first settings"
+				                value="New phone number"
+				                for="newPhoneNumber"/>
+				            <apex:inputText styleClass="textbox first settings"
+				                maxLength="255"
+				                value="{!newPhoneNumber}"
+				                id="newPhoneNumber"/>                                        
+				            <br/>
+				            <apex:outputLabel styleClass="first settings"
+				                value="Device Type"
+				                for="deviceType" style="width: 157px;"/>
+				            <apex:selectList id="deviceType" size="1" styleClass="textbox last settings" value="{!devType}">
+				            	<apex:selectOptions value="{!phoneDeviceTypes}"/>  
+				            </apex:selectList>    
+				            <br/>
+				            <div id="phoneExtensionPanel">      
+				             <apex:outputLabel styleClass="first settings"
+				                 value="New phone extension"
+				                 for="newPhoneExtension"/>
+				             <apex:inputText styleClass="textbox first settings"
+				                 maxLength="255"
+				                 value="{!newPhoneExtension}"
+				                 id="newPhoneExtension"/>    
+						    </div>
+						    <div id="sipAtributesPanel" style="display:none;">
+						    	<apex:outputLabel styleClass="first settings"
+				                 value="SIP Username"
+				                 for="sipUsername"/>
+				             <apex:inputText styleClass="textbox first settings"
+				                 maxLength="255"
+				                 value="{!sipUsername}"
+				                 id="sipUsername"/>
+				             <br/>
+				             <apex:outputLabel styleClass="first settings"
+				                 value="SIP Password"
+				                 for="sipPassword"/>
+				             <apex:inputSecret styleClass="textbox first settings"
+				                 maxLength="255"
+				                 value="{!sipPassword}"
+				                 id="sipPassword"/>   
+						    </div>
+				            <apex:commandLink styleClass="btn settings-btn"
+				           					 style="margin-left: 276px;margin-top: 5px;"
+				                             action="{!insertUserPhoneNumber}"
+				                             status="overlayStatus"
+				                             rerender="userPhonePanel">
+				                        Insert phone
+				            </apex:commandLink>
+				        </fieldset>
+				        
+				        <!-- User Phones config list -->
+				        <apex:outputPanel id="fcUserPhoneConfig">
+				        <fieldset class="disp" style="margin-top:30px;">
+				        	<table class="usersPhonesConfigTable">
+				        		<tr>
+				               		<th class="">User</th>
+				               		<th class="">Phone for ACD</th>
+				               	</tr>
+				               	<apex:repeat value="{!userPhoneConfigList}" var="k">
+				               		<tr>
+				               			<td>
+				               				<apex:outputLabel styleClass="first settings"
+				                							  value="{!userPhoneConfigList[k].user.Name}"/>
+				               			</td>
+				               			<td class="acdPicklistCell">
+				               				<apex:selectList styleClass="textbox acdGroupsPicklist" size="1" value="{!userPhoneConfigList[k].acdCallReceiver}" onchange="if(validateACDEnabled()){updateUserACDCallReceiver('{!userPhoneConfigList[k].user.Id}');}else{$j(this).val('');}">
+				                            	<apex:selectOptions value="{!userPhoneConfigList[k].aCDCallReceiverOptions}"/>  
+				                            </apex:selectList>
+				               			</td>
+				               		</tr>
+				               	</apex:repeat>
+				        	</table>
+				        </fieldset>
+				    	 
+        				</apex:outputPanel>
+        			</div>
+        		</td>
+				<td class="green">
+	        		<div class="inner">
+	                    <h1>HELP GUIDE</h1>
+	                    <p>
+	                    	FastCall calls the user on this phone first, then calls the Salesforce record. <br/>Only used for click-to-call.
+	                    </p>
+	                </div>                    
+	        	</td>
+	        </tr>
+	    </table>
+        
+	</apex:outputPanel>
+
+</apex:component>

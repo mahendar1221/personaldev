@@ -1,0 +1,13 @@
+<apex:page controller="loginLogic">
+<apex:form >
+<style>
+b {color:red;}
+</style>
+    <apex:pageBlock >
+        User Name:<apex:inputtext value="{!loginname}"/><br/>
+         Password:<apex:inputsecret value="{!loginpass}"/><br/>
+         <apex:commandButton value="login" action="{!LoginLgic}" />
+        <b> {!output}</b>
+    </apex:pageBlock>
+</apex:form>
+</apex:page>

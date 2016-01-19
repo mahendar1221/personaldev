@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>CUST_OWNER_NAME</field>
+    </columns>
+    <columns>
+        <field>Package__c.Account__c</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_OPP_OWNER_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_OPP_STAGE_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_OPP_AMOUNT</field>
+    </columns>
+    <description>A sample report of the unsigned e-SignLive Packages that are associated with the high value Open Opportunities.</description>
+    <filter>
+        <criteriaItems>
+            <column>Package__c.Status__c</column>
+            <operator>equals</operator>
+            <value>Sent</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_OPP_CLOSED</column>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Top 5 Oppty with Unsigned Packages</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Package__c@Package__c.Opportunity__c</reportType>
+    <rowLimit>5</rowLimit>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>FK_OPP_AMOUNT</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_THISMONTH</interval>
+    </timeFrameFilter>
+</Report>

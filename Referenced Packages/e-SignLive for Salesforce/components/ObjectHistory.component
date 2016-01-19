@@ -1,0 +1,78 @@
+<apex:component id="ObjectHistory"
+    controller="ESL.ObjectHistoryController">
+
+    <apex:attribute type="Id" required="true" name="subject" assignTo="{!SomeObjectId}" description="The SomeObject id to display SomeObject history information" />
+    <apex:attribute type="String" required="true" name="sectionTitle" description="The title of the history section to be shown in the UI" />
+    <apex:attribute type="String" name="fullList" assignTo="{!showFullList}" description="The number of Object History Entries" />
+
+    <apex:outputPanel id="RelatedEntityHistoryList"
+        layout="block"
+        styleclass="bRelatedList">
+
+        <apex:pageBlock id="blockRelatedList" title="{!sectionTitle}">
+
+            <apex:form id="formRelatedList">
+                <apex:outputLink id="backToPkg" rendered="{!showlistView}"
+                        value="/{!$CurrentPage.parameters.id}">« Back</apex:outputLink>                        
+                        
+                <apex:outputPanel layout="block"
+                    rendered="{!SomeObjectHistories.size == 0}"
+                    style="border: 1px solid #D4DADC; padding: 5px 2px 4px 5px;">
+
+                    <span>{!$Label.esl__NoRecordsMsg}</span>
+                </apex:outputPanel>
+
+                <apex:pageBlockTable id="tableRelatedList"
+                    value="{!SomeObjectHistories}"
+                    var="item"
+                    rendered="{!SomeObjectHistories.size != 0}">
+
+                    <apex:column headerValue="{!$Label.esl__DateLbl}">
+                        <apex:outputField id="fieldCreatedDate"
+                            value="{!item.History['CreatedDate']}"
+                            rendered="{!item.showDateAndUser}" />
+                    </apex:column>
+
+                    <apex:column headerValue="{!$Label.esl__UserLbl}">
+                        <apex:outputLink id="linkCreatedBy"
+                            value="/{!item.History['CreatedById']}"
+                            rendered="{!item.showDateAndUser && NOT(item.IsCustom)}">{!HTMLENCODE(item.History['CreatedBy']['Name'])}</apex:outputLink>
+                    </apex:column>
+
+                    <apex:column headerValue="{!$Label.esl__ActionLbl}">
+                        <apex:outputText id="textActionFormat"
+                            value="{!item.ActionFormat}"
+                            escape="false"
+                            rendered="{!NOT(item.IsCustom)}" >
+
+                            <apex:param value="{!item.History['Field']}" />
+                            <apex:param value="{!item['FieldLabel']}" />
+                            <apex:param value="{!item.History['OldValue']}" />
+                            <apex:param value="{!item.History['NewValue']}" />
+                        </apex:outputText>
+                        <apex:outputText id="textAction"
+                            value="{!item.ActionFormat}"
+                            escape="false"
+                            rendered="{!item.IsCustom}" >
+                            <apex:param value="{!item.History['Text__c']}" />
+                        </apex:outputText>
+                    </apex:column>
+                </apex:pageBlockTable>
+
+                <apex:outputPanel id="panelShowMore"
+                    layout="block"
+                    styleClass="pShowMore"
+                    rendered="{!AND(AllowShowMore,NOT(showlistView))}">                
+                    <apex:commandLink id="linkShowMore"
+                        action="{!showMore}"
+                        rerender="formRelatedList">{!$Label.esl__ShowMoreMsg}</apex:commandLink>
+
+                        <span> | </span>
+
+                    <apex:outputLink id="linkGotoListnew" value="/apex/EntityHistoryPage?id={!subject}&showAll=1">
+                        {!$Label.esl__GoToListMsg}</apex:outputLink>    
+                </apex:outputPanel>
+            </apex:form>
+        </apex:pageBlock>
+    </apex:outputPanel>
+</apex:component>

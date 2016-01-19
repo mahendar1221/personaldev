@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>e_SignLive_Preview_oauth</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <modules>
+        <module>
+            <label>e_SignLive_Preview_oauth</label>
+            <moduleDependencies>
+                <moduleRef>
+                    <name>e_SignLive_Preview_oauth_c4s</name>
+                    <namespacePrefix>ESL</namespacePrefix>
+                    <version>26.0</version>
+                </moduleRef>
+            </moduleDependencies>
+            <moduleType>connected</moduleType>
+            <name>e_SignLive_Preview_oauth</name>
+            <types>
+                <members>e_SignLive_Preview_oauth_devConfig</members>
+                <name>ConnectivityDevConfigMetadata</name>
+            </types>
+            <types>
+                <members>ESL__e_SignLive_Preview_oauth</members>
+                <name>Module</name>
+            </types>
+            <version>118.0</version>
+        </module>
+    </modules>
+    <namespacePrefix>ESL</namespacePrefix>
+    <version>33.0</version>
+</Package>

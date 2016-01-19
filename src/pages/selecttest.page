@@ -1,0 +1,38 @@
+<apex:page controller="AgentandOrderController" action="{!AutoRun}">
+
+    <apex:form >
+
+        <b>Agent Information</b>
+
+        <apex:pageblock >
+
+            <apex:pageBlockSection id="section1">
+
+                <apex:pageBlockSectionItem >
+
+                    <apex:panelGrid columns="2">
+
+                       <apex:actionRegion >    
+
+                           <apex:outputLabel value="Agent Id" for="agentId"/>
+
+                            <apex:selectList value="{!agentId}" size="1" >
+
+                                <apex:actionSupport event="onchange" action="{!search}" rerender="OrderInformationBlock" />
+
+                                <apex:selectOptions value="{!items}" />
+
+                            </apex:selectList>
+
+                        </apex:actionRegion>       
+                    </apex:panelGrid>
+
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>
+
+        </apex:pageblock>
+
+    </apex:form>
+
+</apex:page>

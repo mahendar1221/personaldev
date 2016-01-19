@@ -1,0 +1,7 @@
+<apex:page standardController="lead" extensions="testnew">
+    <apex:form >
+      <b>Lastname:</b>  <apex:inputField value="{!leads.lastname}"/>
+      <apex:inputField value="{!leads.phone}"/>    
+    <apex:commandButton action="{!saveaction}" value="Save Now"/>
+    </apex:form>
+</apex:page>

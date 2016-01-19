@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Custom object that holds the singers involved/ associated with the package</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>AllowDelegation__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Will allow the signer to reassign itself to someone else during the signing ceremony</description>
+        <externalId>false</externalId>
+        <label>AllowDelegation</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Authentication_Method__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Authentication Method</label>
+        <picklist>
+            <picklistValues>
+                <fullName>SMS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Email</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Q&amp;A</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Authentication_Method_v3__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Authentication Method v3</label>
+        <picklist>
+            <picklistValues>
+                <fullName>SMS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Email</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Q&amp;A</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Company__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Company</label>
+        <length>80</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Package Signers</relationshipLabel>
+        <relationshipName>Package_Signers</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Email__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Email</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>First_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>First Name</label>
+        <length>40</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Is_Synced__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Is Synced</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Last_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Last Name</label>
+        <length>80</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lead__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Lead</label>
+        <referenceTo>Lead</referenceTo>
+        <relationshipLabel>Package Signers</relationshipLabel>
+        <relationshipName>Package_Signers</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Locked__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Signer is locked on ESL side and need to be unlocked before he can sign any document</description>
+        <externalId>false</externalId>
+        <label>Locked</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Number_of_signature_completed__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The number of signature block that the signer completed.</description>
+        <externalId>false</externalId>
+        <label>Number of signature completed</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Number_of_signature_required__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The number of signature block related to that signer in the package.</description>
+        <externalId>false</externalId>
+        <label>Number of signature required</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Package__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Package</label>
+        <referenceTo>Package__c</referenceTo>
+        <relationshipLabel>Package Signers</relationshipLabel>
+        <relationshipName>Package_Signers</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Phone__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Phone</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Role_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>true</externalId>
+        <label>Role Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SignatureCompleted__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(
+   AND(
+        Number_of_signature_completed__c &gt; 0,
+        Number_of_signature_completed__c = Number_of_signature_required__c),
+true,false)</formula>
+        <label>SignatureCompleted</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SignerLabel__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>SignerLabel</label>
+        <referenceTo>Signer_Label__c</referenceTo>
+        <relationshipLabel>Package Signers</relationshipLabel>
+        <relationshipName>Package_Signers</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Signer_Status__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF( AND(Package__r.Sent__c = false, OR(ISPICKVAL(Package__r.Status__c, &quot;Prepared&quot;), ISPICKVAL(Package__r.Status__c, &quot;Draft&quot;))), &quot;Not Signed&quot;,
+IF(Locked__c , &quot;This signer is locked.&quot;,
+IF(Number_of_signature_required__c = 0 ,&quot;No signature required.&quot;,
+IF(Number_of_signature_completed__c &lt; Number_of_signature_required__c, &quot;Waiting for a signature.&quot;,
+IF(Number_of_signature_completed__c = Number_of_signature_required__c,&quot;All documents are signed.&quot;,&quot;Not Signed&quot;)
+)
+)
+)
+)</formula>
+        <label>Signing Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Signing_Order__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Signing Order</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Title__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Title</label>
+        <length>80</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Contact</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>External Email</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>User</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Lead</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>User__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>User</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Package_Signers</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <label>e-SignLive Package Signer</label>
+    <nameField>
+        <label>Signer Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>e-SignLive Package Signers</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Contact_Email_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Type__c , &apos;Contact&apos;) &amp;&amp; ISBLANK(Email__c) &amp;&amp; ISBLANK(Contact__r.Email)</errorConditionFormula>
+        <errorDisplayField>Email__c</errorDisplayField>
+        <errorMessage>Contact Email is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contact_First_Name_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Type__c , &apos;Contact&apos;) &amp;&amp; ISBLANK(First_Name__c) &amp;&amp; ISBLANK(Contact__r.FirstName)</errorConditionFormula>
+        <errorDisplayField>First_Name__c</errorDisplayField>
+        <errorMessage>First Name is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contact_Last_Name_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Type__c , &apos;Contact&apos;) &amp;&amp; ISBLANK(Last_Name__c) &amp;&amp; ISBLANK(Contact__r.LastName)</errorConditionFormula>
+        <errorDisplayField>Last_Name__c</errorDisplayField>
+        <errorMessage>Last Name is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contact_Phone_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Authentication_Method__c , &apos;SMS&apos;) &amp;&amp; ISPICKVAL(Type__c , &apos;Contact&apos;) &amp;&amp; ISBLANK(Phone__c) &amp;&amp; ISBLANK(Contact__r.Phone)</errorConditionFormula>
+        <errorDisplayField>Phone__c</errorDisplayField>
+        <errorMessage>Contact Phone is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contact_Required_Values_Validation</fullName>
+        <active>false</active>
+        <description>This is to test if validations for first names can be combined.</description>
+        <errorConditionFormula>AND(ISPICKVAL(Type__c, &apos;Contact&apos; ), NOT(ISBLANK(Contact__c)),OR(ISBLANK(First_Name__c) &amp;&amp; ISBLANK(Contact__r.FirstName), ISBLANK(Last_Name__c) &amp;&amp; ISBLANK(Contact__r.LastName), ISBLANK(Email__c) &amp;&amp; ISBLANK(Contact__r.Email)))</errorConditionFormula>
+        <errorMessage>Contact First Name, Last Name And Email are required values.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>External_Email_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Type__c , &apos;External Email&apos;) &amp;&amp; ISBLANK(Email__c)</errorConditionFormula>
+        <errorDisplayField>Email__c</errorDisplayField>
+        <errorMessage>Email is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>External_First_Name_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Type__c , &apos;External Email&apos;) &amp;&amp; ISBLANK(First_Name__c)</errorConditionFormula>
+        <errorDisplayField>First_Name__c</errorDisplayField>
+        <errorMessage>First Name is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>External_Last_Name_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Type__c , &apos;External Email&apos;) &amp;&amp; ISBLANK(Last_Name__c)</errorConditionFormula>
+        <errorDisplayField>Last_Name__c</errorDisplayField>
+        <errorMessage>Last Name is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>External_Phone_Validation</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISPICKVAL(Authentication_Method__c , &apos;SMS&apos;) &amp;&amp; ISPICKVAL(Type__c , &apos;External Email&apos;) &amp;&amp; ISBLANK(Phone__c)</errorConditionFormula>
+        <errorDisplayField>Phone__c</errorDisplayField>
+        <errorMessage>Phone is required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>External_Required_Values_Validation</fullName>
+        <active>false</active>
+        <description>Validates whether first name, last name and email values are entered for the &apos;External Email&apos; type package template signer or not.</description>
+        <errorConditionFormula>AND(ISPICKVAL(Type__c, &apos;External Email&apos; ), OR(ISBLANK(First_Name__c), ISBLANK(Last_Name__c), ISBLANK(Email__c) &amp;&amp; ISBLANK(Email__c)))</errorConditionFormula>
+        <errorMessage>First Name, Last Name and Email are required values.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Lead_Phone_Validation</fullName>
+        <active>false</active>
+        <description>Validates whether Phone is entered for &apos;SMS&apos; type authentication for Lead type package template singer.</description>
+        <errorConditionFormula>ISPICKVAL(Authentication_Method__c , &apos;SMS&apos;) &amp;&amp; ISPICKVAL(Type__c , &apos;Lead&apos;) &amp;&amp; ISBLANK(Phone__c) &amp;&amp; ISBLANK(Lead__r.Phone)</errorConditionFormula>
+        <errorDisplayField>Phone__c</errorDisplayField>
+        <errorMessage>Lead Phone is required.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Lead_Required_Values_Validation</fullName>
+        <active>false</active>
+        <description>Validates whether first name, last name or Email has been entered for contact type signer or not.</description>
+        <errorConditionFormula>AND(ISPICKVAL(Type__c, &apos;Lead&apos; ), NOT(ISBLANK(Lead__c)),OR(ISBLANK(First_Name__c) &amp;&amp; ISBLANK(Lead__r.FirstName), ISBLANK(Last_Name__c) &amp;&amp; ISBLANK(Lead__r.LastName), ISBLANK(Email__c) &amp;&amp; ISBLANK(Lead__r.Email)))</errorConditionFormula>
+        <errorMessage>Lead First Name, Last Name And Email are required values.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Phone_Format</fullName>
+        <active>false</active>
+        <errorConditionFormula>AND(NOT( ISBLANK(Phone__c)), NOT(ISPICKVAL(Type__c , &apos;&apos;)), NOT(REGEX(Phone__c, &quot;(1\\s*[-\\/\\.]?)?(\\((\\d{3})\\)|(\\d{3}))\\s*[-\\/\\.]?\\s*(\\d{3})\\s*[-\\/\\.]?\\s*(\\d{4})\\s*(([xX]|[eE][xX][tT])\\.?\\s*(\\d+))*&quot;)))</errorConditionFormula>
+        <errorDisplayField>Phone__c</errorDisplayField>
+        <errorMessage>You must enter a valid phone number</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>User_Phone_Validation</fullName>
+        <active>false</active>
+        <description>Validates whether phone value is entered for &apos;SMS&apos; authentication type or not.</description>
+        <errorConditionFormula>ISPICKVAL(Authentication_Method__c , &apos;SMS&apos;) &amp;&amp; ISPICKVAL(Type__c , &apos;User&apos;) &amp;&amp; ISBLANK(Phone__c) &amp;&amp; ISBLANK(User__r.Phone)</errorConditionFormula>
+        <errorDisplayField>Phone__c</errorDisplayField>
+        <errorMessage>User Phone is required.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>User_Required_Values_Validation</fullName>
+        <active>false</active>
+        <description>Validates whether first name, last name or Email has been entered for Uset type signer or not.</description>
+        <errorConditionFormula>AND(ISPICKVAL(Type__c, &apos;User&apos; ), NOT(ISBLANK(User__c)),OR(ISBLANK(First_Name__c) &amp;&amp; ISBLANK(User__r.FirstName), ISBLANK(Last_Name__c) &amp;&amp; ISBLANK(User__r.LastName), ISBLANK(Email__c) &amp;&amp; ISBLANK(User__r.Email)))</errorConditionFormula>
+        <errorMessage>User First Name, Last Name And Email are required values.</errorMessage>
+    </validationRules>
+</CustomObject>

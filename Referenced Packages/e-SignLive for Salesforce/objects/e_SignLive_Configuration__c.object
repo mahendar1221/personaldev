@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Sets Allowance of deleting Completed packages</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Allow_deleting_Completed_packages__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Check to allow deletion of Completed Packages</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Check to allow deletion of Completed Packages</inlineHelpText>
+        <label>Allow deleting Completed packages</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Allowed_extensions__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Possible document types to select from salesforce to create as a Package Document</description>
+        <externalId>false</externalId>
+        <label>Permitted file extensions</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomAppName__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Custom Canvas App Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Default_Convention_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Default Convention Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>UrlParam__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Canvas App Url Parameter</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <label>e-SignLive Configuration</label>
+</CustomObject>

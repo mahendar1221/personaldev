@@ -1,0 +1,117 @@
+<apex:component controller="FastCall.ASFastCallUserStatusPanelController" allowDML="true">
+
+			<div class="fc-container w-help">
+				<table>
+	            	<tr>
+	            		<td class="white">
+	            			<div class="inner">
+								<!-- CALL DETAILS MODAL -->
+					    		<apex:outputPanel styleClass="fc-widget">
+					    		<div id="fcCallDetailsModal" class="modal hide fade">
+					    			<div class="modal-header">
+					    				<a href="#" class="fc-close phoneNumbersModalClose" data-dismiss="modal" aria-hidden="true">&times;</a>
+					    				<h3>Call Details</h3>
+					    			</div>
+					    			<div class="modal-body">
+					    				<fieldset>
+					    					<label class="first settings">Call Type</label>
+					    					<label class="callDetails-callType last settings"></label>
+											<br/>
+					    					<label class="first settings">Call From</label>
+					    					<label class="callDetails-callFrom last settings"></label>
+											<br/>		 
+					    					<label class="first settings">Call To</label>
+					    					<label class="callDetails-callTo last settings"></label>
+					    					<br/>
+					    					<label class="first settings">Call To Name</label>
+					    					<a href="#" class="callDetails-callToName last settings" target="_blank"></a>
+					    				</fieldset>
+					    			</div>
+					    			<div class="modal-footer">
+					    				<a href="#" data-dismiss="modal" class="btn btn-close">Close</a>
+					    			</div>    
+					    		</div>
+					    		</apex:outputPanel>
+					    		<!-- / CALL DETAILS MODAL -->
+					    		
+								<!-- ACTION FUNCTION FOR REFRESH FC USERS LIST -->
+					    		<apex:actionFunction status="overlayStatus" name="refreshFcUsersList" action="{!init}" rerender="fcUsersList"/>
+								
+								<apex:outputPanel layout="block">
+									<div class="inner fcUsersPanelLst" style="padding-bottom: 55px;">
+										<h1 class="fc-container-header">FastCall Users Status</h1>
+										<apex:outputPanel id="fcUsersList" styleClass="fc-list">
+											<div class="fc-userStatus-listHead">
+					            				FastCall Users
+					            				<div class="columnHeadersContainer">				            				
+					            					<div class="multiLineHeader">Conference Enabled</div>
+													<div class="singleLineHeader">Status</div>
+													<div class="fc-settings-button" title="Refresh List" onclick="refreshFcUsersList()"></div>
+					            				</div>
+					            			</div>
+					            			<apex:repeat value="{!fcUsers}" var="k">
+					            				<fieldset class="disp phoneRow usrRow">
+					            					<div class="phoneInfoContainer">
+					            						<apex:outputLabel styleClass="first settings phoneLabel fc-userName-label" 			
+														 value="{!fcUsers[k].name}"/>
+					            					</div>
+					            					<div class="rowLinksContainer fc-userStatus-rowCommands refreshCell">
+					            						<apex:outputPanel rendered="{!fcUsers[k].isInCall}" layout="none">
+					        								<a href="javascript:displayCallDetailsModal('{!fcUsers[k].call.CallType}','{!fcUsers[k].call.Call_From__c}','{!fcUsers[k].call.Call_To__c}',
+					        										'{!IF(fcUsers[k].call.Who.Id != null, fcUsers[k].call.Who.Name, IF(fcUsers[k].call.What.Id != null, fcUsers[k].call.What.Name, ''))}',
+					        										'{!IF(fcUsers[k].call.Who.Id != null, fcUsers[k].call.Who.Id, IF(fcUsers[k].call.What.Id != null, fcUsers[k].call.What.Id, ''))}')" 
+					        								   title="View Call Details"
+					        								   class="fc-view-callDetails">
+					        									Call Details
+					        								</a>
+					            						</apex:outputPanel>
+					            					</div>
+					            					<div class="rowLinksContainer fc-userStatus-rowCommands statusCell dropdown">
+					            						<div class="fc-userStatus-display dropdown-toggle" data-toggle="dropdown" title="Update user status">
+					            							<i class="icon-user-status-{!IF(fcUsers[k].status != null,LOWER(fcUsers[k].status),'offline')}"></i> 
+					            							<span class="fc-user-status-label">{!IF(fcUsers[k].status != null,fcUsers[k].status,'Offline')}</span>
+					            						</div>
+					            						<ul class="dropdown-menu">
+    														  <li data-status="Available" data-usr-id="{!fcUsers[k].Id}">
+    														  	<i class="icon-user-status-available"></i>
+    														  	Available
+    														  </li>
+															  <li data-status="Busy" data-usr-id="{!fcUsers[k].Id}">
+															  	<i class="icon-user-status-busy"></i>
+															  	Busy
+															  </li>
+															  <li data-status="Offline" data-usr-id="{!fcUsers[k].Id}">
+															  	<i class="icon-user-status-offline"></i>
+															  	Offline
+															  </li>
+  														</ul>
+					            					</div>
+					            					<div class="rowLinksContainer fc-userStatus-rowCommands checkboxCell">
+					            						<apex:inputCheckbox styleClass="settings-checkbox first narrow"
+					            											disabled="{!NOT(orgConferenceEnabled)}"
+		                                									onclick="saveUserConferenceEnabled('{!fcUsers[k].id}')"
+		                                									value="{!fcUsers[k].conferenceEnabled}" />
+					            					</div>
+					            				</fieldset>
+					            			</apex:repeat>
+										</apex:outputPanel>
+									</div>
+								</apex:outputPanel>
+								<apex:actionFunction status="overlayStatus" name="saveUserConferenceEnabled" rerender="fcUsersList" action="{!saveUserConferenceEnabled}">
+                					<apex:param name="targetUserId" value="" assignTo="{!targetUser}" />
+                				</apex:actionFunction>			
+							</div>
+	                    </td>
+	                    <td class="green">
+	                        <div class="inner">
+	                            <h1>Help Guide</h1>
+	                            <p>
+	                            	This panel shows the list of FastCall Users and their call status: offline, available, or busy. If on a call, you can click the "Call Details" link to be shown info about the user's call.
+	                            </p>                          
+	                        </div>
+	                    </td>
+	                </tr>
+	            </table>
+            </div>
+
+</apex:component>

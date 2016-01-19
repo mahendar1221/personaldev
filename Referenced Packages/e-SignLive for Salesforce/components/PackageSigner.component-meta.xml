@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>30.0</apiVersion>
+    <description>&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class=&quot;data2Col last&quot; colspan=&quot;2&quot;&gt;&lt;span id=&quot;thePage:theTemplate:theForm:thePageBlock:thePageBlockSection:resetTitle&quot;&gt;&lt;span id=&quot;thePage:theTemplate:theForm:thePageBlock:thePageBlockSection:resetTitle.start&quot; style=&quot;display: none;&quot; /&gt;&lt;span id=&quot;thePage:theTemplate:theForm:thePageBlock:thePageBlockSection:resetTitle.stop&quot; /&gt;&lt;script type=&quot;text/javascript&quot;&gt;//&lt;![CDATA[
+window.document.getElementById(&apos;thePage:theTemplate:theForm:thePageBlock:thePageBlockSection:resetTitle.stop&apos;).onstop=function(){resetTitle(false, &apos;Visualforce Component : PackageSigner&apos;);};
+//]]&gt;
+&lt;/script&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;</description>
+    <label>PackageSigner</label>
+</ApexComponent>

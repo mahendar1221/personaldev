@@ -1,0 +1,26 @@
+<apex:page controller="Revealdata" applyBodyTag="false" docType="html-5.0" sidebar="false" showHeader="false" applyHtmlTag="false" standardStylesheets="false" >
+    <apex:composition template="{!$page.revealJs_Visualforce}">
+    <apex:define name="slides">
+        <div class="slides">
+        <section>
+                    <h1>Account Record Details</h1>
+                    
+                    <p>
+                        <small></small>
+                    </p>
+                </section>
+               
+                <apex:repeat value="{!accounts}" var="a">
+                 <section>
+                    <section id="fragments">
+                        <h2>Account Details</h2>
+                        <p class="fragment"> {!a.name}</p>
+                        <p class="fragment"> {!a.type}</p>
+                        <p class="fragment">{!a.billingcity}</p>
+                    </section>
+                     </section>
+                </apex:repeat>
+               
+    </div>
+    </apex:define></apex:composition>
+</apex:page>

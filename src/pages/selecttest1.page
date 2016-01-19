@@ -1,0 +1,17 @@
+<apex:page controller="ShowSectionController" tabStyle="Account">
+  <apex:form >
+  <Apex:actionFunction name="hideSection" action="{!hideSectionOnChange}" rerender="pg"/>
+
+      <apex:pageBlock id="pg">
+          <apex:pageBlockSection title="Select Value">
+              <apex:inputField value="{!acc.IsDuplicate__c}" onchange="hideSection('{!acc.IsDuplicate__c}')"/>
+          </apex:pageBlockSection>
+          <apex:pageBlockSection title="Section A" rendered="{!flag}">
+              No
+          </apex:pageBlockSection>
+          <apex:pageBlockSection title="Section B" rendered="{!(!flag)}">
+              Yes
+          </apex:pageBlockSection>
+      </apex:pageBlock>
+  </apex:form>
+</apex:page>

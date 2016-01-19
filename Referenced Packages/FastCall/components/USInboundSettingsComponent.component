@@ -1,0 +1,274 @@
+<apex:component controller="FastCall.USInboundSettingsController" allowDML="true">
+	<style>
+		.first.settings.wide{
+			width: 160px;
+		}
+		.reciveCallColumnLabel {
+			margin-right: 12px !important;
+			color: #5B5E62;
+			font-weight: bold;
+		}
+		.reciveCallPhoneHeader, 
+		.reciveCallSimulringHeader {
+			padding-left: 13px;
+		}
+		.reciveCallRingTimeHeader {
+			padding-left: 10px;		
+		}
+		.callReceiversPicklist {
+			padding-left: 5px;
+		}
+		.activeCallReceivers {
+			width: 700px !important;
+		}
+		.activeCallReceivers-head {
+			margin: 15px 0px 10px !important;
+		}
+	</style>
+	
+	<div class="tab-pane" id="inboundSettings">
+		<apex:outputPanel layout="block" styleClass="fc-container w-help">
+		<table>
+			<tr>
+				<td class="white">
+					<div class="inner">
+						<!-- InboundBasic-->
+						<apex:outputPanel id="inboundSettingsPanel" rendered="{!(isInboundBasicEnabled && NOT(IsInboundProEnabled))}">        
+					     
+							<apex:actionFunction status="overlayStatus" name="addReceiver" rerender="inboundSettingsPanel" action="{!addReceiver}"/>
+					       		
+				       		<apex:outputPanel layout="block" id="inboundTwilioNumber">
+				       			<fieldset>
+				       				<h1 class="fc-container-header">MY FASTCALL INBOUND NUMBER BASIC</h1>
+				       				<apex:outputField styleClass="textbox first settings"
+				                    				  rendered="{!NOT(ISNULL(inboundNumberAssigned))}"
+				                    				  value="{!inboundNumberAssigned.FastCall__Phone__c}"
+				                     			      id="inboundPhoneNumber"/>
+					        	</fieldset>
+					        	
+						       	<apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(inboundSettingsMessage)) && NOT(ISBLANK(inboundSettingsMessage.text))}">
+						        	<fieldset class="alert alert-{!inboundSettingsMessage.messageType}">
+						            	<apex:outputPanel styleClass="icon-{!inboundSettingsMessage.messageType}-sign" />
+						                <apex:outputText escape="false" styleClass="settings first last" value="{!inboundSettingsMessage.text}" />
+						            </fieldset>           		
+						        </apex:outputPanel>	        	
+					        		        	
+					        	<apex:outputPanel rendered="{!NOT(ISNULL(inboundNumberAssigned))}">	        		
+					        		<fieldset class="disp">
+					        			<h1 class="fc-container-header">ANSWERING INBOUND CALLS</h1>
+					                	<p class="settings-caption subheader">Please set the phone and ring time that will be used to receive your inbound calls.</p>
+					                    
+					                    <apex:outputLabel styleClass="first settings wide"
+					                        value="Receive Inbound Calls In"
+					                     for="inboundPhoneNumber"/>
+					                 	
+					                 	<apex:selectList id="receiveCallIn" 
+						        			value="{!receiverId}" 
+						        			size="1" 
+						        			onchange="addReceiver();"
+						        			styleClass="textbox first settings">
+						           			<apex:selectOptions value="{!receiveCallInOptions}"/>
+						        		</apex:selectList>	                                                              
+					                </fieldset>	           			
+						            <fieldset class="disp">
+						            	<apex:outputLabel styleClass="first settings wide"
+					                        value="Simulring"
+					                     for="simulringDevice"/>
+					                 	
+					                 	<apex:selectList id="simulringDevice" 
+						        			value="{!simulringId}" 
+						        			size="1" 
+						        			onchange="addReceiver();"
+						        			styleClass="textbox first settings">
+						           			<apex:selectOptions value="{!simulringReceiversOption}"/>
+						        		</apex:selectList>
+						            </fieldset>
+					                <fieldset class="disp">
+					                    <apex:outputLabel styleClass="first settings wide" 
+					                      	value="Ring Time" 
+					                        for="ringTime"
+					                         />
+						        		<apex:inputText id="ringTime" 
+						        			value="{!ringTime}"  
+						        			onblur="addReceiver();"
+						       				styleClass="textbox first settings"
+						       			/>                              		                     
+									</fieldset>
+								</apex:outputPanel>
+					      	</apex:outputPanel>
+					   	</apex:outputPanel>
+					    
+					    <!-- InboundPro-->
+						<apex:outputPanel id="inboundSettingsPanelPro" rendered="{!isInboundProEnabled && isInboundBasicEnabled}">     
+							       		
+				        	<apex:outputPanel layout="block" id="inboundTwilioNumberPro">
+				       			<fieldset>
+				       				<h1 class="fc-container-header">MY FASTCALL INBOUND NUMBER</h1>
+				       				<apex:outputField styleClass="textbox first settings"
+				       				 				  rendered="{!NOT(ISNULL(inboundNumberAssigned))}"
+				                     				  value="{!inboundNumberAssigned.FastCall__Phone__c}"
+				                     				  id="inboundPhoneNumberPro"/>
+					        	</fieldset>
+				
+						       	<apex:outputPanel layout="block" id="inboundSettingsMessage" rendered="{!NOT(ISBLANK(inboundSettingsMessage)) && NOT(ISBLANK(inboundSettingsMessage.text))}">
+						        	<fieldset class="alert alert-{!inboundSettingsMessage.messageType}">
+						            	<apex:outputPanel styleClass="icon-{!inboundSettingsMessage.messageType}-sign" />
+						                <apex:outputText escape="false" styleClass="settings first last" value="{!inboundSettingsMessage.text}" />
+						            </fieldset>           		
+						        </apex:outputPanel>	        	
+					        		   
+					        	<apex:outputPanel rendered="{!NOT(ISNULL(inboundNumberAssigned))}">	       			
+					                <fieldset class="disp">
+					                	<h1 class="fc-container-header">ANSWERING INBOUND CALLS</h1>
+					                	<p class="settings-caption subheader">Please set the phones used to receive your inbound calls; the order and the ring time between phones.</p>
+					                </fieldset>
+					                <apex:actionFunction name="updateRingTime" action="{!updateRingTime}" reRender="inboundSettingsPanelPro" status="overlayStatus">
+										<apex:param name="param1" value="" assignTo="{!receiverToUpdate}"/>
+										<apex:param name="param2" value="" assignTo="{!ringTimeToUpdate}"/>
+									</apex:actionFunction>
+									<apex:actionFunction name="rfreshSimulringList" reRender="receiveCallSimulring" status="overlayStatus"/>
+					                <table class="activeCallReceivers">
+						       			<tr>
+						       				<th class="reciveCallPhoneHeader">Phone</th>
+						       				<th class="reciveCallSimulringHeader">Simulring</th>
+						       				<th class="reciveCallRingTimeHeader">Ring Time</th>
+						       				<th></th>
+						       			</tr>
+						       			<tr>
+						       				<td class="callReceiversPicklist">
+						       					<apex:selectList id="receiveCallInPro" 
+						        						value="{!receiverId}"
+						        						onchange="rfreshSimulringList()"
+						        						size="1" 
+						        						styleClass="textbox first settings">
+						           					<apex:selectOptions value="{!receiveCallInOptions}"/>
+						        				</apex:selectList>
+						        			</td>
+						        			<td>
+						        				<apex:selectList id="receiveCallSimulring" 
+						        						value="{!simulringId}" 
+						        						size="1" 
+						        						styleClass="textbox first settings">
+						           					<apex:selectOptions value="{!simulringReceiversOption}"/>
+						        				</apex:selectList>
+						        			</td>
+						        			<td>
+						        				<apex:inputText id="ringTimePro" 
+						        					value="{!ringTime}"
+						       						styleClass="textbox first settings"
+						       					/>
+						       				</td>
+						       				<td>
+						       					<apex:commandLink value="Add" status="overlayStatus" styleClass="btn settings-btn" action="{!addReceiver}" reRender="inboundSettingsPanelPro"/>                   		                     
+											</td>
+										</tr>
+										<tr>
+											<td colspan="4">
+												<div class="fc-container-header activeCallReceivers-head">
+					            					Active Call Receivers
+					            				</div>
+					            			</td>
+					            		</tr>
+					            		<tr>
+						       				<th class="reciveCallPhoneHeader">Phone</th>
+						       				<th class="reciveCallSimulringHeader">Simulring</th>
+						       				<th class="reciveCallRingTimeHeader">Ring Time</th>
+						       				<th></th>
+						       			</tr>
+										<apex:repeat value="{!receiversList}" var="receiver">
+												<tr>
+													<td>
+								                		<apex:outputLabel styleClass="first settings"
+								                        	 			  value="{!receiver.FastCall__Receiver_Name__c}" />
+								                	</td>
+								                	<td>
+								                		<apex:outputLabel styleClass="first settings"
+								                        	 			  value="{!receiver.FastCall__Simulring_Receiver_Name__c}" />
+								                	</td>
+									                <td>                     
+									                	<apex:inputText id="test" styleClass="textbox first settings narrow"
+									                    				value="{!receiver.FastCall__Receiver_Ring_Time__c}" onblur="updateRingTime('{!receiver.FastCall__Receiver_Id__c}', this.value)"/>
+									            	</td>
+									            	<td>
+										            	<apex:outputPanel rendered="{!receiversList.size > 1}">
+									            			<apex:outputPanel rendered="{!receiver.FastCall__Position__c < receiversList.size - 1}">
+											            		<apex:commandLink title="down" styleClass="btn settings-btn" action="{!sortReceivers}" reRender="inboundSettingsPanelPro" status="overlayStatus">
+											            			<span class="icon-arrow-down">&#x25BC;</span>
+											            			<apex:param name="param1" value="down" assignTo="{!sortParam}" />
+											            			<apex:param name="param2" value="{!receiver.FastCall__Receiver_Id__c}" assignTo="{!receiverToSort}"/>
+											            		</apex:commandLink>
+											            	</apex:outputPanel>
+											            	
+											            	<apex:outputPanel rendered="{!receiver.FastCall__Position__c <= receiversList.size - 1 && receiver.FastCall__Position__c > 0}">
+											            		<apex:commandLink title="up" styleClass="btn settings-btn" action="{!sortReceivers}" reRender="inboundSettingsPanelPro" status="overlayStatus">
+											            			<span class="icon-arrow-up">&#x25B2;</span>
+											            			<apex:param name="param1" value="up" assignTo="{!sortParam}" />
+											            			<apex:param name="param2" value="{!receiver.FastCall__Receiver_Id__c}" assignTo="{!receiverToSort}"/>
+											            		</apex:commandLink>
+											            	</apex:outputPanel>
+
+										            	</apex:outputPanel>
+										            	
+										            	<apex:commandLink title="Del" status="overlayStatus" action="{!deleteReceiver}" styleClass="btn settings-btn" reRender="inboundSettingsPanelPro">
+										            		<i class="icon-remove"></i>
+										            		<apex:param name="param1" assignTo="{!receiverToDelete}" value="{!receiver.FastCall__Receiver_Id__c}"/>
+										            	</apex:commandLink>
+									            	</td>
+								            	</tr>
+								         </apex:repeat>
+										</table>
+									</apex:outputPanel>	
+					    	</apex:outputPanel>
+				 	 	</apex:outputPanel>
+		 	 		</div>
+		 	 	</td>
+		 	 	<td class="green">
+		 	 		<div class="inner">
+		                <h2>HELP GUIDE</h2>
+		                <p>
+		                	Your admin can assign an inbound phone number to you. In this edition of FastCall each user can have one (1) inbound phone number.<br/>
+							Calls to the assigned phone number will create a Task, Call type = Inbound.
+		                </p>
+		            </div>
+		 	 	</td>
+ 	 		</tr>
+ 	 	</table>
+ 	 	</apex:outputPanel>
+ 	 	
+ 	 	<!-- Inbound Call Recording -->
+ 	 	<apex:outputPanel id="inboundCallRecordingPanel" layout="block" styleClass="fc-container w-help">
+ 	 	
+ 	 	<apex:actionFunction status="overlayStatus" name="updateInboundCallRecordingSettings" rerender="inboundCallRecordingPanel" action="{!updateInboundCallRecordingSettings}"/>
+ 	 	
+		<table>
+			<tr>
+				<td class="white">
+					<div class="inner">
+						<h1 class="fc-container-header">Inbound Call Recording</h1>
+						<apex:outputLabel styleClass="first settings"
+                     				  value="Enable Call Recording"
+                     				  style="width: 320px;"
+                     				  for="inboundCallRecChk"/>
+                 		<apex:inputCheckbox styleClass="last settings settings-checkbox"
+                     				  value="{!callRecordingEnabled}"
+                     				  onclick="updateInboundCallRecordingSettings()"
+                     				  id="inboundCallRecChk"/>
+		 	 		</div>
+		 	 	</td>
+		 	 	<td class="green">
+		 	 		<div class="inner">
+		                <h2>HELP GUIDE</h2>
+		                <p>
+		                	
+		                </p>
+		            </div>
+		 	 	</td>
+ 	 		</tr>
+ 	 	</table>
+ 	 	</apex:outputPanel>
+ 	 	
+ 	 	<!-- Voicemail for inbound calls -->
+ 	 	<c:USVoicemailForInbound />
+ 	 	
+	</div>
+</apex:component>

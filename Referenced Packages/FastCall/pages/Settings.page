@@ -1,0 +1,1013 @@
+<apex:page sidebar="false"
+    controller="FastCall.Settings"
+    action="{!twilioConnect}"
+    tabStyle="FastCall_Settings__tab"
+    docType="html-5.0"
+    title="FastCall Settings">
+    
+    <apex:stylesheet value="{!style}" />
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Archivo+Narrow:400,700,700italic,400italic"/>
+    <apex:repeat value="{!js}" var="script" >
+        <apex:includeScript value="{!script}" />
+    </apex:repeat>
+
+    <script> 
+        function validateAutoExtensionPermission() {
+        
+            var hasPermission = {!isAutoExtensionEnabled};
+            
+            if (!hasPermission) {
+            
+                $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.extensionAuto}')).attr('checked', false);
+                
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Automatically dialing extensions is not available on this FastCall edition. Visit our page ' +
+                                                'to know more about this and other upgrades.');
+            }
+            else {
+                saveExtensionAutoDial();
+            }
+            
+            return hasPermission;
+        }
+
+        function validateConferencePermission() {
+        
+            var hasPermission = {!isConferenceEnabled};
+            
+            if (!hasPermission) {
+            
+                $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.enableConference}')).attr('checked', false);
+                
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Conference dialing is required for the voicemail drop and not available on this FastCall edition. Visit our page ' +
+                                                'to know more about this and other upgrades.');
+            } else {
+                saveConferenceEnabled();
+            }
+            
+            return hasPermission;
+        }
+
+        function validateAddInConferencePermission() {
+            var hasPermission = {!addInConferenceEnabled};
+            
+            if (!hasPermission) {
+            
+                $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.enableAddInConference}')).attr('checked', false);
+                
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'In the FastCall Sales+ Edition you can add multiple FastCall users into an in-progress conference call. Please contact us to learn more');
+            } else {
+                saveAddInConferenceEnabled();
+            }
+            
+            return hasPermission;
+        }
+        
+        function validateCountryCodePermission() {
+            var hasPermission = {!isCountryCodeEnabled};
+
+            if (!hasPermission) {
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Usage of Country Code is not available on this FastCall edition. Visit our page ' +
+                                                'to know more about this and other upgrades.');
+            }
+            
+            return hasPermission;            
+        }
+        
+        function validateCallRecordingEnabledPermission() {
+            var isFreeEdition = {!capabilityManager.isFreeEdition};
+            
+            if (isFreeEdition) {
+                $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.enableCallRecording}')).attr('checked', false);
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Calls can be recorded and stored in the cloud. The link to the call audio is stored on ' +
+                                                'the Task record. Check out the FastCall page to upgrade and see other benefits.');
+            } else {
+                saveCallRecordingStatus();
+            }
+            
+            return isFreeEdition;
+        }
+        
+        function validateBelocalEnabled() {
+            var belocalEnabled = {!belocalEnabled};
+            if (belocalEnabled) {
+                updateBelocalStatus();
+            } else {
+                $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.localArea}')).attr('checked', false);
+                $j('#modalLocalArea').modal('show');
+            }
+        }
+
+        function validateOpportunityEnabled() {
+            var opptyEnabled = {!opportunityEnabled};
+            if (opptyEnabled) {
+                updateDisplayOpptyOnWidget();
+            } else {
+                $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.opptyOnWidgetChk}')).attr('checked', false);
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'), 'This feature is enabled in Sales+ Edition. Please contact us to learn more');
+            }
+        }
+        
+        function editInline(element) {
+        	if (!$j(element).hasClass('notEditable')) {
+            	$j(element).next().css('display','');
+            	$j(element).css('display','none');
+            	$j(element).next().focus();
+            }            
+        }
+
+        // Avoid SFDC's auto-focus
+        function setFocusOnLoad() {}
+        
+    </script>
+    
+    <style>
+        input.error,
+        select.error,
+        textarea.error {
+          color: #b94a48;
+          border-color: #b94a48;
+          -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+    
+        input.error:focus,
+        select.error:focus,
+        textarea.error:focus {
+          border-color: #953b39;
+          -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+             -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+                  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+        }
+        label.error {
+            color: #953b39;
+        }
+        .errorText {
+            color:#b94a48;
+            position:absolute;
+            margin-left:10px;
+            padding-top:10px;
+        }
+    </style>
+  
+    <div class="overlay" style="display:none;">
+        <div class="overlay-holder">
+            <span class="loading-img"  title="Please Wait..."></span>
+            <span class="loading">Loading...</span>
+        </div>
+    </div>
+    
+    <ul class="nav nav-tabs" id="settingsTab">
+        <li><a href="#fcGettingStarted">Getting Started</a></li>
+        <li><a href="#setupFCWidget">Call Scoring &amp; Goals</a></li>
+        <li><a href="#addEditUsers">Users</a></li>
+        <li><a href="#VoIP">Telecom Settings</a></li>
+        <li><a href="#phoneNumbers">Phone Numbers</a></li>
+        <li><a href="#international">International and Advanced Settings</a></li>
+    </ul>
+   
+    <apex:form id="mainForm">
+
+        <apex:actionStatus id="overlayStatus" onstart="$j('.overlay').show();$j('.modal .modalLoader').show();" onstop="$j('.overlay').hide();$j('.modal .modalLoader').hide();"/>
+        <apex:actionFunction name="refreshGeneralSettings" status="overlayStatus" rerender="generalSettingsPanel"/>
+            
+        <div class="tab-content">
+        
+            <apex:outputPanel rendered="{!NOT(ISBLANK(fastcallMessage)) && NOT(ISBLANK(fastcallMessage.text))}" layout="block">
+                <fieldset class="alert alert-{!fastcallMessage.messageType}">
+                   <apex:outputPanel styleClass="icon-{!fastcallMessage.messageType}-sign" />
+                   <apex:outputLabel styleClass="settings first last " value="{!fastcallMessage.text}" />
+               </fieldset>
+            </apex:outputPanel>
+            
+            <p id="topHelp">Check out the <a target="_blank" href="http://fastcall.com/products/click-to-call/installation-guide/">Installation Guide</a> for help configuring FastCall.</p>
+            
+            <!-- PANEL1: Fastcall Settings ------------------------------------>
+            <c:ASGettingStartedComponent />
+            <!-- / FastCall Settings -->
+            <!--/ PANEL1 -->
+            
+            <!-- Setup FastCall Widget -->
+            <c:ASFastCallWidgetComponent />
+            <!-- /Setup FastCall Widget -->
+            
+            <!-- PANEL2: Add / Edit Users ---------------------------------->          
+            
+            <div class="main-pane tab-pane" id="addEditUsers">
+                
+                <!-- FastCall Users Panel -->
+                <c:ASFastCallPanel />
+                <!-- / FastCall Users Panel -->         
+                 
+                <!-- My account -->
+                <apex:outputPanel layout="block" styleClass="fc-container w-help">
+                    <table>
+	                    <tr>
+	                    <td class="white myAccount">
+	                        <div class="inner">
+	                            <h1 class="fc-container-header">My Account in the Salesforce AppExchange</h1><br/>
+	                            <p><a href="https://appexchange.salesforce.com/myaccount" class="btn settings-btn">Go to My Account</a></p>
+	                        </div>
+	                    </td>
+	                    <td class="green">
+	                        <div class="inner">
+	                            <h1>HOW TO ADD AND EDIT USERS</h1>
+	                            <p>
+	                            	Adding FastCall users in Salesforce is a three-step process. First, you purchase additional licenses in the AppExchange and assign the licenses to your users. Next, users must be given the FastCall User permission set and the FastCall call center file.
+	                            </p>
+	                            <p>
+	                            	For additional help, see the FastCall blog for <a href="http://fastcall.com/2014/07/how-to-add-users-in-fastcall/">"How to add users and manage licenses"</a>.  Once users are added by the admin, individual users manage their personal settings on the FastCall User Settings tab.
+	                            </p>
+	                        </div>
+	                        <br/>
+	                        <a href="#" class="more">+</a>
+	                    </td>
+	                    </tr>
+                    </table>
+                </apex:outputPanel>
+                <!-- / My account-->    
+            </div>
+            <!--/ PANEL2 -->
+            
+            
+            <!-- PANEL3: Salesforce Sites ------------------------------------>
+            <div class="main-pane tab-pane" id="sites">
+                <apex:outputPanel layout="block" styleClass="fc-container">
+                    <p>Salesforce sites</p>
+                </apex:outputPanel>
+            </div>    
+            <!-- /PANEL3 -->
+            
+
+            
+            <!-- PANEL4: Telecom settings ----------------------------------->
+            <div class="main-pane tab-pane" id="VoIP">
+                <!-- Home -->
+                <apex:outputPanel layout="block" id="telecomIntro" styleClass="fc-container">                      
+                    <div class="inner">
+                        <div class="boxes">
+                            <a href="javascript:$j.scrollTo('#scrollTo4',800);"><img src="//fastcall411.s3.amazonaws.com/c2c/1.13/imgs/force.png"/></a><br/><br/>
+                            <h2>Saleforce-native phone</h2>
+                            <p>
+                            To dial and control your phone calls FastCall uses a cloud-based phone service called Twilio.
+                            </p>
+                        </div>
+                        <div class="boxes">                             
+                            <a href="javascript:$j.scrollTo('#scrollTo5',800);"><img src="//fastcall411.s3.amazonaws.com/c2c/1.13/imgs/twilio.png"/></a><br/><br/>
+                            <h2>Connect with Twilio</h2>
+                            <p>
+                            Adding Twilio to FastCall allows you to record calls, control caller ID and use our voicemail drop.
+                            </p>
+                        </div>
+                        <div class="boxes last">                             
+                            <a href="javascript:$j.scrollTo('#scrollTo6',800);"><img src="//fastcall411.s3.amazonaws.com/c2c/1.13/imgs/caller-id.png"/></a><br/><br/>
+                            <h2>Competitive phone service</h2>
+                            <p>
+                              Twilio provides telephone service in many markets around the world and is very competitive. 
+                              A complete list of countries served, along with pricing can be found on Twilio.com. 
+                              </p>
+                        </div>      
+                        
+                    </div>                                                         
+                </apex:outputPanel><!-- / Home -->
+                
+                <!-- twilio connect -->
+                <apex:outputPanel layout="block" styleClass="fc-container w-help" >
+                    <table>
+                    <tr>
+                    <td class="white connectwTwilio">
+                         <div class="inner" id="scrollTo5">
+                            <h1 class="fc-container-header">Connect with Twilio</h1>
+                            <fieldset>
+                                <div class="settings first last">
+                                    <apex:outputPanel rendered="{!NOT(ISBLANK(twilioAccount))}" styleClass="icon-confirm-sign" />    
+                                    <apex:outputLabel rendered="{!NOT(ISBLANK(twilioAccount))}" value="You have connected with your Twilio Account."/>
+                                    <apex:outputPanel rendered="{!ISBLANK(twilioAccount)}" styleClass="icon-warning-sign" />
+                                    <apex:outputLabel rendered="{!ISBLANK(twilioAccount)}" value="A Twilio account is required to complete your phone calls"/>
+                                </div>
+                            </fieldset>
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(twilioAccount))}" layout="none">
+                                <fieldset>
+                                    <label class="first settings" style="width:215px;">Connected Account SID</label>
+                                    <label class="settings" style="margin-left: -65px;font-weight: bold;">{!twilioAccount}</label>
+                                </fieldset>
+                                <fieldset>
+                                    <apex:commandLink styleClass="first settings"
+                                        title="View Twillio Call Logs"
+                                        target="_blank"
+                                        value="View Twillio Call Logs"
+                                        action="{!viewTwilioLogs}"/>
+                                    <!-- 
+                                    <a class="first settings" title="View Twillio Call Logs" target="blank" href="/apex/TwillioLogs?logType=Calls">View Twillio Call Logs</a>
+                                    -->
+                                </fieldset>
+                                <fieldset>
+                                    <apex:commandLink styleClass="first settings"
+                                        title="View Twillio Notifications"
+                                        target="_blank"
+                                        value="View Twillio Notifications"
+                                        action="{!viewTwilioNotifications}"/>
+                                    <!--
+                                    <a class="first settings" title="View Twillio Notifications" target="blank" href="/apex/TwillioLogs?logType=Notifications">View Twillio Notifications</a>
+                                    -->
+                                </fieldset>
+                                <fieldset>
+                                    <apex:commandLink styleClass="first settings"
+                                        title="View Twillio Usage"
+                                        target="_blank"
+                                        value="View Twillio Usage"
+                                        action="{!viewTwilioUsage}"/>
+                                </fieldset>
+                            </apex:outputPanel>   
+                            <fieldset>
+                                <div class="fc-widget settings first last">
+                                    <div class="btn-group" style="display:inline;" >
+                                        <a class="btn twilio-button"  href="{!twilioConnect}">
+                                            <span class="twilio"></span>
+                                            <span class="twilio-separator"></span>
+                                    {!twilioButton}
+                                        </a>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>HELP GUIDE</h1>                            
+                            <p class="note">
+                                <b>NOTE:</b> If you're not asked for Twilio credentials, then you're already logged in. If you want to change the Twilio account,
+                                you should first close the existent session in your browser.<br/>
+                                All interaction with Twilio will happen in FastCall. You verify existing phone numbers and provision new numbers in FastCall. Not in Twilio.
+                            </p>
+                        </div>
+                    </td>
+                    </tr>
+                    </table>    
+                </apex:outputPanel> <!-- / twilio connect -->
+                
+                <!-- SETUP A SALESFORCE SITE -->
+                <apex:outputPanel layout="block" id="generalSettingsPanel" styleClass="fc-container w-help" >
+                    <table>
+                    <td class="white">
+                        <div class="inner" id="scrollTo4">
+                            <fieldset>
+                                <h1 class="fc-container-header">SETUP A SALESFORCE SITE TO PASS CALL INSTRUCTIONS TO TWILIO</h1>
+                            </fieldset>
+                        
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(generalMessage)) && NOT(ISBLANK(generalMessage.text))}" layout="block">
+                                <fieldset class="alert alert-{!generalMessage.messageType}">
+                                    <apex:outputPanel styleClass="icon-{!generalMessage.messageType}-sign" />
+                                    <apex:outputLabel styleClass="settings first last " value="{!generalMessage.text}" />
+                                </fieldset>
+                            </apex:outputPanel>
+                    
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings" value="Public Site URL" for="callbackUrl"/>
+                                <apex:inputText styleClass="textbox last settings wide" value="{!callbackUrl}" id="callbackUrl" onblur="javascript:saveCallBackURL();"></apex:inputText>
+                                <label class="setting-caption last">
+                                FastCall needs a Force.com site setup on your org to pass call instructions to Twilio. Enter the URL of this site here (including http[s]://).
+                                </label>
+                                <ul class="checks setting-caption" style="margin-left: 180px;">
+                                    <li>Use the "https" URL (unless installing in a sandbox)</li>
+                                    <li>URL should look like this: https://yourdomain.secure.force.com/fc</li>
+                                    <li>Add the FastCall WebApplication page to the site</li>
+                                    <li>Give the Site Guest User a license</li>
+                                    <li>See the <a target="_blank" href="http://fastcall.com/products/click-to-call/installation-guide/#tab-id-4">Installation Guide</a> for help</li> 
+                                    <li>Salesforce Enterprise or above is required to provision a Force.com site and connect Twilio</li>
+                                 </ul>    
+
+                            </fieldset>
+                            <apex:actionFunction status="overlayStatus" name="saveCallBackURL" rerender="generalSettingsPanel" action="{!saveCallBackURL}" />
+                            
+                        </div>
+                    </td>
+                    <td class="green">
+						<div class="inner">
+                            <h1>OPTION TO ADD TWILIO TO FASTCALL</h1>
+                            <p>
+                            FastCall passes call instructions to Twilio using a Force.com site. Follow the steps <a href="http://fastcall.com/products/click-to-call/installation-guide/#tab-id-4" target="_blank">here</a> to add the Force.com site.
+                            </p>
+                        </div><br/>
+                        <a href="http://fastcall.com/products/click-to-call/installation-guide/#tab-id-4" class="more" target="_blank">+</a>
+                    </td>
+                    </table>
+   
+                </apex:outputPanel> <!-- / SETUP A SALESFORCE SITE -->
+                
+                <!-- PHONE SETTINGS -->
+                <apex:outputPanel layout="block" id="phoneSettingsPanel" styleClass="fc-container w-help" >
+                    <table>
+                    <td class="white">
+                        <div class="inner" id="scrollTo4">
+                            <fieldset>
+                                <h1 class="fc-container-header">PHONE SETTINGS</h1>
+                            </fieldset>
+
+                            <apex:outputLabel styleClass="setting-caption subheader alert"
+                                style="margin-bottom: 8px;"
+                                rendered="{!capabilityManager.isFreeEdition}">
+                                The features below are not available on the current FastCall edition. Visit the
+                                <a target="_blank" href="http://fastcall.com/products/click-to-call/pricing/">FastCall web site</a> for more information. 
+                            </apex:outputLabel>
+                    
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings wide-label" value="Automatically dial extensions" for="extensionAuto"/>
+                                <apex:inputCheckbox id="extensionAuto" styleClass="last settings settings-checkbox" 
+                                                    value="{!autoDialExtension}" onclick="javascript:validateAutoExtensionPermission();"/>
+                                <label class="setting-caption last setting-caption-wide-label">Automatically dial extensions on record phone fields after called party answers (numbers after a-z or # characters)</label>
+                            </fieldset>
+                            <apex:actionFunction status="overlayStatus" name="saveExtensionAutoDial" rerender="phoneSettingsPanel" action="{!saveExtensionAutoDial}" />
+                    
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings wide-label" value="Pause before dialing extensions" for="extensionPause"/>
+                                <apex:inputText disabled="{!NOT(autoDialExtension)}"
+                                    styleClass="textbox last settings"
+                                    style="width:99px;"
+                                    value="{!extensionPause}"
+                                    id="extensionPause"
+                                    onblur="javascript:saveExtensionPause();"/>
+                                <label class="setting-caption last setting-caption-wide-label">Time to wait before dialing extensions, after called party answers (in seconds)</label>
+                            </fieldset>
+                            <apex:actionFunction status="overlayStatus" name="saveExtensionPause" rerender="phoneSettingsPanel" action="{!saveExtensionPause}" />
+                    
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings wide-label" value="Enable dial from widget" for="dialFromSfdc"/>
+                                <apex:inputCheckbox id="dialFromSfdc" styleClass="last settings settings-checkbox" value="{!enableDialFromSfdc}" onclick="saveEnableDialFromSfdc();"/>
+                                <label class="setting-caption last setting-caption-wide-label">Enable option to dial from widget</label>        
+                            </fieldset>
+                            <apex:actionFunction status="overlayStatus" name="saveEnableDialFromSfdc" rerender="phoneSettingsPanel" action="{!saveEnableDialFromSalesforce}" />
+
+                            <apex:outputLabel styleClass="setting-caption subheader alert"
+                                style="margin-bottom: 8px;"
+                                rendered="{!capabilityManager.isTrainingEdition}">
+                                The features bellow are not available on the current FastCall edition. Visit the
+                                <a target="_blank" href="http://fastcall.com/products/click-to-call/pricing/">FastCall web site</a> for more information. 
+                            </apex:outputLabel>
+							
+							<apex:actionRegion >
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings wide-label" value="Enable conference dialing" for="enableConference"/>
+                                <apex:inputCheckbox id="enableConference" styleClass="last settings settings-checkbox" 
+                                                    value="{!conferenceEnabled}" onclick="javascript:validateConferencePermission();"/>
+                                <label class="setting-caption last setting-caption-wide-label">Place calls using a conference call (vs direct bridging). This enables features such as the Voice Mail Drop. <br/>Twilio global conferencing must be enabled for international users. See here for more info: <a target="_blank" href="https://www.twilio.com/voice/conference">https://www.twilio.com/voice/conference</a></label>
+                            </fieldset>
+                            <apex:actionFunction status="overlayStatus" name="saveConferenceEnabled" rerender="holdMusicInConfComponent,addInConfPanel" action="{!saveConferenceEnabled}" />
+                    		</apex:actionRegion>
+                    		
+                            <apex:outputPanel id="addInConfPanel">
+                            <apex:outputPanel rendered="{!conferenceEnabled}">
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings wide-label" value="Enable add in conference" for="enableAddInConference"/>
+                                <apex:inputCheckbox id="enableAddInConference" styleClass="last settings settings-checkbox" 
+                                                    value="{!enableAddInConference}" onclick="javascript:validateAddInConferencePermission();"/>
+                                <label class="setting-caption last setting-caption-wide-label">Add multiple FastCall users into an in-progress conference call</label>
+                            </fieldset>
+                            </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:actionFunction status="ovelayStatus" name="saveAddInConferenceEnabled" rendered="phoneSettingsPanel" action="{!saveAddInConferenceEnabled}"/>
+
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings wide-label" value="Use local area codes" for="localArea"/>
+                                <apex:inputCheckbox id="localArea" styleClass="last settings settings-checkbox" value="{!useLocalAreaCodes}" onclick="javascript:validateBelocalEnabled();"/>
+                                <label class="setting-caption last setting-caption-wide-label">Place outbound calls with a caller "from" number matching the called party local area code</label>
+                            </fieldset>
+                            <apex:actionFunction status="overlayStatus" name="updateBelocalStatus" rerender="phoneSettingsPanel" action="{!updateBelocalStatus}" />
+                             
+                            <div class="fc-widget">
+                                <div id="modalLocalArea" class="modal hide fade">
+                                    <div class="modal-header">
+                                        <button type="button" class="fc-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3>Upgrade Now</h3>
+                                    </div>
+                                   
+                                    <div class="modal-body">
+                                        <p>
+                                            BeLocal is available in the FastCall Sales+ Edition. Please see <a href="http://fastcall.com/2014/07/belocal-by-fastcall-assigns-local-caller-id-based-on/" target="_blank">here</a> for more info.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#" class="btn btn-close" data-dismiss="modal">Maybe later</a>
+                                        <a href="http://fastcall.com/products/click-to-call/pricing/" target="_blank" class="btn btn-primary">Get it now!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="green">
+						<div class="inner">
+                            <h1>Help Guide</h1>
+                            <p>
+                            	Our paid upgrades add voicemail drop, call recording, multiple caller IDs and more. Twilio enables FastCall to add these "sales phone" features. 
+                            </p>
+                        </div><br/>
+                        <a href="http://fastcall.com/products/click-to-call/installation-guide/#tab-id-4" class="more" target="_blank">+</a>
+                    </td>
+                    </table>
+   
+                </apex:outputPanel> <!-- / PHONE SETTINGS -->
+                
+                <!-- Enabled calling devices -->
+                <apex:outputPanel id="callingDevicesPanel" layout="block" styleClass="fc-container w-help">
+                    <table>
+                    <tr>
+                    <td class="white enableCallingDevices">
+                       <div class="inner">
+                        <h1 class="fc-container-header">Please tell us how you will use FastCall?</h1>
+                        <p>Select which options will be displayed on the FastCall widget</p>                    
+                    
+                        <apex:outputPanel rendered="{!NOT(ISBLANK(callingDevicesMessage)) && NOT(ISBLANK(callingDevicesMessage.text))}" layout="block">
+                            <fieldset class="alert alert-{!callingDevicesMessage.messageType}">
+                                <apex:outputPanel styleClass="icon-{!callingDevicesMessage.messageType}-sign" />
+                                <apex:outputLabel styleClass="settings first last" value="{!callingDevicesMessage.text}" />
+                            </fieldset>
+                        </apex:outputPanel>
+                    
+                        <fieldset>
+                            <apex:selectCheckboxes value="{!enabledCallingDevices}" styleClass="callingDevices" layout="pageDirection" dir="LTR">
+                                <apex:selectOptions value="{!callingDeviceOptions}"/>
+                            </apex:selectCheckboxes>
+                        </fieldset>
+  
+                        <apex:actionFunction status="overlayStatus" name="saveCallingDevices" rerender="callingDevicesPanel" action="{!saveCallingDevices}"/> 
+                            <script>
+                            $j('.callingDevices').find('input').on('change', 
+                                 function() {
+                                        saveCallingDevices();
+                                });
+                            </script>
+                        </div>
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>Help Guide</h1>
+                            <p>
+                            Once Twilio is added you can select which “dialing modes” you want your users to have available.
+                            </p>
+                            <p>
+                            Our click-to-dial mode works along with your existing phone - whether a landline or mobile. Click-to-dial calls the user on her phone first (office, mobile), then dials the Salesforce record. User phones are taken from the Salesforce user record. Additional user phones can be added to the FastCall User Tab.
+                            </p>
+                            <p>
+                            With the FastCall softphone option (headset icon) you can use your computer and a headset to make calls. This option typically replaces your phone hardware and may require additional set-up.<br/> 
+                            </p>
+                            <p>
+                            See <a href="http://fastcall.com/2013/11/tips-for-using-the-fastcall-softphone/" target="blank">here</a> for details.
+                            </p>      
+                          
+                        </div>
+
+                    </td>
+                    </tr>
+                    </table>
+         
+                </apex:outputPanel><!-- /Enabled calling devices -->
+
+                <!-- Hold music in conference calls -->
+                <apex:outputPanel id="holdMusicInConfComponent">
+                    <c:ASHoldMusicInConf rendered="{!conferenceEnabled}"/>
+                </apex:outputPanel> 
+                <!-- /Hold music in conference calls -->
+                                              
+                <!-- Delete Twilio Call Recordings -->
+                <apex:outputPanel layout="block" styleClass="fc-container w-help" id="deleteCallRecordingsPanel">
+                    <table>
+                    <tr>
+                    <td class="white">
+                        <div class="inner">                    
+                            <fieldset>
+                                <h1 class="fc-container-header">Twilio Call Recordings</h1>
+                            </fieldset>
+                            <apex:outputPanel rendered="{!isCallRecordingDeletionInProgress}" layout="block">
+                                <fieldset class="alert alert-confirm">
+                                    <apex:outputPanel styleClass="icon-confirm-sign" />
+                                    <apex:outputLabel styleClass="settings first last " value="Call recordings deletion process is in progress" />
+                                </fieldset>
+                            </apex:outputPanel>
+                            
+                            <fieldset>
+                                <apex:outputLabel value="Enable Call Recording" styleClass="first settings" for="enableCallRecording"/>
+                                <apex:inputCheckbox id="enableCallRecording" styleClass="last settings settings-checkbox" value="{!callRecordingEnabled}" onclick="javascript:validateCallRecordingEnabledPermission();"/>
+                            </fieldset>
+                            <apex:outputPanel id="widgetRecSettings">
+                                <apex:outputPanel rendered="{!callRecordingEnabled}" layout="none">
+                                    <fieldset>
+                                        <apex:outputLabel value="Show recording indicator in widget" styleClass="first settings" for="showRecIndicator"/>
+                                        <apex:inputCheckbox id="showRecIndicator" styleClass="last settings settings-checkbox" value="{!showRecordingIndicator}"                    onclick="saveRecordingSettings()"/>
+                                    </fieldset>
+                                    <fieldset>
+                                        <apex:outputLabel value="Call recording can be turned off in the widget" styleClass="first settings" for="turnOffRec"/>
+                                        <apex:inputCheckbox id="turnOffRec" styleClass="last settings settings-checkbox" value="{!showDisableRecording}" 
+                                                            onclick="saveRecordingSettings()"/>
+                                    </fieldset>
+                                </apex:outputPanel>    
+                            </apex:outputPanel>
+                            <apex:actionFunction status="overlayStatus" name="saveCallRecordingStatus" rerender="widgetRecSettings" action="{!saveCallRecordingStatus}"/>
+                            <apex:actionFunction status="overlayStatus" name="saveRecordingSettings" rerender="widgetRecSettings" action="{!saveRecordingSettings}"/>  
+                            
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings" style="width:240px;" value="Delete recordings older than this date" for="callRecordingsDate"/>
+                                <apex:input type="datetime-local" styleClass="textbox last settings" value="{!callRecordingsDeletionDate}" id="callRecordingsDate">
+                                </apex:input>
+                                <apex:outputPanel rendered="{!NOT(isCallRecordingDeletionInProgress)}" layout="none">
+                                <div class="fc-widget settings first last" style="width:auto;">
+                                    <apex:commandButton status="overlayStatus" styleClass="btn" value="Delete Recordings" 
+                                    					action="{!deleteTwillioCallRecordings}" rerender="deleteCallRecordingsPanel" />
+                                </div>
+                                </apex:outputPanel>
+                            </fieldset>
+
+                        </div>                    
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>HELP GUIDE</h1>
+                            <p>
+                            	This process will run once and delete all the call recordings older than the selected date. Recordings are deleted from Twilio too. This process cannot be undone.
+                            </p>
+                        </div>                    
+                    </td>
+                    </tr>
+                    </table>              
+                </apex:outputPanel>
+                <!-- Delete Twillio Call Recordings -->
+
+                <!-- Inbound call settings -->
+                <div class="fc-container w-help splitTitle">
+                    <h1>Inbound Call Settings</h1>               
+                </div>
+
+                <!-- Inbound call recording Settings -->
+                <c:ASInboundCallRecording />
+                <!-- / Inbound call recording Settings -->
+
+                <!-- Voicemail for inbound -->
+                <c:ASVoicemailForInbound />                
+                <!-- / Voicemail for inbound -->
+
+                <!-- Inbound Lead settings -->
+                <c:AsInboundLeadSettings />
+                <!-- / Inbound Lead settings -->
+
+            </div> 
+            
+            <!--  PANEL 4: Phone Numbers - Verify & Provision -->
+            
+            <c:ASPhoneNumbersComponent />
+            
+			<!-- endof PANEL 4: Phone Numbers - Verify & Provision --->
+                        
+           <!------------------------------------------
+
+            <div class="tab-pane" id="FastcallAppSetup">
+                <ul class="nav nav-tabs">
+                    <li><a href="">Salesforce Sites</a></li>
+                    <li><a href="#">Telecom Connection</a></li>
+                </ul>
+                <div class="fc-container">
+
+                </div>  
+            </div>------------------------------------->
+            
+
+             <!-- PANEL 5: International & advanced set.. ------------------->           
+            <div class="main-pane tab-pane" id="international">
+                 <!-- country code -->
+                <div class="fc-container w-help splitTitle">
+                    <h1>International Settings</h1>               
+                </div>
+                <apex:outputPanel layout="block" id="countryCodePanel" styleClass="fc-container w-help">
+                    <table>
+                    <tr>
+                    <td class="white countryCode">
+                        <div class="inner">
+                            <fieldset>
+                                <h1 class="fc-container-header">Country Code</h1>
+                            </fieldset>
+
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(countryCodeMessage)) && NOT(ISBLANK(countryCodeMessage.text))}" layout="block">
+                                <fieldset class="alert alert-{!countryCodeMessage.messageType}">
+                                    <apex:outputPanel styleClass="icon-{!countryCodeMessage.messageType}-sign" />
+                                    <apex:outputLabel styleClass="settings first last" value="{!countryCodeMessage.text}" />
+                                </fieldset>
+                            </apex:outputPanel>
+
+                            <fieldset>
+                                <apex:inputText styleClass="textbox first settings"
+                                    maxlength="4"
+                                    value="{!countryCode}"
+                                    onblur="javascript:if(validateCountryCodePermission()){saveCountryCode();}"/>
+                            </fieldset>
+                    
+                            <apex:actionFunction status="overlayStatus" name="saveCountryCode" action="{!saveCountryCode}" rerender="countryCodePanel"/>
+                        </div>                    
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>DIALING INTERNATIONAL PHONE NUMBERS</h1>
+                            <p>
+                            Set your country code (only digits) if you're not in the US or Canada. This country code will be prepended to all phones numbers dialed, except those starting with '+'.  
+                            International dialing must also be enabled in your Twilio account for each country you wish to call. You manage this in your Twilio account <a href="https://www.twilio.com/user/account/settings/international" target="_blank">here</a>.
+                          </p>
+                          <p>
+                            You can also see Twilio’s help page
+                            <a href="https://www.twilio.com/help/faq/voice/how-do-i-dial-international-numbers-with-twilio" target="_blank">"How to dial international numbers"</a>.
+                           </p>
+                        </div>                    
+                    </td>
+                    </tr>
+                    </table>
+            
+                </apex:outputPanel>
+                <!-- /countryCode -->
+                
+                <!-- Advanced settings -->
+                <div class="fc-container w-help splitTitle">
+                    <h1>Advanced Settings</h1>               
+                </div>
+                
+                <!-- Missed call notification -->
+                <c:AsMissedCallNotification />
+
+                <!-- Area Code Settings -->
+                <c:ASAreaCodeSettingsComponent />
+
+                <!-- Opportunity on widget -->
+                <apex:outputPanel layout="block" id="opportunityOnWidgetPanel" styleClass="fc-container w-help">
+                    <table>
+                        <tr>
+                            <td class="white countryCode">
+                                <div class="inner">
+                                    <h1 class="fc-container-header">Opportunity</h1>
+                                    <fieldset>
+                                        <apex:outputLabel styleClass="first settings" value="Display Opportunities on widget" 
+                                                          for="opptyOnWidgetChk" style="width: 210px;"/>
+                                        <apex:inputCheckbox id="opptyOnWidgetChk" styleClass="last settings settings-checkbox" 
+                                                            value="{!displayOpportunityOnWidget}" 
+                                                            onclick="javascript:validateOpportunityEnabled();"/>
+                                    </fieldset>
+                                </div>
+                            </td>
+                            <td class="green">
+                                <div class="inner">
+                                    <h1>HELP GUIDE</h1>
+                                    <p>
+                                        A Salesforce Opportunity can be linked to the call if you are calling a Salesforce Contact. FastCall will list the open Opportunities for the Account, if the Opportunity is not listed you can search Opportunities by Opportunity Name.
+                                    </p>
+                                </div>                    
+                            </td>
+                        </tr>
+                    </table>
+
+                    <apex:actionFunction status="overlayStatus" name="updateDisplayOpptyOnWidget" 
+                                         rerender="opportunityOnWidgetPanel" action="{!saveDisplayOpportunityOnWidget}" />
+
+                </apex:outputPanel> <!-- / Opportunity on widget -->   
+                
+                <!-- Notes on task comments -->
+                <apex:outputPanel layout="block" id="notesToComments" styleClass="fc-container w-help">
+                    <table>
+                        <tr>
+                            <td class="white countryCode">
+                                <div class="inner">
+                                    <h1 class="fc-container-header">Call notes to task comments</h1>
+                                    <fieldset>
+                                        <apex:outputLabel styleClass="first settings" value="Store notes on task comments field" for="storeNotes"/>
+                                        <apex:inputCheckbox id="storeNotes" styleClass="last settings settings-checkbox" 
+                                                            value="{!saveNotesOnComments}" onclick="javascript:updateNotesOnComments();"/>
+                                        <label class="setting-caption last">Allows up to 32000 characters</label>
+                                    </fieldset>
+                                    <fieldset>
+                                        <apex:outputLabel styleClass="first settings" value="Keep notes box open" for="notesBoxOpen"/>
+                                        <apex:inputCheckbox id="notesBoxOpen" styleClass="last settings settings-checkbox" value="{!keepNotesBoxOpen}" 
+                                                            onclick="javascript:saveNotesBoxSetting();"/>
+                                    </fieldset>
+                                </div>
+                            </td>
+                            <td class="green">
+                                <div class="inner">
+                                    <h1>HELP GUIDE</h1>
+                                    <p>
+                                    FastCall stores the notes entered while on a call on a Task custom field named Call Notes.
+                                    This is a Text(255) field, which can be included as a column on the Open Activities &amp; Activity History
+                                    related lists. The standard Task Comments field, is a Text Area (32000) field, and cannot be used in such
+                                    related lists.
+                                    </p>
+                                    <p>
+                                        By enabling this setting, users can enter longer notes. The first 255 characters are stored on the
+                                        Task Call Notes custom field, and the full text is stored on the Task Comments field. 
+                                    </p>
+                                </div>                    
+                            </td>
+                        </tr>
+                    </table>
+
+                    <apex:actionFunction status="overlayStatus" name="updateNotesOnComments" rerender="generalSettingsPanel" action="{!saveEnableNotesOnComments}" />
+                    <apex:actionFunction status="overlayStatus" name="saveNotesBoxSetting" rerender="generalSettingsPanel" action="{!saveNotesBoxSetting}" />
+
+                </apex:outputPanel> <!-- / Notes on task comments -->          
+
+                <apex:outputPanel layout="block" styleClass="fc-container w-help" id="advancedSettingsPanel">               
+                    <table>
+                    <tr>
+                    <td class="white">
+                        <div class="inner">
+                            <fieldset>
+                                <h1 class="fc-container-header">Advanced Settings</h1>
+                            </fieldset>
+
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(advancedSettingsMessage)) && NOT(ISBLANK(advancedSettingsMessage.text))}" layout="block">
+                                <fieldset class="alert alert-{!advancedSettingsMessage.messageType}">
+                                    <apex:outputPanel styleClass="icon-{!advancedSettingsMessage.messageType}-sign" />
+                                    <apex:outputLabel styleClass="settings first last" value="{!advancedSettingsMessage.text}" />
+                                </fieldset>
+                            </apex:outputPanel>
+
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings" value="User Leg Ring Time" for="userRingTime"/>
+                                <apex:inputText styleClass="textbox last settings" style="width:99px;" value="{!userRingTime}" id="userRingTime" onblur="saveAdvancedSettings();"/>
+                                <label class="setting-caption last">Time to wait until the user answers the phone</label>
+                            </fieldset>
+
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings" value="Lead Leg Ring Time" for="ringTime"/>
+                                <apex:inputText styleClass="textbox last settings" style="width:99px;" value="{!ringTime}" id="ringTime" onblur="saveAdvancedSettings();"/>
+                                <label class="setting-caption last">Time to wait until the called person answers the phone</label>
+                            </fieldset>
+                    
+                            <fieldset>
+                                <apex:outputLabel styleClass="first settings" value="Post Call Edition Delay" for="refreshDelay"/>
+                                <apex:inputText styleClass="textbox last settings"  style="width:99px;" 
+                                                value="{!postCallRefreshDelay}" id="refreshDelay" onblur="saveAdvancedSettings();">
+                                </apex:inputText>
+                                <label class="setting-caption last">Delay between call termination, and redirecting the browser to the Task in edition mode</label>
+                            </fieldset>
+                            
+                            <fieldset>
+                            	<apex:outputLabel styleClass="first settings" value="Real Time Notifications" for="enablefcRTN"/>
+                                <apex:inputCheckbox styleClass="settings-checkbox last settings"  value="{!enableRealTimeNotifications}" id="enablefcRTN" onclick="saveAdvancedSettings();"/>
+                                <label class="setting-caption last">FastCall real time notifications</label>
+                            </fieldset>
+                        </div>
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>HELP GUIDE</h1>
+                            <p>
+                            The FastCall application uses a timeout for each leg of a call (user and SFDC record). When the call leg to the user is answered in click-to-call, FastCall dials the SFDC record. 
+                            The user leg may be kept short so that an unanswered call does not connect to the user’s voicemail. If this were to happen, FastCall would dial the SFDC record and no user will be on the call.
+                            Keeping the user leg short prevents the leg from connecting to the user’s voicemail. The call “times out” first.
+                            </p>
+                        </div>                    
+                    </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel> <!-- / Advanced Settings -->
+                
+                <!-- Start/Stop Call Scoring Job -->
+                <apex:outputPanel id="fcScoringPanel" layout="block" styleClass="fc-container w-help">
+                	<table>
+				        <tr>
+				        <td class="white callScore">
+				        <div class="inner">                       
+				                <fieldset>
+				                    <h1 class="fc-container-header">Call Score</h1>
+				                    <label class="setting-caption subheader">
+				                    </label>
+				                </fieldset>
+				
+				                <fieldset>
+				                    <div class="settings first last">
+				                        <apex:outputPanel rendered="{!isRunning}" styleClass="icon-confirm-sign" />
+				                        <apex:outputLabel rendered="{!isRunning}" value="The scoring process is running"/>
+				                        <apex:outputPanel rendered="{!NOT(isRunning)}" styleClass="icon-remove-sign" />
+				                        <apex:outputLabel rendered="{!NOT(isRunning)}" value="The scoring process isn't running"/>
+				                    </div>
+				                </fieldset>
+				                <fieldset>
+				                    <div class="fc-widget settings first last">
+				                        <apex:commandButton status="overlayStatus" styleClass="btn" value="Stop Scoring" action="{!stop}" rendered="{!isRunning}" rerender="fcScoringPanel,scoringNotRunningMsg" />
+				                        <apex:commandButton status="overlayStatus" styleClass="btn" value="Start Scoring" action="{!start}" rendered="{!NOT(isRunning)}" rerender="fcScoringPanel,scoringNotRunningMsg" />
+				                    </div>
+				                    <br/><br/>
+				                </fieldset>
+				            </div>
+				        </td>
+				        <td class="green">
+				            <div class="inner" id="scrollTo2">
+				                <h1 class="fc-container-header">Start Call Score</h1>
+				              	<p>
+				              		Call Score is an Apex Scheduled job and can be restarted here if needed.
+				              	</p>
+				            </div>
+				            <br/>
+				            <a href="http://fastcall.com/products/click-to-call/user-guide/#tab-id-4" target="_blank" class="more">
+				            +
+				            </a>
+				        </td>
+				        </tr>
+			        </table>
+                </apex:outputPanel><!-- Start/Stop Call Scoring Job -->
+                
+                <!-- Task Sinchronizer -->
+                <apex:outputPanel id="taskSyncPanel" layout="block" styleClass="fc-container w-help">
+                    <table>
+                    <tr>
+                    <td class="white">
+                        <div class="inner"> 
+                            <fieldset>
+                                <h1>Task Synchroniser</h1>
+                                <label class="setting-caption subheader alert">
+                                    Do not enable this process unless requested by FastCall support.
+                                </label>
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="settings first last">
+                                    <apex:outputPanel rendered="{!isTaskSyncRunning}" styleClass="icon-confirm-sign" />
+                                    <apex:outputLabel rendered="{!isTaskSyncRunning}" value="The Task synchronisation process is running"/>
+                                    <apex:outputPanel rendered="{!NOT(isTaskSyncRunning)}" styleClass="icon-remove-sign" />
+                                    <apex:outputLabel rendered="{!NOT(isTaskSyncRunning)}" value="The Task synchronisation process isn't running"/>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="fc-widget settings first last">
+                                    <apex:commandButton status="overlayStatus" styleClass="btn" value="Stop Task Synchroniser" action="{!stopTaskSync}" rendered="{!isTaskSyncRunning}" rerender="taskSyncPanel" />
+                                    <apex:commandButton status="overlayStatus" styleClass="btn" value="Start Task Synchroniser" action="{!startTaskSync}" rendered="{!NOT(isTaskSyncRunning)}" rerender="taskSyncPanel" />
+                                </div>
+                            </fieldset>
+                            
+                            <apex:actionFunction status="overlayStatus" name="saveAdvancedSettings" action="{!saveAdvancedSettings}" rerender="advancedSettingsPanel"/>
+                        </div>                    
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>HELP GUIDE</h1>
+                            <p>Do not enable this process unless requested by FastCall support.</p>
+                        </div>
+                    </td>
+                    </tr>
+                    </table>
+                    <div class="white">
+                    </div>
+                    <div class="green">
+                    </div>    
+                </apex:outputPanel> <!-- / Task Synchronizer -->    
+
+                <!-- Phone Numbers Synchronizer -->
+                <apex:outputPanel layout="block" id="phoneNumbersSynchronizerPanel" styleClass="fc-container w-help">
+                    <table>
+                    <tr>
+                    <td class="white">
+                        <div class="inner"> 
+                            <fieldset>
+                                <h1>Phone Numbers Synchroniser</h1>
+                                <label class="setting-caption subheader alert">
+                                    Do not enable this process unless requested by FastCall support.
+                                </label>
+                            </fieldset>
+                            
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(advancedSettingsMessage)) && NOT(ISBLANK(advancedSettingsMessage.text))}" layout="block">
+                                <fieldset class="alert alert-{!advancedSettingsMessage.messageType}">
+                                    <apex:outputPanel styleClass="icon-{!advancedSettingsMessage.messageType}-sign" />
+                                    <apex:outputLabel styleClass="settings first last" value="{!advancedSettingsMessage.text}" />
+                                </fieldset>
+                            </apex:outputPanel>                            
+                            
+                            <fieldset>
+                                <div class="fc-widget settings first last">
+                                    <apex:commandButton status="overlayStatus" styleClass="btn" value="Synchronize Phone Numbers" 
+                                    					action="{!syncPhoneNumbers}" rerender="phoneNumbersSynchronizerPanel" />
+                                </div>
+                            </fieldset>
+                        </div>                    
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>HELP GUIDE</h1>
+                            <p>Do not enable this process unless requested by FastCall support.</p>
+                        </div>
+                    </td>
+                    </tr>
+                    </table>
+                    <div class="white">
+                    </div>
+                    <div class="green">
+                    </div>    
+                </apex:outputPanel> <!-- / Phone Numbers Synchronizer -->
+
+            </div> <!--/ PANEL5 -->
+            
+        </div>
+        
+        <div id="fcModalHolder" class="fc-widget">
+        </div>
+         
+    </apex:form>
+    
+</apex:page>

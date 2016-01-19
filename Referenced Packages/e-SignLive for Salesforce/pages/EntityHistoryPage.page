@@ -1,0 +1,5 @@
+<apex:page >
+
+    <c:ObjectHistory subject="{!$CurrentPage.parameters.id}" sectionTitle="{!$Label.esl__HistoryLbl}" fullList="{!$CurrentPage.parameters.showAll}"/>
+
+</apex:page>

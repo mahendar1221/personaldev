@@ -1,0 +1,114 @@
+<apex:component controller="FastCall.USVoicemailForInboundController" allowDML="true">
+	
+	<!-- Voicemail for inbound calls -->
+	<apex:outputPanel layout="block" id="voicemailForInbound" styleClass="fc-container w-help">
+	    <table>
+	        <tr>
+	            <td class="white">
+	                <div class="inner">  	
+	                	
+	                	<apex:actionFunction name="refreshVoicemailPanel" status="overlayStatus" rerender="voicemailForInbound"/>
+	                	<apex:actionFunction name="recordVoicemailMessage" action="{!recordVoiceMailMessage}" status="overlayStatus" rerender="voicemailForInbound"/>
+	                	<apex:actionFunction name="updateVoicemailEnabledStat" action="{!updateVoicemailEnabledStat}" status="overlayStatus" rerender="voicemailForInbound"/>
+	                	<apex:actionFunction name="updateVoicemailTextMessage" action="{!updateVoiceMessageText}" status="overlayStatus" rerender="voicemailForInbound"/>
+	                		
+	                	<apex:outputPanel rendered="{!NOT(ISBLANK(voiceMailNotifyMessage)) && NOT(ISBLANK(voiceMailNotifyMessage.text))}" layout="block">
+	                  		<fieldset class="alert alert-{!voiceMailNotifyMessage.messageType}">
+	                    		<apex:outputPanel styleClass="icon-{!voiceMailNotifyMessage.messageType}-sign" />
+	                    		<apex:outputLabel styleClass="settings first last" value="{!voiceMailNotifyMessage.text}" escape="false" />
+	                 		</fieldset>
+	              		</apex:outputPanel>
+	          			
+	                    <h1 class="fc-container-header">Voicemail</h1>
+	                    <fieldset>
+	                    	<apex:outputLabel styleClass="first settings"
+                     				  value="Enable Voicemail for inbound calls"
+                     				  style="width: 320px;"
+                     				  for="enableVoicemailChk"/>
+                 			<apex:inputCheckbox styleClass="last settings settings-checkbox"
+                     				  value="{!voicemailForInboundEnabled}"
+                     				  onclick="updateVoicemailEnabledStat()"
+                     				  id="enableVoicemailChk"/>
+	                    </fieldset>
+	                    <apex:outputPanel rendered="{!isEmptyVMRecURL}">
+		                    <fieldset>
+		                    	<apex:outputLabel styleClass="first settings"
+			                                 	  value="Text for Voicemail Message"
+			                                 	  for="vmMessagetxt"/>
+			                    <apex:inputText id="vmMessagetxt"
+			                    				styleClass="textbox first settings"
+			                    				style="width: 495px;"
+		                            			maxLength="255"
+		                            			onblur="updateVoicemailTextMessage()"
+		                            			value="{!voiceMailMessageText}"/>             	  
+		                    </fieldset>
+                    	</apex:outputPanel>
+	                    <apex:outputPanel rendered="{!AND(connectedToTwilio,isEmptyVoiceMailMessageText)}">
+		                    <fieldset>
+		                             	
+		                    	<span class="fc-sub-header">Record voicemail</span>
+		                    	<label class="setting-caption subheader" style="margin-bottom: 8px;">
+			                    	Enter a phone number to call to record it. 
+			                    </label>
+			                    
+			                    <apex:outputLabel styleClass="first settings"
+			                                 value="Phone to dial"
+			                                 for="phoneToDial"/>
+		                         <apex:selectList size="1"
+		                            styleClass="textbox last settings"
+		                            value="{!newVoicemailPhone}"
+		                            id="phoneToDial"
+		                            style="margin-left: 5px;"
+		                            onchange="refreshVoicemailPanel()">
+		                            <apex:selectOptions value="{!userPhoneOptions}"/>
+		                        </apex:selectList>
+		
+		                        <apex:inputText styleClass="textbox first settings"
+		                            			maxLength="80"
+		                            			value="{!newVoicemailOtherPhone}"
+		                            			rendered="{!newVoicemailPhone == 'other'}"/>
+								
+		                        <a href="javascript:recordVoicemailMessage();" class="btn settings-btn">
+		                            Record new message <i class="icon-plus"></i>
+		                        </a>
+		                    </fieldset>
+		                    <apex:outputPanel rendered="{!NOT(isEmptyVMRecURL)}">
+		                    	<fieldset>
+		                    		<apex:outputLabel styleClass="first settings"
+		                    						  style="width:225px;"
+			                                 		  value="Recorded Voicemail Message"/>
+			                         <apex:commandLink title="Delete"
+		                                        styleClass="btn settings-btn"
+		                                        action="{!deleteRecordedVoicemailMessage}"
+		                                        status="overlayStatus"
+		                                        rerender="voicemailForInbound">
+	                                     <i class="icon-remove"></i>
+	                                 </apex:commandLink>
+	                                 <apex:outputLink title="Listen"
+	                                     styleClass="btn settings-btn"
+	                                     style="margin-left: 10px;"
+	                                     value="{!voiceMailRecUrl}.mp3"
+	                                     target="_blank">
+	                                     <i class="icon-play"></i>
+	                                 </apex:outputLink>        		  
+		                    	</fieldset>
+	                    	</apex:outputPanel>
+	                    </apex:outputPanel>
+	                </div>
+	            </td>
+	            <td class="green">
+	                <div class="inner">
+	                    <h1>HELP GUIDE</h1>
+	                    <p>
+	                    	FastCall Voicemail will answer after the ring time set above. You can add text for FastCall to read (TTS - text to speech) - or you can record a message to be played to your callers.
+	                    </p>
+	                    <p class="note">
+	                    	Note: <br/>If you are routing calls to another phone with voicemail (office, mobile) this phone may answer the call before the FastCall voicemail. Your ring time will determine this.
+	                    </p>
+	                </div>                    
+	            </td>
+	        </tr>
+	    </table>
+	</apex:outputPanel> <!-- / Voicemail for inbound calls -->
+	
+</apex:component>

@@ -1,0 +1,22 @@
+<apex:page controller="testsearch">
+    <apex:form >
+    
+    <style>
+    .locationError { color: blue; font-weight: strong;}
+    .employeeError { color: green; font-weight: strong;}
+    </style>
+       <apex:pageBlock >
+         <apex:pageBlocksection >
+         <apex:messages />
+         <apex:pageBlockSectionItem >
+         
+        <apex:inputText value="{!leadsearch}" id="stringid"/>
+        <apex:message styleClass="locationError" for="stringid"/>
+        
+        
+        </apex:pageBlockSectionItem>
+        <apex:commandButton value="search" action="{!search}"/>
+        </apex:pageBlocksection>
+        </apex:pageBlock>
+    </apex:form>  
+</apex:page>

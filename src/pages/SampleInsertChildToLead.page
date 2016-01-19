@@ -1,0 +1,6 @@
+<apex:page standardController="ChildLead__c" extensions="InsertChildToLead" action="{!InsertOpertion}">
+      <apex:form >
+         
+      
+      </apex:form>
+</apex:page>

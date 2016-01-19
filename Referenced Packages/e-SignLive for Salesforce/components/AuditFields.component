@@ -1,0 +1,22 @@
+<apex:component >
+<apex:attribute name="masterobject" description="Master Obj" type="sObject" required="true"/>
+
+<apex:pageBlockSection >
+    <apex:pageBlockSectionItem rendered="{!IF(masterobject['createdbyid'] != null,true,false)}">
+        <apex:outputLabel value="{!$Label.esl__CreatedByLbl}"/>
+        <apex:outputPanel >
+            <apex:outputField value="{!masterobject['createdbyid']}"/>
+            <span style="padding-right : 5px"></span>
+            <apex:outputField value="{!masterobject['createddate']}"/>
+        </apex:outputPanel>
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem rendered="{!IF(masterobject['lastmodifiedbyid'] != null,true,false)}">
+        <apex:outputLabel value="{!$Label.esl__LastModifiedByLbl}" />
+        <apex:outputPanel >
+            <apex:outputField value="{!masterobject['lastmodifiedbyid']}"/>
+            <span style="padding-right : 5px"></span>
+            <apex:outputField value="{!masterobject['lastmodifieddate']}"/>
+        </apex:outputPanel>
+    </apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:component>

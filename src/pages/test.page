@@ -1,0 +1,27 @@
+<apex:page standardController="Contact">
+   <apex:form >
+      <style>
+         tr.dataRow {
+           background-color:white;
+         }
+         tr.dataRow:hover {
+           background-color: #e3f3ff;
+         };
+     </style>
+     <apex:pageBlock >
+        <table class="list " border="0" cellpadding="0" cellspacing="0">
+           <tr class="headerRow">
+              <th class="headerRow"> First Name</th>
+              <th class="headerRow"> Last Name </th>
+              <th class="headerRow"> Phone </th>
+           </tr>
+           <tr class="dataRow">
+              <td class="dataCell">{!contact.FirstName}</td>
+              <td class="dataCell">{!contact.LastName}</td>
+              <td class="dataCell">{!contact.phone}</td>
+           </tr>
+           
+       </table>
+   </apex:pageBlock>
+ </apex:form>
+</apex:page>

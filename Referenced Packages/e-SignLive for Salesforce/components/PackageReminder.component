@@ -1,0 +1,72 @@
+<apex:component controller="ESL.PackageReminderController" allowDML="true" id="theReminderComponent">
+    <apex:attribute name="masterobject" description="Master Obj Id" type="sObject" required="true" assignTo="{!masterSObj}"/>    
+    <apex:attribute name="ReminderObj" description="Reminder Obj" type="ESL__ReminderConfiguration__c" required="true" assignTo="{!Reminder}"/>
+    <apex:attribute name="title" description="Pass in the title of the Page Block" type="String" required="true"/>
+    <apex:attribute name="readonly" description="Pass in true or false" type="Boolean" default="false" assignTo="{!parentReadOnly}"/>
+    <apex:attribute name="tableId" description="Unique Id for the table" type="String" />    
+
+    <apex:actionstatus id="processRmnd" onstart="onStartRmndProcessing();" onstop="onStopRmndProcessing();" />    
+            <!-- C094591 -->
+                        
+            <apex:outputPanel id="panelrmnd" rendered="{!AND(NOT(HideReminderPanel),NOT(showDisableReminderPanel))}">
+                <hr/>
+                    <apex:pageBlockSection columns="2">        
+	                    <apex:pageBlockSectionItem helpText="{!IF(IsPackageTemplate,$Label.esl__Enable_Reminders_Template_Help,$Label.esl__Enable_Reminders_Help)}">  
+	                        <apex:outputLabel value="{!$Label.esl__Enabled}"/>            
+		                        <apex:inputField value="{!Reminder.ESL__Enabled__c}"/>                       
+		                </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem />
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Send_reminder_in_N_days_Help}">  
+	                        <apex:outputLabel value="{!$Label.esl__Send_reminders}"/>                        
+		                        <apex:inputField type="number"                          
+		                            value="{!Reminder.ESL__Send_reminders__c}" />                          
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem />                     
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Repeat_reminder_Help}">  
+                            <apex:outputLabel value="{!$Label.esl__Repeat_reminders}"/>	                    
+	                        <apex:inputField type="number"                          
+	                            value="{!Reminder.ESL__Repeat_reminders__c}"/>                      
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem />                     
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Repetitions_Help}">
+                            <apex:outputLabel value="{!$Label.esl__Repetitions}"/>	                    
+	                        <apex:inputField type="number"                          
+	                            value="{!Reminder.ESL__Repetitions__c}"/>                      
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+            </apex:outputPanel>
+            
+            <apex:outputPanel id="rmndPanelDisable" rendered="{!AND(NOT(HideReminderPanel),showDisableReminderPanel)}">
+                <hr/>   
+                <div id="blockRm" style="display:none;">
+                    <div class="sectionCurtain">
+                        <div class="sectionBox">
+                            <img src="/img/loading24.gif" class="savingImg"/>
+                            <span id="RmndActionText">{!$Label.Please_Wait}</span>
+                        </div>
+                    </div>
+                </div>  
+                <apex:pageBlockSection columns="2">      
+                        <apex:pageBlockSectionItem helpText="{!IF(IsPackageTemplate,$Label.esl__Enable_Reminders_Template_Help,$Label.esl__Enable_Reminders_Help)}">  
+                            <apex:outputLabel value="{!$Label.esl__Enabled}"/>            
+                                <apex:outputField value="{!Reminder.ESL__Enabled__c}"/>                      
+                        </apex:pageBlockSectionItem>                       
+	                    <apex:commandButton title="{!$Label.esl__Disable_Reminders}" id="disableRemindersBtn"  reRender="packageTabs,theReminderComponent,rmndPanelDisable,pgPkgMessages" value="{!$Label.esl__Disable_Reminders}" action="{!disableReminders}" rendered="{!and(reminder.ESL__Enabled__c,not(IsPackageTemplate),hasAccess)}" status="processRmnd"/>                        
+	                    <apex:pageBlockSectionItem rendered="{!or(not(reminder.ESL__Enabled__c),IsPackageTemplate,NOT(hasAccess))}"/>
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Send_reminder_in_N_days_Help}">  
+                            <apex:outputLabel value="{!$Label.esl__Send_reminders}"/>            
+                                <apex:outputField value="{!Reminder.ESL__Send_reminders__c}"/>                       
+                        </apex:pageBlockSectionItem>	                    
+	                    <apex:pageBlockSectionItem />     
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Repeat_reminder_Help}">  
+                            <apex:outputLabel value="{!$Label.esl__Repeat_reminders}"/>            
+                                <apex:outputField value="{!Reminder.ESL__Repeat_reminders__c}"/>                       
+                        </apex:pageBlockSectionItem>
+	                    <apex:pageBlockSectionItem />
+                        <apex:pageBlockSectionItem helpText="{!$Label.esl__Repetitions_Help}">  
+                            <apex:outputLabel value="{!$Label.esl__Repetitions}"/>            
+                                <apex:outputField value="{!Reminder.ESL__Repetitions__c}"/>                       
+                        </apex:pageBlockSectionItem>                         
+                </apex:pageBlockSection>                            
+            </apex:outputPanel>                                    
+</apex:component>

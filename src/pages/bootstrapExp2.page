@@ -1,0 +1,8 @@
+<apex:page standardStylesheets="false" showHeader="false">
+<apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap-3.1.1-dist/css/bootstrap.min.css')}" />
+<apex:form styleClass="container">
+
+
+ <table ></table>
+</apex:form>    
+</apex:page>

@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>Anchor</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <content>Anchor</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>AnchorView</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Acrofield_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Form Field Name</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Acrofield__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Acrofield</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AnchorPoint__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Anchor Point</label>
+        <picklist>
+            <picklistValues>
+                <fullName>TOPLEFT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>TOPRIGHT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>BOTTOMLEFT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>BOTTOMRIGHT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Anchor_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Text Anchor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Static Position</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PDF Form Field</fullName>
+                <default>true</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Binding__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Binding</label>
+        <picklist>
+            <controllingField>SubType__c</controllingField>
+            <picklistValues>
+                <fullName>{approval.signed}</fullName>
+                <controllingFieldValues>LABEL</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>{signer.name}</fullName>
+                <controllingFieldValues>LABEL</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>{signer.title}</fullName>
+                <controllingFieldValues>LABEL</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>{signer.company}</fullName>
+                <controllingFieldValues>LABEL</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Character_Index__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The index of the character within the anchor text that will be used to calculate the position</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The index of the character within the anchor text that will be used to calculate the position</inlineHelpText>
+        <label>Character Index</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ESLFieldName__c</fullName>
+        <deprecated>false</deprecated>
+        <description>E07</description>
+        <externalId>false</externalId>
+        <inlineHelpText>You must define a name if you want to refer this field as part of a field mapping</inlineHelpText>
+        <label>e-SignLive Field Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Height__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The height of the field position to be calculated</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The height of the field position to be calculated</inlineHelpText>
+        <label>Height</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Index__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The occurrence of the string, for instance with a value of 2 will skip the first two occurrence of anchor text, and use the third occurrence to calculate the position</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The occurrence of the string, for instance with a value of 2 will skip the first two occurrence of anchor text, and use the third occurrence to calculate the position</inlineHelpText>
+        <label>Occurrence</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Left_Offset__c</fullName>
+        <deprecated>false</deprecated>
+        <description>An absolute offset applied to the final x value</description>
+        <externalId>false</externalId>
+        <inlineHelpText>An absolute offset applied to the final x value</inlineHelpText>
+        <label>Left Offset</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Output_type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Output type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Signature - Full Name</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signature - Initials</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signature - Capture</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signature - Mobile Capture</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Signer Name</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Approval Signed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Signer Title</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Signer Company</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>QR Code</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Page__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Page</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Signer_Label__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Signer Label</label>
+        <referenceTo>Signer_Label__c</referenceTo>
+        <relationshipName>Anchors</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>SubType__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Sub-Type</label>
+        <picklist>
+            <controllingField>Type__c</controllingField>
+            <picklistValues>
+                <fullName>FULLNAME</fullName>
+                <controllingFieldValues>SIGNATURE</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>TEXTFIELD</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>RADIO</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>LABEL</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CHECKBOX</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>INITIALS</fullName>
+                <controllingFieldValues>SIGNATURE</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CAPTURE</fullName>
+                <controllingFieldValues>SIGNATURE</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>MOBILE_CAPTURE</fullName>
+                <controllingFieldValues>SIGNATURE</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>TEXTAREA</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>DATE</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>LIST</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CUSTOMFIELD</fullName>
+                <controllingFieldValues>INPUT</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>QRCODE</fullName>
+                <controllingFieldValues>IMAGE</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Text__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The exact string that will be searched for in the uploaded document</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The exact string that will be searched for in the uploaded document</inlineHelpText>
+        <label>Text</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Top_Offset__c</fullName>
+        <deprecated>false</deprecated>
+        <description>An absolute offset applied to the final y value</description>
+        <externalId>false</externalId>
+        <inlineHelpText>An absolute offset applied to the final y value</inlineHelpText>
+        <label>Top Offset</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>SIGNATURE</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>INPUT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>IMAGE</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Visual_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Signature - Full name</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signature - Initials</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signature - Capture</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signature - Mobile Capture</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Signed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Signer Name</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Signer Title</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Label - Signer Company</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Input - Text field</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Input - Text area</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Input - Checkbox</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Input - Radio</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Input - List</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Input - Custom field</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Width__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The width of the field position to be calculated</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The width of the field position to be calculated</inlineHelpText>
+        <label>Width</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Text Tag</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>TT-{000000}</displayFormat>
+        <label>Text Tag Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Text Tags</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Anchor_Type__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Visual_Type__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Anchor_Type__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Type__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Anchor_Type__c</searchFilterFields>
+        <searchFilterFields>Type__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>

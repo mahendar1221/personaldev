@@ -1,0 +1,72 @@
+<apex:component controller="FastCall.ASAreaCodeSettingsController" allowDML="true">
+
+<!-- Area Code Settings -->
+<apex:outputPanel layout="block" id="areaCodeSettings" styleClass="fc-container w-help">
+    <table>
+        <tr>
+            <td class="white countryCode">
+                <div class="inner">
+                	<apex:outputPanel rendered="{!NOT(ISBLANK(areaCodeSettingsMessage)) && NOT(ISBLANK(areaCodeSettingsMessage.text))}" layout="block">
+                  <fieldset class="alert alert-{!areaCodeSettingsMessage.messageType}">
+                      <apex:outputPanel styleClass="icon-{!areaCodeSettingsMessage.messageType}-sign" />
+                      <apex:outputLabel styleClass="settings first last" value="{!areaCodeSettingsMessage.text}" />
+                  </fieldset>
+              </apex:outputPanel>
+                    <h1 class="fc-container-header">Area Code Settings</h1>
+                    <fieldset>
+                        <apex:outputLabel styleClass="first settings"
+                     				  value="Area Code"
+                     				  style="width: 70px;"
+                     				  for="areaCodeInput"/>
+                 	    <apex:inputText styleClass="textbox first settings"
+                     				 value="{!newAreaCode}"
+                     				 id="areaCodeInput"/>
+                        <apex:commandLink title="Update Area Code Settings"
+                                 	 action="{!insertAreaCodeSetting}"
+                                 	 style="margin-left: 10px;"
+                                     styleClass="btn settings-btn"
+                                     status="overlayStatus"
+                                     rerender="areaCodeSettings">
+                                        Update Area Code Settings
+                        </apex:commandLink>				  				
+                    </fieldset>
+                    <fieldset>
+                    	<apex:outputPanel rendered="{!listAreaCodeSettings.size > 0}">
+                    		<span class="fc-sub-header">Area Code Settings List</span>
+                    		<table class="area-code-settings-list" style="width: 380px;">
+                    			<tr><th>Area Code</th><th></th></tr>
+                    			<apex:repeat value="{!listAreaCodeSettings}" var="acs">
+                    			 	<tr>
+                    			 		<td>{!acs.Name}</td>
+                    			 		<td>
+                    			 			<apex:commandLink title="Delete"
+                                       styleClass="btn settings-btn"
+                                       action="{!deleteAreaCodeSetting}"
+                                       status="overlayStatus"
+                                       rerender="areaCodeSettings">
+                               
+                                       <i class="icon-remove"></i>
+                                       <apex:param name="areaCodeSettingToDelete" assignTo="{!areaCodeSettingToDelete}" value="{!acs.Id}"/>
+                                   </apex:commandLink>
+                    			 		</td>
+                    			 	</tr>
+                    			</apex:repeat>
+                    		</table>	
+                    	</apex:outputPanel>
+                    </fieldset>
+                </div>
+            </td>
+            <td class="green">
+                <div class="inner">
+                    <h1>HELP GUIDE</h1>
+                    <p>
+                    	You can set particular settings to be applied when calling phone numbers on certain area codes. <br/>
+                    	For example, you can block Call Recording when calling area codes on states that prohibit such recordings.
+                    </p>
+                </div>                    
+            </td>
+        </tr>
+    </table>
+</apex:outputPanel> <!-- / Area Code Settings -->
+
+</apex:component>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Nanostuffs - PDF Converter</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>This application lets you convert standard object record details to PDF format. Entire record values are placed in a PDF file which you can download &amp; distribute. The app covers Leads, Accounts, Contacts, Opportunities, Campaigns, Contracts, Cases, Solutions &amp; Products. Once you install the app, just make sure you add our custom buttons &quot;Convert To PDF&quot; to page layout of each of the standard object.</description>
+    <namespacePrefix>pdfconvert</namespacePrefix>
+    <types>
+        <members>ConvertToPDF</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>ConvertToPDF</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>Account.Convert_To_PDF</members>
+        <members>Campaign.Convert_To_PDF</members>
+        <members>Case.Convert_To_PDF</members>
+        <members>Contact.Convert_To_PDF</members>
+        <members>Contract.Convert_To_PDF</members>
+        <members>Lead.Convert_To_PDF</members>
+        <members>Opportunity.Convert_To_PDF</members>
+        <members>Product2.Convert_To_PDF</members>
+        <members>Solution.Convert_To_PDF</members>
+        <name>WebLink</name>
+    </types>
+    <version>33.0</version>
+</Package>

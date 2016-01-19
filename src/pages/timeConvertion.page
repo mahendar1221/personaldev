@@ -1,0 +1,14 @@
+<apex:page standardController="Time_Zone__c" extensions="timeZoneConvertion">
+    <apex:form >
+    <apex:pageBlock >
+       
+       Time zone: <apex:selectList id="Lb" value="{!SelectedValues}"
+         size="1" required="true" >
+           <apex:selectOptions value="{!AvailableValues}"/>
+      </apex:selectList><br/>
+        timeconvert:  <apex:inputField value="{!TimeZone.timeconvert__c}"/><br/>
+        user time:<apex:inputField value="{!timeZone.user_time__c}"/>
+        <apex:commandButton value="save" action="{!saveToConvert}"/>
+     </apex:pageBlock>
+    </apex:form>
+</apex:page>

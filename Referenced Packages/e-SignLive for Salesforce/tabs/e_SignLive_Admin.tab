@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This page will let Admin configure connection with Silanis</description>
+    <icon>Silanis/Admin_Tab_Icon.png</icon>
+    <label>e-SignLive Admin</label>
+    <mobileReady>false</mobileReady>
+    <motif>Custom230: TV Widescreen</motif>
+    <page>Admin</page>
+</CustomTab>

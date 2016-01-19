@@ -1,0 +1,26 @@
+<apex:page controller="signalColor">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:selectList value="{!colour}" size="1">
+                <apex:selectOptions value="{!selectedcolour}">
+                </apex:selectOptions>
+            </apex:selectList>
+            <br/>
+            <apex:selectList value="{!colour1}" size="1">
+                <apex:selectOptions value="{!selectedcolour1}">
+                </apex:selectOptions>
+            </apex:selectList>
+            <br/>
+            <apex:selectList value="{!colour2}" size="1">
+                <apex:selectOptions value="{!selectedcolour2}">
+                </apex:selectOptions>
+            </apex:selectList>  
+            <br/>
+            
+            <apex:commandButton value="Click To ShowColour" action="{!colourDisplay}"  />      
+        </apex:pageBlock>
+         <apex:image url="{!$Resource.red}"   width="50" height="50"  rendered="{!red}" />
+         <apex:image url="{!$Resource.green}" width="50" height="50"  rendered="{!green}" />
+         <apex:image url="{!$Resource.yellow}" width="50" height="50"  rendered="{!yellow}" />
+    </apex:form>
+</apex:page>

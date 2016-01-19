@@ -1,0 +1,32 @@
+<apex:component controller="ESL.CanvasAppController" >
+    <c:IncludeStylesAndScripts />
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/canvasApp.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/canvasApp.js')}" />
+    <apex:attribute name="silanisId" assignTo="{!SilanisPackageId}" description="" type="string" required="true"/>
+    <apex:attribute name="mode" assignTo="{!DisplayMode}" description="" type="string" required="true" />
+    <apex:attribute name="conventionId" assignTo="{!convId}" description="Id of the convention related to the package" type="string" required="true" />
+    
+    <div id="Error" style="display:none">
+        <apex:pageMessage severity="warning" detail="{!$Label.esl__CanvasAppNoPopupWarning}" strength="2"/>
+    </div>
+    <div id="canvas-dialog">    
+        <apex:outputPanel styleClass="conventionFields_div" rendered="{!showConventionFields}">
+            <c:ConventionFields conventionId="{!conventionId}"/>
+        </apex:outputPanel>
+        <div id="canvasDialog_div">
+            <apex:actionfunction name="rerendercanvas" rerender="theCanvasApp"/>
+            <apex:canvasApp id="theCanvasApp" width="1000px" height="100%" developerName="{!CanvasAppName}" scrolling="auto" parameters="{SilanisId:'{!SilanisPackageId}',Mode:'{!DisplayMode}'}"/>
+        </div>
+    </div>  
+    <script>
+        if("{!showConventionFields}" == "true"){
+            //pass a width to show Convention Fields component
+            DetectMobile('{!MobileESLUrl}','1205px');
+        }
+        else{
+            //If there is no Convention use a with to show only the ESL App
+            DetectMobile('{!MobileESLUrl}','1025px');
+        }
+        rerendercanvas();
+    </script>
+</apex:component>

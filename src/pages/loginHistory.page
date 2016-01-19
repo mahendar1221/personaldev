@@ -1,0 +1,7 @@
+<apex:page controller="LoginHistory">
+    <apex:form >
+        <apex:pageBlock >
+           {!history1}
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,54 @@
+<apex:component controller="FastCall.AsInboundLeadSettingsController" allowDML="true">
+	
+<apex:outputPanel layout="block" id="inboundLeadSettingsPanel" styleClass="fc-container w-help">
+    <table>
+        <tr>
+            <td class="white">
+                <div class="inner">
+              
+                	<apex:actionFunction name="updateInboundLeadSettings" action="{!saveInboundLeadSettings}" status="overlayStatus" 
+                						 rerender="inboundLeadSettingsPanel"/>
+                	  		
+                	<apex:outputPanel rendered="{!NOT(ISBLANK(inboundLeadMessage)) && NOT(ISBLANK(inboundLeadMessage.text))}" layout="block">
+                  		<fieldset class="alert alert-{!inboundLeadMessage.messageType}">
+                    		<apex:outputPanel styleClass="icon-{!inboundLeadMessage.messageType}-sign" />
+                    		<apex:outputLabel styleClass="settings first last" value="{!inboundLeadMessage.text}"/>
+                 		</fieldset>
+              		</apex:outputPanel>
+              		
+                    <h1 class="fc-container-header">Inbound Lead settings</h1>
+                    <fieldset>
+                        <apex:outputLabel styleClass="first settings"
+                     				  value="Lead Status"
+                     				  style=""
+                     				  for="inboundLeadStatus"/>
+                 		<apex:selectList id="inboundLeadStatus" styleClass="last settings textbox" size="1" value="{!selectedLeadStatus}"
+	                                onchange="javascript:updateInboundLeadSettings();">
+	                                <apex:selectOptions value="{!leadStatusOptions}"/>  
+	                    </apex:selectList> 
+                    </fieldset>
+                    <fieldset>
+                        <apex:outputLabel styleClass="first settings"
+                     				  value="Lead Source"
+                     				  style=""
+                     				  for="inboundLeadSource"/>
+                 		<apex:selectList id="inboundLeadSource" styleClass="last settings textbox" size="1" value="{!selectedLeadSource}"
+	                                onchange="javascript:updateInboundLeadSettings();">
+	                                <apex:selectOptions value="{!leadSourceOptions}"/>  
+	                    </apex:selectList> 
+                    </fieldset>
+                </div>
+            </td>
+            <td class="green">
+                <div class="inner">
+                    <h1>HELP GUIDE</h1>
+                    <p>
+                    	Lead Status and Lead Source can be set when creating a new Salesforce Lead from an inbound call. For example, Lead Source = Inbound Call.
+                    </p>
+                </div>                    
+            </td>
+        </tr>
+    </table>
+</apex:outputPanel>
+	
+</apex:component>

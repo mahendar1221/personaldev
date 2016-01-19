@@ -1,0 +1,9 @@
+<apex:page controller="ActionFnc">
+         
+     <apex:form id="frm"> 
+     <apex:actionFunction action="{!onclks}" name="onselect" reRender="frm">
+             <apex:param assignTo="{!onCLk}" name="als" value=""/>         
+         </apex:actionFunction>                           
+         <apex:commandButton value="order" onclick="onselect()"/>         
+     </apex:form>   
+</apex:page>

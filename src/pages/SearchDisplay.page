@@ -1,0 +1,51 @@
+<apex:page standardController="lead" extensions="SearchDisplay">
+  <apex:form >
+   <style>
+    .locationError { color: green; }
+    .employeeError { color: red; font-weight: strong;}
+    </style>
+  
+   <apex:pageblock >
+      
+      <apex:panelGroup >
+       
+      <apex:outputLabel value="search with text:" for="test"/>
+      <apex:inputText value="{!SearchEmail}" id="test" />
+       
+    
+      <apex:actionStatus startText="searching...."  id="leadRec" />
+          <apex:Messages styleclass="locationError"  />
+          <apex:commandButton value="search" action="{!search}"  status="leadRec"  />
+          
+      </apex:panelGroup>
+      </apex:pageBlock>
+        
+        <apex:outputPanel >
+        <apex:pageBlock rendered="{!parent}">
+       <apex:pageblockTable value="{!DisplayRecords}" var="a" >
+           
+              <apex:column > 
+
+                  <apex:facet name="header">Name</apex:facet>
+                    <apex:commandLink action="{!childAction}"  >
+                        {!a.Name}
+                        <apex:param name="cid" assignTo="{!cid}" value="{!a.id}"/>
+                    </apex:commandLink>
+
+              </apex:column>
+        </apex:pageblockTable>
+   </apex:pageBlock>
+   </apex:outputPanel>
+   
+   <apex:outputPanel rendered="{!if(ChildRecords.size>0,true,false)}">
+   <apex:pageBlock id="child" mode="edit">
+       <apex:pageBlockTable value="{!ChildRecords}" var="c"  >
+           <apex:column value="{!c.name}"/>
+           <apex:column value="{!c.Company__c}"/>
+           <apex:column value="{!c.Score__c}"/>
+       </apex:pageBlockTable>
+   </apex:pageBlock>
+   </apex:outputPanel>
+  </apex:form>
+      
+</apex:page>

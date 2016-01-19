@@ -1,0 +1,983 @@
+<apex:page title="FastCall User Settings"
+    controller="FastCall.UserSettings"
+    sidebar="false"
+    action="{!init}"
+    tabStyle="FastCall_User_Settings__tab">
+
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Archivo+Narrow:400,700,700italic,400italic"/>
+    
+    <apex:repeat value="{!pageStyles}" var="styleSheet">
+        <apex:stylesheet value="{!styleSheet}" />
+    </apex:repeat>
+    
+    <apex:repeat value="{!pageScripts}" var="script" >
+        <apex:includeScript value="{!script}" />
+    </apex:repeat>
+	<style>
+		.phoneNumberListLabel {
+			width: 250px !important;
+			word-wrap: normal !important;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			vertical-align: bottom;
+		}
+		.modal-close-fixed {
+			font-size: 45px !important;
+			color: #000000 !important;
+			text-decoration: none !important;
+			line-height: 32px !important;
+		}
+	</style>
+    <script type="text/javascript">
+        
+        function callerIdChange() {
+            var selectedVal = $j('#callerIdRadio').find("input[type='radio']:checked").val();
+            
+            if ({!isUserCallerIdEnabled}) {
+            
+                $j('.overlay').show();
+            
+                if (selectedVal == 'user') {
+                    $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.callerIdWrapper}')).slideDown();
+                }
+                else {
+                    $j(FastCall.Utils.VF2JQ('{!$Component.mainForm.callerIdWrapper}')).hide();
+                }
+                
+                flushSettings();
+            }
+            else if (selectedVal == 'user') {
+                $j('#callerIdRadio').find("input[value='org']").attr('checked', 'checked');
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'FastCall can be configured to use a different Caller ID for each user. This way, ' +
+                                                'inbound calls are routed directly to the user\'s phone. Visit our page to know more ' +
+                                                'about this and other upgrades');
+            }
+        }
+        
+        function validateAMDropPermission() {
+            var hasPermission = {!isAMDropEnabled};
+            
+            if (!hasPermission) {
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Message recording is not enabled on this FastCall edition. Visit our page ' +
+                                                'to know more about this and other upgrades.');
+            }
+            
+            return hasPermission;
+        }
+        
+        function validateCountryCodePermission() {
+            var hasPermission = {!isCountryCodeEnabled};
+
+            if (!hasPermission) {
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Usage of Country Code is not available on this FastCall edition. Visit our page ' +
+                                                'to know more about this and other upgrades.');                               
+            }
+            
+            return hasPermission;            
+        }
+
+        function editIVR(ivrElement) {
+            $j(ivrElement).next().css('display','');
+            $j(ivrElement).css('display','none');
+            $j(ivrElement).next().focus();            
+        }
+
+        function editCallerId(callerIdElement) {
+            if (!$j(callerIdElement).hasClass('notEditable')) {
+                $j(callerIdElement).next().css('display','');
+                $j(callerIdElement).css('display','none');
+                $j(callerIdElement).next().focus();
+            }            
+        }
+        
+        function editSIPparameters(phoneID, sipPhone, sipUsername) {
+        	$j('#sipPhoneToEdit').text(sipPhone);
+        	$j('#sipPhoneUsername').val(sipUsername);
+        	$j('#editSIPid').val(phoneID);
+        	$j('#editSIPmodal').modal();
+        }
+        
+        $j(document).ready(function () {
+            
+            $j(FastCall.Utils.VF2JQ('{!$Component.mainForm}')).on('change', FastCall.Utils.VF2JQ('{!$Component.mainForm.deviceType}'), function () {
+            		if ($j(this).val() == 'SIP') {
+            			$j('#sipAtributesPanel').show();
+            			$j('#phoneExtensionPanel').hide();
+            		} else {
+            			$j('#sipAtributesPanel').hide();
+            			$j('#phoneExtensionPanel').show();
+            		}	
+            });
+            
+            $j(FastCall.Utils.VF2JQ('{!$Component.mainForm}')).on('click', '#updateSIPparams', function (e) {
+            		e.preventDefault();
+            		if ($j.trim($j('#editSIPid').val()) != '') {
+            			updateSipPhone($j.trim($j('#editSIPid').val()),$j.trim($j('#sipPhoneUsername').val()),$j.trim($j('#sipPhonePassword').val()));
+            			$j('#editSIPmodal').modal('hide');			
+            		}
+            });
+            
+            $j(FastCall.Utils.VF2JQ('{!$Component.mainForm}')).on('blur', FastCall.Utils.VF2JQ('{!$Component.mainForm.newPhoneNumber}'), function () {
+
+         		if ($j.trim($j(this).val()).length >= 4 && $j.trim($j(this).val()).substring(0,4) == 'sip:') {
+         			$j(FastCall.Utils.VF2JQ('{!$Component.mainForm.deviceType}')).val('SIP');
+         		}
+         		else {
+         			$j(FastCall.Utils.VF2JQ('{!$Component.mainForm.deviceType}')).val('Standard');
+         		}
+         		$j(FastCall.Utils.VF2JQ('{!$Component.mainForm.deviceType}')).trigger('change');
+            });
+        });
+    </script>
+    
+    <ul class="nav nav-tabs" id="userSettingsTab">
+        <li><a href="#FCPersonalSettings">My Caller IDs</a></li>
+        <li><a href="#myPhones">My Phones</a></li>
+        <li><a href="#inboundSettings">My Inbound</a></li>
+        <li><a href="#generalSettings">General Settings</a></li>
+        <li><a href="#help">Help / Contact Us</a></li>
+    </ul>
+    
+    <apex:form id="mainForm">
+
+        <apex:actionFunction name="flushSettings" action="{!flushSettings}" oncomplete="javascript:$j('.overlay').hide();" rerender="callerIdWrapper"/>
+        <apex:actionFunction name="recordIVR" action="{!recordIVR}" oncomplete="javascript:$j('.overlay').hide();" rerender="ivrPanel"/>
+        <apex:actionFunction name="refreshIVR" oncomplete="javascript:$j('.overlay').hide();" rerender="ivrPanel"/>
+        <apex:actionFunction name="validateMultiCallerId" action="{!insertMultiCallerId}" oncomplete="javascript:$j('.overlay').hide();" rerender="multiCallerIdPanel"/>
+        <apex:actionFunction status="overlayStatus" name="updateIVRs" rerender="ivrPanel" action="{!updateIVRs}"/>
+        <apex:actionFunction status="overlayStatus" name="updateMultiCallerId" rerender="multiCallerIdPanel" action="{!updateMultiCallerId}"/>
+        <apex:actionFunction status="overlayStatus" name="updatePhoneNumbers" rerender="userPhonesPanel" action="{!updateUserPhoneNumbers}">
+            <apex:param name="updateType" assignTo="{!phoneNumberUpdateType}" value=""/>
+        </apex:actionFunction>
+        
+        <apex:actionStatus id="overlayStatus" onstart="$j('.overlay').show();" onstop="$j('.overlay').hide();"/>
+        
+        <div class="overlay" style="display:none;">
+            <div class="overlay-holder">
+                <span class="loading-img"  title="Please Wait..."></span>
+                <span class="loading">Loading...</span>
+            </div>
+        </div>
+
+        <p id="topHelp">Check out the <a target="_blank" href="http://fastcall.com/products/click-to-call/user-guide/">User Guide</a> for help configuring FastCall.
+        </p>
+        
+        <div class="tab-content">
+        <!-- PANEL 1: My Personal Settings -->
+        <div class="tab-pane" id="FCPersonalSettings">
+	        <!-- In Training edition, lets user set 1 personal caller ID  -->
+	        <apex:outputPanel layout="block" rendered="{!NOT(isMultiCallerIdEnabled)}">
+	        
+	            <div id="callerIdRadio" class="fc-container w-help" >
+	                <table>
+	                    <tr>
+	                        <td class="white personalCaller">
+	                        
+	                        <div class="inner">
+	                            <fieldset>
+	                                <h1 class="fc-container-header">My Personal Settings</h1>
+	                                <apex:outputLabel styleClass="setting-caption subheader alert"
+	                                    style="margin-bottom: 8px; margin-top: 10px"
+	                                    rendered="{!capabilityManager.isFreeEdition}">
+	                                    This feature is not available on the current FastCall edition. Visit the
+	                                    <a target="_blank" href="http://fastcall.com/products/click-to-call/pricing/">FastCall web site</a> for upgrade information. 
+	                                </apex:outputLabel>
+	                            </fieldset>
+	
+	                            <fieldset>                
+	                                <apex:selectRadio id="callerIdSelect"
+	                                    layout="pageDirection"
+	                                    value="{!callerIdSource}"
+	                                    onchange="javascript:callerIdChange();">
+	                                <apex:selectOption itemLabel="Use default, org wide, caller ID" itemValue="org"/>
+	                                <apex:selectOption itemLabel="Use my own personal caller ID" itemValue="user"/>
+	                                </apex:selectRadio>
+	                            </fieldset>               
+	                        </div>
+	                    </td>                        
+	                        
+	                        <td class="green">
+	                            <div class="inner">
+	                                <h1>VALIDATING CALLER ID</h1>
+			                        <p>
+			                        In our paid upgrades, you can set up to five personal caller IDs used on outbound calls. In the FastCall Free Edition, all users share one org-wide caller ID.
+			                        </p> 
+	                            </div>
+	                            <a class="more" href="http://fastcall.com/products/click-to-call/user-guide/#tab-id-7" target="_blank">+</a>                        
+	                        </td>
+	                    </tr>
+	                </table>
+	            </div>
+	    
+	            <apex:outputPanel layout="block" id="callerIdWrapper">
+	            
+	                <apex:outputPanel layout="block"
+	                    id="callerIdPanel"
+	                    rendered="{!AND(isUserCallerIdEnabled, NOT(changeIdMode))}"
+	                    styleClass="fc-container w-help"
+	                    style="display: {!IF(callerIdSource == 'user', 'block', 'none')}">
+	                
+	                    <table>
+	                        <tr>
+	                            <td class="white pcId">
+	                                <div class="inner">
+	    
+	                            <fieldset>
+	                                <h1 class="fc-container-header">Personal Caller ID</h1>
+	                            </fieldset>
+	                 
+	                            <fieldset>
+	                                <div class="settings first last">
+	                                    <apex:outputPanel rendered="{!NOT(ISBLANK(userCallerId))}" styleClass="icon-confirm-sign" />
+	                                    <apex:outputLabel rendered="{!NOT(ISBLANK(userCallerId))}" value="Phone number already validated" />
+	                                    <apex:outputPanel rendered="{!ISBLANK(userCallerId)}" styleClass="icon-warning-sign" />
+	                                    <apex:outputLabel rendered="{!ISBLANK(userCallerId)}" value="No phone number validated" />
+	                                </div>
+	                            </fieldset>
+	        
+	                            <apex:outputPanel rendered="{!NOT(ISBLANK(twilioMessage)) && NOT(ISBLANK(twilioMessage.text))}" layout="block">
+	        
+	                                <fieldset class="alert alert-{!twilioMessage.messageType}">
+	                                    <apex:outputPanel styleClass="icon-{!twilioMessage.messageType}-sign" />
+	                                    <apex:outputLabel styleClass="settings first last" value="{!twilioMessage.text}" />
+	                                </fieldset>
+	        
+	                            </apex:outputPanel>
+	                 
+	                            <apex:outputPanel id="callerIdPhone" rendered="{!allowTwilio}">
+	                                <fieldset>
+	                                    <apex:outputLabel styleClass="settings first"
+	                                    rendered="{!NOT(ISBLANK(userCallerId)) && (ISBLANK(twilioMessage))}"
+	                                    value="{!userCallerId}" />
+	                                    <apex:commandButton styleClass="btn settings-btn change-phone"
+	                                    rendered="{!NOT(ISBLANK(userCallerId)) && (ISBLANK(twilioMessage))}"
+	                                    action="{!resetCallerIdPanel}"
+	                                    value="Change"
+	                                    rerender="callerIdWrapper"
+	                                    onclick="$j('.overlay').show();"
+	                                    oncomplete="$j('.overlay').hide();">
+	                                    <apex:param name="changeIdMode" assignTo="{!changeIdMode}" value="true"/>
+	                                    </apex:commandButton>
+	                                 <apex:outputPanel rendered="{!ISBLANK(userCallerId) || (NOT(ISBLANK(twilioMessage))) }" >  
+	                                    <apex:outputLabel styleClass="first settings" 
+	                                                      value="Phone" style="width:60px;" />
+	                                    <apex:inputText styleClass="textbox settings first"
+	                                    value="{!callerIdReplacement}"  />
+	                                    <apex:outputLabel styleClass="first settings" 
+	                                                      value="Extension" style="width:60px;" />
+	                                    <apex:inputText styleClass="textbox settings first"
+	                                                    value="{!userCallerIdExtension}" style="width:40px;" />               
+	                                    <apex:commandButton styleClass="btn settings-btn"
+	                                    action="{!validateUserCallerId}"
+	                                    value="Validate"
+	                                    rerender="callerIdPanel"
+	                                    onclick="$j('.overlay').show();"
+	                                    oncomplete="$j('.overlay').hide();"/>
+	                                 </apex:outputPanel>   
+	                                </fieldset>
+	                            </apex:outputPanel>
+	                    
+	                            <apex:outputPanel rendered="{!NOT(allowTwilio)}">
+	                                <fieldset >
+	                                    <div class="settings first last">
+	                                        <apex:outputPanel styleClass="icon-warning-sign" />
+	                                        <apex:outputLabel value="To validate a phone number you must enter a Public Site URL and connect with your Twilio Account. Please contact your system administrator." />
+	                                    </div>
+	                                </fieldset>
+	                            </apex:outputPanel>        
+	                        </div>
+	                            </td>
+	                            <td class="green">
+	                                <div class="inner">
+	                                    <h1>HELP GUIDE</h1>
+	                                     <p>Validate a phone number to be displayed to the called party when dialing.
+	                                    </p>
+	                                </div>                            
+	                            </td>
+	                        </tr>
+	                     </table>   
+	
+	                </apex:outputPanel> <!-- / callerIdPanel -->
+	                    
+	
+	               <apex:outputPanel id="changeCallerIdPanel"
+	                   styleClass="fc-container w-help"
+	                   layout="block"
+	                   rendered="{!changeIdMode}">
+	                    <table>
+	                    <tr>
+	                    <td class="white ChangeMyPCId">
+	                       <div class="inner">
+	                            <fieldset>
+	                                <h1 class="fc-container-header">Change My Personal Caller ID </h1>
+	                            </fieldset>
+	        
+	                            <apex:outputPanel layout="block" id="innerChangeCallerIdPanel">
+	        
+	                                <apex:outputPanel rendered="{!NOT(ISBLANK(twilioMessage)) && NOT(ISBLANK(twilioMessage.text))}" layout="block">    
+	                                    <fieldset class="alert alert-{!twilioMessage.messageType}">
+	                                        <apex:outputPanel styleClass="icon-{!twilioMessage.messageType}-sign" />
+	                                        <apex:outputLabel styleClass="settings first last" value="{!twilioMessage.text}" />
+	                                    </fieldset>
+	                                </apex:outputPanel>   
+	        
+	                                <apex:outputPanel layout="block" rendered="{!ISBLANK(twilioMessage) || ISBLANK(twilioMessage.text)}">
+	                                    <fieldset>
+	                                        <apex:outputLabel styleClass="first settings" 
+	                                                          value="Phone" style="width:60px;" />
+	                                        <apex:inputText styleClass="textbox first settings" value="{!callerIdReplacement}" id="validatePhone" />
+	                                        <apex:outputLabel styleClass="first settings" 
+	                                                      value="Extension" style="width:60px;" />
+	                                        <apex:inputText styleClass="textbox settings first"
+	                                                        value="{!userCallerIdExtension}" style="width:40px;" /> 
+	                                        <apex:commandButton styleClass="btn settings-btn"
+	                                        value="Validate"
+	                                        action="{!changeUserCallerId}"
+	                                        rerender="innerChangeCallerIdPanel"
+	                                        onclick="$j('.overlay').show();"
+	                                        oncomplete="$j('.overlay').hide();"/>
+	                                    </fieldset>
+	                                </apex:outputPanel>
+	                        
+	                                <div class="fc-widget">  
+	                                    <apex:commandButton styleClass="btn continue-btn"
+	                                        status="overlayStatus"
+	                                        rendered="{!NOT(ISBLANK(twilioMessage)) && NOT(ISBLANK(twilioMessage.text))}"
+	                                        value="Continue"
+	                                        action="{!resetCallerIdPanel}"
+	                                        onclick="$j('.overlay').show();"
+	                                        oncomplete="$j('.overlay').hide();"
+	                                        rerender="callerIdWrapper">
+	                                        <apex:param name="changeIdMode" assignTo="{!changeIdMode}" value="false"/>
+	                                    </apex:commandButton>
+	                                </div>
+	                            </apex:outputPanel> <!-- /innerChangeCallerIdPanel -->                      
+	                        </div>                      
+	                    </td>
+	                    <td class="green">
+	                        <div class="inner">
+	                            <h1>HELP GUIDE</h1>
+	                            <p>
+	                                Change the phone number you use to place calls.
+	                            </p>
+	                        </div>
+	                    </td>
+	                    </tr>
+	                    </table>    
+	                </apex:outputPanel> <!-- / changeCallerIdPanel -->
+	            </apex:outputPanel><!-- / callerIdWrapper -->
+	
+	        </apex:outputPanel> <!-- / !isMultiCallerIdEnabled -->
+	
+	
+	        <!--
+	            Multiple Caller IDs
+	        
+	            On Sales Edition, lets the user validate many Caller IDs. The one to use on a call is picked on the graphical widget.
+	        -->
+	        <apex:outputPanel layout="block"
+	            rendered="{!isMultiCallerIdEnabled}"
+	            id="multiCallerIdPanel">
+	        
+	            <div id="callerIdRadio" class="fc-container w-help">
+	            <table>
+	                <tr>
+	                    <td class="white mypcid">
+	                     <div class="inner">
+	                        <fieldset>
+	                            <h1 class="fc-container-header">My Personal Caller IDs</h1>
+	                        </fieldset>
+	        
+	                        <apex:outputPanel rendered="{!NOT(ISBLANK(multiCallerIdMessage)) && NOT(ISBLANK(multiCallerIdMessage.text))}" layout="block">
+	            
+	                            <fieldset class="alert alert-{!multiCallerIdMessage.messageType}">
+	                                <apex:outputPanel styleClass="icon-{!multiCallerIdMessage.messageType}-sign" />
+	                                <apex:outputText escape="false" styleClass="settings first last" value="{!multiCallerIdMessage.text}" />
+	                            </fieldset>
+	            
+	                        </apex:outputPanel>
+	            
+	                        <apex:outputPanel layout="block" rendered="{!NOT(allowTwilio)}">
+	                            <fieldset >
+	                                <div class="settings first last">
+	                                    <apex:outputPanel styleClass="icon-warning-sign" />
+	                                    <apex:outputLabel value="To validate a personal phone number you must enter a Public Site URL and connect with your Twilio Account. Please contact your system administrator." />
+	                                </div>
+	                            </fieldset>
+	                        </apex:outputPanel>
+	        
+	                        <apex:outputPanel layout="block" rendered="{!allowTwilio}">
+	                        
+	                            <span class="fc-sub-header">Verify a new phone number</span>
+	        
+	                            <label class="setting-caption subheader" style="margin-bottom: 8px;">
+	                                If you don't enter a name for the new Caller ID, the phone number will be used as label.
+	                            </label>
+	                            
+	                            <fieldset>
+	        
+	                                <apex:outputLabel styleClass="first settings"
+	                                    value="Label for new number"
+	                                    for="newCallerIdName"/>
+	                                <apex:inputText styleClass="textbox first settings"
+	                                    maxLength="255"
+	                                    value="{!newCallerIdName}"
+	                                    id="newCallerIdName"/>
+	
+	                                <br/>
+	
+	                                <apex:outputLabel styleClass="first settings"
+	                                    value="New number to validate"
+	                                    for="newCallerIdNumber"/>
+	                                <apex:inputText styleClass="textbox first settings"
+	                                    maxLength="255"
+	                                    value="{!newCallerIdNumber}"
+	                                    id="newCallerIdNumber"/>
+	                                
+	                                <br/> 
+	                                    
+	                                <apex:outputLabel styleClass="first settings"
+	                                    value="Number extension"
+	                                    for="newCallerIdExtension"/>
+	                                <apex:inputText styleClass="textbox first settings"
+	                                    maxLength="255"
+	                                    value="{!newCallerIdExtension}"
+	                                    id="newCallerIdExtension"/>    
+	                    
+	                                <a href="javascript:$j('.overlay').show();validateMultiCallerId();" class="btn settings-btn">
+	                                    Validate number
+	                                </a>
+	                            </fieldset>
+	                            
+	                            <span class="fc-sub-header">Phone Numbers list</span>
+	                            
+	                            <div class="fc-list">
+	        
+	                                <apex:outputLabel styleClass="setting-caption subheader" rendered="{!callerIds.size != 0}">
+	                                    This is the list of phone numbers you have verified to use as Caller ID.
+	                                </apex:outputLabel>
+	            
+	                                <apex:outputLabel styleClass="setting-caption subheader alert" rendered="{!callerIds.size == 0}">
+	                                    You have not yet verified any phone number as a personal Caller ID.
+	                                </apex:outputLabel>
+	        
+	                                <apex:repeat value="{!callerIds}" var="callerId">
+	                                    <fieldset class="disp">
+	                                        <apex:outputLabel title="Click to edit"
+	                                            styleClass="first settings disp"
+	                                            value="{!callerId.name}"
+	                                            onclick="editCallerId(this);" />
+	                                        <apex:inputText styleClass="textbox first settings narrow"
+	                                            style="display:none;"
+	                                            maxlength="255"
+	                                            onblur="javascript:updateMultiCallerId();"
+	                                            value="{!callerId.name}" />
+	                    
+	                                        <apex:outputLabel styleClass="first settings"
+	                                            style="cursor: default;"
+	                                            value="{!callerId.FastCall__Phone__c}"/>
+	            
+	                                        <apex:commandLink title="Delete"
+	                                            styleClass="btn settings-btn"
+	                                            action="{!deleteMultiCallerId}"
+	                                            status="overlayStatus"
+	                                            rerender="multiCallerIdPanel">
+	                                            
+	                                            <i class="icon-remove"></i>
+	                                            <apex:param name="callerIdToDelete" assignTo="{!callerIdToDelete}" value="{!callerId.Id}"/>
+	                                        </apex:commandLink>
+	                                    </fieldset>
+	                                </apex:repeat>
+	                            </div>
+	                        </apex:outputPanel>
+	                    </div>
+	                    </td>
+	                    <td class="green">
+	                        <div class="inner">
+	                            <h2>HELP GUIDE</h2>
+	                            <p>
+	                            	A validated phone number can be selected in the FastCall widget as your caller ID. Personal caller IDs can be set by the admin and assigned to a user - OR - the user can setup her own caller IDs in this section.<br/> 
+	                            	If your admin assigned a phone number for inbound call routing, that number can also be used as caller ID.
+	                            </p>
+	                            <p class="note">
+	                            	<strong>NOTE:</strong><br/> 
+	                            	Twilio requires a verified caller ID to dial a phone number.
+	                            </p>
+	                        </div>
+	                        <a href="http://fastcall.com/products/click-to-call/user-guide/#tab-id-7" target="_blank" class="more">+</a>
+	                    </td>               
+	                </tr>
+	             </table>           
+	            </div>
+	
+	        </apex:outputPanel> <!-- / isMultiCallerIdEnabled -->
+    	</div> <!-- endof PANEL 1: My Personal Settings -->
+    	
+        <!--
+            User Phones
+        
+            Let user add/edit phones to use as fastCall calling devices
+        -->
+        <!-- PANEL 2: My Phones -->
+        <div class="tab-pane" id="myPhones">
+	        <apex:outputPanel layout="block" id="userPhonesPanel">        
+	            <div id="userPhonesRadio" class="fc-container w-help">
+	                <table>
+	                    <tr>
+	                        <td class="white mypcid">
+	                            <div class="inner">
+	                                <fieldset>
+	                                    <h1 class="fc-container-header">My Phones</h1>
+	                                </fieldset>
+	        
+	                                <apex:outputPanel rendered="{!NOT(ISBLANK(userPhonesMessage)) && NOT(ISBLANK(userPhonesMessage.text))}" layout="block">
+	                    
+	                                    <fieldset class="alert alert-{!userPhonesMessage.messageType}">
+	                                        <apex:outputPanel styleClass="icon-{!userPhonesMessage.messageType}-sign" />
+	                                        <apex:outputText escape="false" styleClass="settings first last" value="{!userPhonesMessage.text}" />
+	                                    </fieldset>
+	                    
+	                                </apex:outputPanel>
+	                
+	                                <apex:outputPanel layout="block">
+	                                
+	                                    <span class="fc-sub-header">Add new phone number</span>
+	                
+	                                    <label class="setting-caption subheader" style="margin-bottom: 8px;">
+	                                        If you don't enter a name for the new phone, the phone number will be used as label.
+	                                    </label>
+	                                    
+	                                    <fieldset>
+	                
+	                                        <apex:outputLabel styleClass="first settings"
+	                                            value="Label for new number"
+	                                            for="newPhoneName"/>
+	                                        <apex:inputText styleClass="textbox first settings"
+	                                            maxLength="30"
+	                                            value="{!newPhoneName}"
+	                                            id="newPhoneName"/>
+	                                        <br/>
+	                                        <apex:outputLabel styleClass="first settings"
+	                                            value="New phone number"
+	                                            for="newPhoneNumber"/>
+	                                        <apex:inputText styleClass="textbox first settings"
+	                                            maxLength="255"
+	                                            value="{!newPhoneNumber}"
+	                                            id="newPhoneNumber"/>                                        
+	                                        <br/>
+	                                        <apex:outputLabel styleClass="first settings"
+	                                            value="Device Type"
+	                                            for="deviceType" style="width: 157px;"/>
+	                                        <apex:selectList id="deviceType" size="1" styleClass="textbox last settings" value="{!devType}">
+	                                        	<apex:selectOptions value="{!phoneDeviceTypes}"/>  
+	                                        </apex:selectList>    
+	                                        <br/>
+	                                        <div id="phoneExtensionPanel">      
+		                                        <apex:outputLabel styleClass="first settings"
+		                                            value="New phone extension"
+		                                            for="newPhoneExtension"/>
+		                                        <apex:inputText styleClass="textbox first settings"
+		                                            maxLength="255"
+		                                            value="{!newPhoneExtension}"
+		                                            id="newPhoneExtension"/>    
+	                            		    </div>
+	                            		    <div id="sipAtributesPanel" style="display:none;">
+	                            		    	<apex:outputLabel styleClass="first settings"
+		                                            value="SIP Username"
+		                                            for="sipUsername"/>
+		                                        <apex:inputText styleClass="textbox first settings"
+		                                            maxLength="255"
+		                                            value="{!newSipUsername}"
+		                                            id="sipUsername"/>
+		                                        <br/>
+		                                        <apex:outputLabel styleClass="first settings"
+		                                            value="SIP Password"
+		                                            for="sipPassword"/>
+		                                        <apex:inputSecret styleClass="textbox first settings"
+		                                            maxLength="255"
+		                                            value="{!newSipPassword}"
+		                                            id="sipPassword"/>   
+	                            		    </div>
+	                                        <apex:commandLink styleClass="btn settings-btn"
+	                                       					 style="margin-left: 255px;margin-top: 5px;"
+	                                                         action="{!insertUserPhoneNumber}"
+	                                                         status="overlayStatus"
+	                                                         rerender="userPhonesPanel">
+	                                                    Insert phone
+	                                        </apex:commandLink>
+	                                    </fieldset>
+	                                    
+	                                    <span class="fc-sub-header">My Phone Numbers list</span>
+	                                    
+	                                    <div class="fc-list">
+	                
+	                                        <apex:outputLabel styleClass="setting-caption subheader" rendered="{!userPhoneNumbers.size != 0}">
+	                                            This is the list of phone numbers available to use as calling devices on FastCall.
+	                                        </apex:outputLabel>
+	                    
+	                    					<!-- Edit SIP phone parameters modal -->
+	                    					 <apex:outputPanel styleClass="fc-widget" rendered="{!userPhoneNumbers.size != 0}">
+									    		<div id="editSIPmodal" class="modal hide fade">
+									    			<div class="modal-header">
+									    				<a href="#" class="fc-close modal-close-fixed" data-dismiss="modal" aria-hidden="true">&times;</a>
+									    				<h3>Edit SIP phone parameters</h3>
+									    			</div>
+									    			<div class="modal-body">
+									    				<fieldset>
+									    					<input id="editSIPid" type="hidden"/>
+									    					<label class="first settings">SIP Phone</label>
+									    					<label id="sipPhoneToEdit" class="last settings"></label>
+															<br/>
+									    					<label class="first settings">SIP Username</label>
+									    					<input type="text" id="sipPhoneUsername" class="textbox last settings" maxlength="255"/>
+															<br/>		 
+									    					<label class="first settings">SIP Password</label>
+									    					<input type="password" id="sipPhonePassword" class="textbox last settings" maxlength="255"/>
+									    				</fieldset>
+									    			</div>
+									    			<div class="modal-footer">
+									    				<a href="#" id="updateSIPparams" class="btn settings-btn">Update</a>
+									    				<a href="#" data-dismiss="modal" class="btn btn-close">Cancel</a>
+									    			</div>    
+									    		</div>
+									    		<apex:actionFunction status="overlayStatus" name="updateSipPhone" action="{!updateSIPphoneParameters}" rerender="userPhonesPanel">
+									    			<apex:param name="phoneNumberId" assignTo="{!sipIdToUpdate}" value=""/>
+													<apex:param name="sipUsernameToUpdate" assignTo="{!sipUsernameToUpdate}" value=""/> 
+													<apex:param name="sipPasswordToUpdate" assignTo="{!sipPasswordToUpdate}" value=""/> 
+									    		</apex:actionFunction>
+								    		</apex:outputPanel>
+	                    					
+	                                        <apex:outputLabel styleClass="setting-caption subheader alert" rendered="{!userPhoneNumbers.size == 0}">
+	                                            You don't have phone.
+	                                        </apex:outputLabel>
+	        								
+	                                        <apex:repeat value="{!userPhoneNumbers}" var="phone">
+	                                            <fieldset class="disp">
+	                                                <apex:outputLabel title="Click to edit"
+	                                                    styleClass="first settings 
+	                                                                {!IF(phone.Phone_Type__c != 'SFDC-User-Phone', 'disp', 'notEditable')}"
+	                                                    style="{!IF(phone.FastCall__Phone_Type__c != 'SFDC-User-Phone', '', 'cursor:default;margin-left:4px;')}"          
+	                                                    value="{!phone.name}"
+	                                                    onclick="editCallerId(this);" />
+	                                                <apex:inputText styleClass="textbox first settings narrow"
+	                                                    style="display:none;"
+	                                                    maxlength="30"
+	                                                    onblur="javascript:updatePhoneNumbers('name');"
+	                                                    value="{!phone.name}" 
+	                                                    rendered="{!phone.FastCall__Phone_Type__c != 'SFDC-User-Phone'}" />
+	                            
+	                                                <apex:outputLabel styleClass="first settings disp phoneNumberListLabel"
+	                                                    title="Click to edit"
+	                                                    value="{!phone.FastCall__Phone__c}"
+	                                                    onclick="editCallerId(this);"/>
+	                                                <apex:inputText styleClass="textbox first settings narrow"
+	                                                    style="display:none;width:250px;"
+	                                                    maxlength="255"
+	                                                    onblur="javascript:updatePhoneNumbers('number');"
+	                                                    value="{!phone.FastCall__Phone__c}" />
+	                                                    
+	                                                <apex:outputLabel styleClass="first settings"
+	                                                    style="width:22px;margin-left:0px;padding-left:5px;margin-right:0px;padding-right:0px;line-height:0px;"
+	                                                    value="ext."
+	                                                    rendered="{!phone.FastCall__Phone_Type__c != 'SFDC-User-Phone' && phone.FastCall__Extension__c != null}"/>    
+	                                                <apex:outputLabel styleClass="first settings disp"
+	                                                    style="width:50px;{!IF(phone.FastCall__Extension__c == null,'margin-left:27px;','margin-left:0px;')}padding-left:5px;"
+	                                                    title="Click to edit"
+	                                                    value="{!phone.FastCall__Extension__c}"
+	                                                    onclick="editCallerId(this);"
+	                                                    rendered="{!phone.FastCall__Phone_Type__c != 'SFDC-User-Phone'}"/>
+	                                                <apex:inputText styleClass="textbox first settings narrow"
+	                                                    style="display:none;width:15px !important;"
+	                                                    maxlength="255"
+	                                                    onblur="javascript:updatePhoneNumbers('ext');"
+	                                                    value="{!phone.FastCall__Extension__c}" 
+	                                                    rendered="{!phone.FastCall__Phone_Type__c != 'SFDC-User-Phone'}"/>            
+													<apex:commandLink title="Delete"
+	                                                    styleClass="btn settings-btn"
+	                                                    style="margin-right:5px;"
+	                                                    action="{!deleteUserPhoneNumber}"
+	                                                    status="overlayStatus"
+	                                                    rerender="userPhonesPanel"
+	                                                    rendered="{!phone.FastCall__Phone_Type__c != 'SFDC-User-Phone'}">
+	                                            
+	                                                    <i class="icon-remove"></i>
+	                                                    <apex:param name="phoneNumberToDelete" assignTo="{!phoneNumberToDelete}" value="{!phone.Id}"/>
+	                                                </apex:commandLink>
+	                                                <apex:outputPanel rendered="{!phone.FastCall__Device_Type__c == 'SIP'}">
+		                                                <a title="Edit SIP parameters"
+		                                                   class="btn settings-btn"
+		                                                   href="javascript:editSIPparameters('{!phone.Id}','{!phone.FastCall__Phone__c}','{!phone.SIP_Username__c}')">
+		                                                	<i class="icon-edit"></i>
+		                                                </a>
+	                                                </apex:outputPanel>
+	                                            </fieldset>
+	                                        </apex:repeat>
+	                                    </div>
+	                                </apex:outputPanel>
+	                            </div>
+	                        </td>
+	                        <td class="green">
+	                            <div class="inner">
+	                                <h2>HELP GUIDE</h2>
+	                                <p>
+	                                	When using FastCall in click-to-call mode, we call the user first, then the Salesforce record. In this section, you set the phones used for click-to-call.
+		                            </p>
+		                            <p>
+		                            	Your office and/or mobile phones are taken from the SFDC user record.
+		                            </p>
+		                            <p>
+		                            	You can optionally set additional phones (office2, conference room, etc).
+		                            </p>
+		                            <p class="note">
+		                            	Note: These numbers are different than caller ID, and will not be verified with Twilio.
+		                            </p>
+	                            </div>
+	                        </td>
+	                    </tr>
+	                </table>           
+	            </div>
+	
+	        </apex:outputPanel> 
+        </div> <!-- / endof PANEL 2: User Phones -->    
+        
+        <!-- PANEL 3: General Settings -->
+        <div class="tab-pane" id="generalSettings">
+	        <!-- User Country Code -->
+	        <apex:outputPanel layout="block" id="countryCodePanel">        
+	            <div id="userPhonesRadio" class="fc-container w-help">
+	            	<table>
+	            		<tr>
+	            			<td class="white">
+	            				<div class="inner">
+					                <fieldset>
+					                    <h1 class="fc-container-header">My Country Code</h1>
+					                </fieldset>
+					                 <apex:outputPanel rendered="{!NOT(ISBLANK(countryCodeMessage)) && NOT(ISBLANK(countryCodeMessage.text))}" layout="block">
+					                       <fieldset class="alert alert-{!countryCodeMessage.messageType}">
+					                           <apex:outputPanel styleClass="icon-{!countryCodeMessage.messageType}-sign" />
+					                           <apex:outputLabel styleClass="settings first last" value="{!countryCodeMessage.text}" />
+					                       </fieldset>
+					               </apex:outputPanel>
+					
+					               <fieldset>
+					                   <apex:inputText styleClass="textbox first settings" id="countryCodeInput"
+					                       maxlength="4"
+					                       value="{!userCountryCode}"
+					                       onblur="javascript:if(validateCountryCodePermission()){saveCountryCode();}"/>
+					               </fieldset>
+					               <apex:actionFunction status="overlayStatus" name="saveCountryCode" action="{!saveCountryCode}" rerender="countryCodePanel"/>
+				               </div>
+		               		</td>
+		                	<td class="green">
+		               			<div class="inner">
+	                                <h2>HELP GUIDE</h2>
+	                                <p>
+	                               		 You can set a country code to be added before any phone number you dial. FastCall will prepend the country code to any dialed phone number that does not start with “+”. <br/>
+	                               		 Any country code you set here will override the country code set by your Salesforce Administrator.
+	                                </p>
+	                            </div>
+		               		</td>
+		               </tr>
+	               </table>
+	           </div>
+	        </apex:outputPanel> <!-- / User Country Code -->    
+	        
+	        <!-- The user can record audio messages to be played back when using the "drop message" button -->
+	        <apex:outputPanel styleClass="fc-container w-help" id="ivrPanel" layout="block">
+	            <table>
+	            <tr>
+	            <td class="white myRecordedMessages">
+	                <div class="inner">
+	                    <fieldset>
+	                        <h1 class="fc-container-header">My Recorded Messages</h1>
+	                        <apex:outputLabel styleClass="setting-caption subheader alert"
+	                            style="margin-bottom: 8px; margin-bottom: 8px;"
+	                            rendered="{!OR(capabilityManager.isFreeEdition, capabilityManager.isTrainingEdition)}">
+	                            This feature is not available on the current FastCall edition. Visit the
+	                            <a target="_blank" href="http://fastcall.com/products/click-to-call/pricing/">FastCall web site</a> for more information. 
+	                        </apex:outputLabel>
+	                    </fieldset>
+	            
+	                    <apex:outputPanel rendered="{!NOT(ISBLANK(ivrMessage)) && NOT(ISBLANK(ivrMessage.text))}" layout="block">
+	
+	                        <fieldset class="alert alert-{!ivrMessage.messageType}">
+	                            <apex:outputPanel styleClass="icon-{!ivrMessage.messageType}-sign" />
+	                            <apex:outputText escape="false" styleClass="settings first last" value="{!ivrMessage.text}" />
+	                        </fieldset>
+	
+	                    </apex:outputPanel>
+	
+	                    <apex:outputPanel rendered="{!NOT(allowTwilio)}">
+	                        <fieldset >
+	                            <div class="settings first last">
+	                                <apex:outputPanel styleClass="icon-warning-sign" />
+	                                <apex:outputLabel value="To record a message you must enter a Public Site URL and connect with your Twilio Account. Please contact your system administrator." />
+	                            </div>
+	                        </fieldset>
+	                    </apex:outputPanel>
+	
+	                    <apex:outputPanel layout="block" rendered="{!allowTwilio}">
+	            
+	                        <span class="fc-sub-header">Record a new message</span>
+	                
+	                        <label class="setting-caption subheader" style="margin-bottom: 8px;">
+	                            Enter a name for the voice message and a phone number to call to record it. 
+	                        </label>
+	                
+	                        <fieldset>
+	                        
+	                            <apex:outputLabel styleClass="first settings"
+	                                value="New voicemail name"
+	                                for="newIVRName"/>
+	                            <apex:inputText styleClass="textbox first settings"
+	                                maxLength="255"
+	                                value="{!newIVRName}"
+	                                id="newIVRName"/>
+	
+	                            <br/>
+	                            
+	                            <apex:outputLabel styleClass="first settings"
+	                                 value="Phone to dial"
+	                                 for="phoneToDial"/>
+	    
+	                             <apex:selectList size="1"
+	                                styleClass="textbox last settings"
+	                                value="{!newIVRPhone}"
+	                                id="phoneToDial"
+	                                style="margin-left: 5px;"
+	                                onchange="javascript:$j('.overlay').show();refreshIVR();">
+	                                <apex:selectOptions value="{!userPhoneOptions}"/>
+	                            </apex:selectList>
+	    
+	                            <apex:inputText styleClass="textbox first settings"
+	                                maxLength="80"
+	                                value="{!newIVROtherPhone}"
+	                                rendered="{!newIVRPhone == 'other'}"/>
+	    
+	                            <a href="javascript:if(validateAMDropPermission()){$j('.overlay').show();recordIVR();}" class="btn settings-btn">
+	                                Record new message <i class="icon-plus"></i>
+	                            </a>
+	                        </fieldset>
+	    
+	                        <span class="fc-sub-header">Voice messages list</span>
+	                
+	                        <div class="fc-list">
+	
+	                            <apex:outputLabel styleClass="setting-caption subheader" rendered="{!IVRs.size != 0}">
+	                                This is the list of voice messages you have already recorded.
+	                            </apex:outputLabel>
+	
+	                            <apex:outputLabel styleClass="setting-caption subheader alert" rendered="{!IVRs.size == 0}">
+	                                You have not yet recorded any voice message.
+	                            </apex:outputLabel>
+	
+	                            <apex:repeat value="{!IVRs}" var="ivr">
+	                                <fieldset class="disp">
+	                                    <apex:outputLabel title="Click to edit"
+	                                    styleClass="first settings disp"
+	                                    value="{!ivr.name}"
+	                                    onclick="editIVR(this);" />
+	                                    
+	                                    <apex:inputText styleClass="textbox first settings narrow"
+	                                    style="display:none;"
+	                                    maxlength="255"
+	                                    onblur="javascript:updateIVRs();"
+	                                    value="{!ivr.name}" />
+	        
+	                                    <apex:commandLink title="Delete"
+	                                        styleClass="btn settings-btn"
+	                                        action="{!deleteIVR}"
+	                                        status="overlayStatus"
+	                                        rerender="ivrPanel">
+	                                
+	                                        <i class="icon-remove"></i>
+	                                        <apex:param name="ivrToDelete" assignTo="{!ivrToDelete}" value="{!ivr.Id}"/>
+	                                    </apex:commandLink>
+	        
+	                                    <apex:outputLink title="Listen"
+	                                        styleClass="btn settings-btn"
+	                                        style="margin-left: 10px;"
+	                                        value="{!ivr.FastCall__Audio_URL__c}.mp3"
+	                                        target="_blank">
+	                                        <i class="icon-play"></i>
+	                                    </apex:outputLink>
+	        
+	                                </fieldset>
+	                            </apex:repeat>
+	                        </div>
+	                    </apex:outputPanel>
+	                </div>
+	            </td>
+	            <td class="green">
+	                <div class="inner">
+	                    <h2>HELP GUIDE</h2>
+	                    <p>
+	                        You or somebody else can record a voice message to be left when your outbound call connects to a prospect’s voicemail or answering machine.
+	                    </p>
+	                </div>
+	                <a href="http://fastcall.com/products/click-to-call/user-guide/#tab-id-8" target="_blank" class="more">+</a>
+	            </td>
+	            </tr>
+	            </table>           
+	        </apex:outputPanel>
+        </div> <!-- / endof PANEL 3: General Settings -->
+
+        <!-- PANEL 4: Inbound Settings -->
+        
+        <c:USInboundSettingsComponent />
+        
+		<!-- endof PANEL 4 -->        
+        
+    	<!--PANEL 5: Help Contact Us --------------------------------->
+        <div class="tab-pane" id="help">
+            <div class="fc-container" >
+                <div class="inner">
+                    <fieldset>
+                        <h1 class="fc-container-header">Get help</h1>
+                    </fieldset>
+                    <fieldset>
+                        <div class="settings first last">
+                            <apex:outputPanel styleClass="icon-info-sign" />    
+                            <apex:outputLabel >
+                                Please visit FastCall's support page for help. There you'll find
+                                step by step guides, screencasts, and FAQs about configuring and using FastCall.
+                            </apex:outputLabel>
+                        </div>
+
+                    </fieldset>
+
+                    <apex:outputLink title="Listen"
+                        styleClass="btn settings-btn"
+                        style="margin-left: 10px;"
+                        value="http://www.fastcall.com/products/click-to-call/"
+                        target="_blank">
+                            Visit Support page
+                    </apex:outputLink>       
+                    <br/><br/><br/>
+                    
+                    <fieldset>
+                        <div class="settings first last">
+                            <apex:outputPanel styleClass="icon-info-sign" />    
+                            <apex:outputLabel >
+                                You can open a case with FastCall if you're having issues using the application. 
+                                Please contact your organization's Salesforce Administrator, and ask him to open a support case with FastCall, on the Administrator Settings tab.
+                            </apex:outputLabel>
+                        </div>
+
+                    </fieldset>
+                                     
+                </div>
+            </div>
+        </div> <!--/ endof PANEL 5 -->
+        
+        </div>
+        
+        <div id="fcModalHolder" class="fc-widget">
+        </div>
+
+    </apex:form>
+
+</apex:page>

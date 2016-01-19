@@ -1,0 +1,26 @@
+<apex:page controller="PickList">
+  <apex:form >
+  <apex:pageBlock >
+  <apex:inputField value="{!lead.lastname}"/>
+  <apex:inputField value="{!lead.company}"/>
+  <apex:pageBlockSection >
+  
+  </apex:pageBlockSection>
+  <apex:pageBlockButtons >
+  <apex:commandButton value="Picklist" action="{!AssignValues}" />
+    </apex:pageBlockButtons>
+   
+  <apex:selectList title="CityCode"   value="{!Selected}"  size="1">
+  <apex:selectOptions value="{!GetValues}" >
+  
+  
+  
+  </apex:selectOptions>
+  
+  </apex:selectList>
+  
+  
+
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

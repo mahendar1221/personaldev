@@ -1,0 +1,67 @@
+<apex:component controller="ESL.SelectFieldHelper" allowDML="true">
+<apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/selectField.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/selectField.css')}"/>
+    <apex:attribute description="Select Field Component" name="sFieldHelper" type="ESL.SelectFieldHelper" assignTo="{!SFHSelfReference}"/>
+
+	<apex:form >
+		    <div id="blockSelectField" style="display:none;">
+	        <div class="sectionCurtain">
+	            <div class="sectionBox">
+	                <img src="/img/loading24.gif" class="savingImg"/>
+	                <span id="SelectFieldActionText">{!$Label.Please_Wait}</span>
+	            </div>
+	        </div>
+	    </div>   
+	    <apex:actionFunction name="refreshComponentJS" action="{!refreshSelfReference}" reRender="TheBlock" status="processSelectField"/>
+        	
+        <apex:actionFunction name="changeSelectedField" action="{!reviewPath}" rerender="TheBlock" focus="AddUpdateBtn">
+            <apex:param name="selectedField" value=""/>
+            <apex:param name="index" value=""/>                    
+        </apex:actionFunction> 
+	
+	<apex:actionstatus id="processSelectField" onstart="onStartSelectFieldProcessing();" onstop="onStopSelectFieldProcessing();" />
+	
+        <apex:outputPanel layout="block" id="TheBlock" style="width:100%;">        
+            <div class="topLeft">
+                <apex:commandLink id="FieldTreeDialogIdX" action="{!CancelButton}" tabindex="0" styleclass="dialogClose">Close</apex:commandLink>
+			    <h2 id="FieldTreeDialogIdTitle">{!if(type=='Signer',$Label.Select_Signer_Field,$Label.Select_Related_Object_Fields)}</h2>
+		    </div>
+		    <div style="" class="innerContent" id="FieldTreeDialogIdContent">
+		        <p id="FieldTreeDialogIdInfo">Select a field, then click Insert.  Labels followed by a "&gt;" indicate that there are more fields available.</p>
+		    </div>		
+		    <div style="height: 193px;" class="fieldSelectorScrollableArea" id="FieldTreeDialogIdInner">
+                <apex:outputPanel layout="block" style="overflow-x:auto;white-space: nowrap;">
+                    <table>    
+                        <tbody>
+                            <tr>
+                                <td>							    
+                                    <apex:variable value="{!0}" var="index" />
+                                    <apex:repeat value="{!FIeldTreeList}" var="aColumn" id="theRepeat">		        
+                                        <apex:selectList value="{!aColumn.selectedField}" multiselect="false" size="9" onchange="changeSelectedField(event.target.value,{!index});" style="height:155px;">		          	
+                                            <apex:selectOptions value="{!aColumn.sOptions}" />                        
+                                        </apex:selectList>  
+                                        <apex:variable value="{!index + 1}" var="index" />		                                  
+                                    </apex:repeat>		
+									    
+						        </td>
+                                <td>				
+                                    <apex:outputPanel layout="block" styleclass="insertBox" style="height:153px;white-space: nowrap;" rendered="{!showSelected}" id="insertboxpanel">									    
+							            <apex:outputText value="{!$Label.esl__You_have_selected}"/><p/>               
+							            <apex:outputText value="{!selectedPath}"/><p/> 
+							            <apex:outputText value="Type: {!selectedFieldType}"/><p/> 
+							            <apex:outputText value="{!warningToShow}" rendered="{!warningToShow != ''}"/><p/> 
+									    <apex:commandButton id="AddUpdateBtn"  action="{!InsertButton}" value="{!if(isAdd,$Label.esl__Add,$Label.esl__Update)}" oncomplete="fieldWasAddedorUpdated();closeDialogSigners();"/>
+							        </apex:outputPanel>								
+								</td>
+							</tr>
+						</tbody>
+					</table>
+                </apex:outputPanel>                
+            </div>
+            <apex:outputPanel layout="block" style="padding-top: 12px;">
+                <apex:commandButton action="{!CancelButton}" value="Close" id="theCloseButton" style="display: block; margin: 0px auto;"/>
+            </apex:outputPanel>
+        </apex:outputPanel>   
+	</apex:form>
+		
+</apex:component>

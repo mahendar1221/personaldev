@@ -1,0 +1,29 @@
+<apex:page controller="BootstapLoginPage" standardStylesheets="true" showHeader="false" docType="html-5.0" language="en-US" applyHTMLTag="false">
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+        <link href="signin.css" rel="stylesheet"/>
+    <title>Signin Template for Bootstrap</title>
+    <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap-3.1.1-dist/css/bootstrap.min.css')}" />
+    <!-- Bootstrap core CSS -->
+     <!-- Custom styles for this template -->
+    </head>
+</html>
+   <body>
+    <div class="from-group">
+      <apex:form styleClass="form-control" >
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <apex:inputText styleclass="form-control" value="{!userName}" html-placeholder="Email address" /><br/>
+            <apex:pagemessages />
+            <apex:inputSecret styleclass="form-control" value="{!Password}" html-placeholder="Password"/ ><br/>
+          <a    Horizontal-Alignment="center" >  <apex:commandbutton styleclass="btn btn-primary "  value="Sign in" action="{!LoginAction}"   /></a>
+            {!output}
+      </apex:form>
+
+    </div> <!-- /container -->
+  </body>
+</apex:page>

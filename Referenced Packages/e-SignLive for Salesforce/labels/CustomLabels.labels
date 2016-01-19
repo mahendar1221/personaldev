@@ -1,0 +1,3453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>AcceptOnlyLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AcceptOnlyLbl</shortDescription>
+        <value>Accept Only</value>
+    </labels>
+    <labels>
+        <fullName>Accept_Only_Tooltip</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Accept Only Tooltip</shortDescription>
+        <value>Select the “Accept Only” checkbox if you want signers to “Accept” this disclosure document, but you don’t want them to be able to sign it.</value>
+    </labels>
+    <labels>
+        <fullName>AccountLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AccountLbl</shortDescription>
+        <value>Account</value>
+    </labels>
+    <labels>
+        <fullName>AcctOppRequiredMsg</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Account or Opportunity is on Package</shortDescription>
+        <value>Package should be associated with an Account or Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>Action</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Action</shortDescription>
+        <value>Action</value>
+    </labels>
+    <labels>
+        <fullName>ActionLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ActionLbl</shortDescription>
+        <value>Action</value>
+    </labels>
+    <labels>
+        <fullName>Activate</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Activate</shortDescription>
+        <value>Activate</value>
+    </labels>
+    <labels>
+        <fullName>Activating</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Activating Action Status</shortDescription>
+        <value>Activating..</value>
+    </labels>
+    <labels>
+        <fullName>Active_Package_Template</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Active Package Template</shortDescription>
+        <value>Active Package Templates can not be deleted</value>
+    </labels>
+    <labels>
+        <fullName>Add</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Add</shortDescription>
+        <value>Add</value>
+    </labels>
+    <labels>
+        <fullName>AddDocumentBtn</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AddDocumentBtn</shortDescription>
+        <value>Add Document</value>
+    </labels>
+    <labels>
+        <fullName>AddSignerBtn</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AddSignerBtn</shortDescription>
+        <value>Add Signer</value>
+    </labels>
+    <labels>
+        <fullName>Add_New</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Add New</shortDescription>
+        <value>Add New</value>
+    </labels>
+    <labels>
+        <fullName>Add_selected_Documents</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Add selected Documents</shortDescription>
+        <value>Add selected Documents</value>
+    </labels>
+    <labels>
+        <fullName>Adding</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Adding Action Status</shortDescription>
+        <value>Adding...</value>
+    </labels>
+    <labels>
+        <fullName>AdhocLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AdhocLbl</shortDescription>
+        <value>Ad Hoc Creation</value>
+    </labels>
+    <labels>
+        <fullName>AdminDisconnectConfirm</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AdminDisconnectConfirm</shortDescription>
+        <value>If you click Disconnect: (1) your Salesforce Connector data will be out-of-sync with your e-SignLive instance data; (2) every in-process transaction will return an error.</value>
+    </labels>
+    <labels>
+        <fullName>AdminPageBlkTitleLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AdminPageBlkTitleLbl</shortDescription>
+        <value>Account Setup</value>
+    </labels>
+    <labels>
+        <fullName>AdminSectionHeaderLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AdminSectionHeaderLbl</shortDescription>
+        <value>e-SignLive Admin</value>
+    </labels>
+    <labels>
+        <fullName>Admin_Environment</fullName>
+        <categories>Admin</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin_Environment</shortDescription>
+        <value>The selection made here must correspond to an instance where the Administrator’s e-SignLive account and data are hosted. If changing the instance and API, the existing data in Salesforce will be out of sync and invalid compared to the e-SignLive instance’s data.</value>
+    </labels>
+    <labels>
+        <fullName>Admin_IP_Restriction</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin IP Restriction</shortDescription>
+        <value>IP Restriction</value>
+    </labels>
+    <labels>
+        <fullName>Admin_IP_Restriction_Link</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin IP Restriction Link</shortDescription>
+        <value>http://docs.e-signlive.com/doku.php?id=esl:sf:e-signlive_for_salesforce_deployment_40#configure_the_application</value>
+    </labels>
+    <labels>
+        <fullName>Admin_IP_Restriction_Link_Label</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin IP Restriction Link Label</shortDescription>
+        <value>e-SignLive IP addresses</value>
+    </labels>
+    <labels>
+        <fullName>Admin_IP_Restriction_Message</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin IP Restriction Message</shortDescription>
+        <value>If you are using Profile Login IP restrictions,</value>
+    </labels>
+    <labels>
+        <fullName>Admin_IP_Restriction_Suffix</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin IP Restriction Suffix</shortDescription>
+        <value>must be allowed.</value>
+    </labels>
+    <labels>
+        <fullName>Admin_Remote_site_settings</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin Remote site settings</shortDescription>
+        <value>Remote site settings</value>
+    </labels>
+    <labels>
+        <fullName>Admin_Remote_site_settings_link</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin Remote site settings link</shortDescription>
+        <value>Click here</value>
+    </labels>
+    <labels>
+        <fullName>Admin_Remote_site_settings_message</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin Remote site settings message</shortDescription>
+        <value>You need to add the domain of the endpoint in Salesforce&apos;s remote site settings.</value>
+    </labels>
+    <labels>
+        <fullName>AdvancedOptionsTabLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AdvancedOptionsTabLbl</shortDescription>
+        <value>Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>All_documents</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All documents</shortDescription>
+        <value>All Documents</value>
+    </labels>
+    <labels>
+        <fullName>AllowDelegationTooltip</fullName>
+        <categories>Allow Delegation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AllowDelegationTooltip</shortDescription>
+        <value>A signer can delegate another person to sign their document packages for them. The delegating signer must provide an email address and the full name of the delegate, and optionally can provide an email message to the new signer. Both signers will be notified of the change of signer and will be CC’d on the email message (if applicable).</value>
+    </labels>
+    <labels>
+        <fullName>Allow_Signature_Delegation</fullName>
+        <categories>Signer Delegation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Allow Signature Delegation</shortDescription>
+        <value>Change Signer</value>
+    </labels>
+    <labels>
+        <fullName>Anchor_New_Anchor</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Anchor - New Anchor</shortDescription>
+        <value>New Text Tag</value>
+    </labels>
+    <labels>
+        <fullName>Anchor_Type_Acrofield</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Anchor Type - Acrofield</shortDescription>
+        <value>PDF Form Field</value>
+    </labels>
+    <labels>
+        <fullName>Anchor_Type_Static_Position</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Anchor Type - Static Position</shortDescription>
+        <value>Static Position</value>
+    </labels>
+    <labels>
+        <fullName>Anchor_Type_Text_Search</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Anchor Type - Text Search</shortDescription>
+        <value>Text Anchor</value>
+    </labels>
+    <labels>
+        <fullName>Anchors_are_Read_Only</fullName>
+        <categories>Anchors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Anchors are Read Only</shortDescription>
+        <value>Text tags for this convention are read only as its being used by</value>
+    </labels>
+    <labels>
+        <fullName>Answer</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Answer</shortDescription>
+        <value>Answer</value>
+    </labels>
+    <labels>
+        <fullName>AtLeastOneDocumentPerPackageMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AtLeastOneDocumentPerPackageMsg</shortDescription>
+        <value>There must be at least one Document associated with a Package before sending it</value>
+    </labels>
+    <labels>
+        <fullName>AtLeastOneDocumentPerTemplateMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AtLeastOneDocumentPerTemplateMsg</shortDescription>
+        <value>There must be at least one Document associated with a Template before activating it</value>
+    </labels>
+    <labels>
+        <fullName>AtLeastOneSignerPerPackageMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AtLeastOneSignerPerPackageMsg</shortDescription>
+        <value>There must be at least one Signer associated with a Package before sending it</value>
+    </labels>
+    <labels>
+        <fullName>AtLeastOneSignerPerTemplateMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AtLeastOneSignerPerTemplateMsg</shortDescription>
+        <value>There must be at least one Signer associated with a Template before activating it</value>
+    </labels>
+    <labels>
+        <fullName>Attach</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Attach</shortDescription>
+        <value>Add</value>
+    </labels>
+    <labels>
+        <fullName>AuthenticationMethodLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AuthenticationMethodLbl</shortDescription>
+        <value>Authentication</value>
+    </labels>
+    <labels>
+        <fullName>Auto_prepare_tooltip</fullName>
+        <categories>Tooltips</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Auto prepare tooltip</shortDescription>
+        <value>Select a “Convention” if you want signatures and other Form Fields to be positioned automatically on the basis of rules defined in the convention. If you do so, you will need to assign “Signer Labels” to the signers.</value>
+    </labels>
+    <labels>
+        <fullName>AvailablePackageTemplatesLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AvailablePackageTemplatesLbl</shortDescription>
+        <value>Available Templates</value>
+    </labels>
+    <labels>
+        <fullName>Back</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Back</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
+        <fullName>Can_t_delete_package</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Can&apos;t delete package</shortDescription>
+        <value>Only Package Owner can delete this Record</value>
+    </labels>
+    <labels>
+        <fullName>Can_t_delete_package_template</fullName>
+        <categories>Package Template Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Can&apos;t delete package template</shortDescription>
+        <value>Only Package Template Owner can delete this Record</value>
+    </labels>
+    <labels>
+        <fullName>Can_t_edit_active_template</fullName>
+        <categories>Package Template Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Can&apos;t edit active template</shortDescription>
+        <value>Active Package Templates can&apos;t be Edited</value>
+    </labels>
+    <labels>
+        <fullName>Can_t_edit_package</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Can&apos;t edit package</shortDescription>
+        <value>Only Package Owner can edit this Record</value>
+    </labels>
+    <labels>
+        <fullName>Can_t_edit_package_template</fullName>
+        <categories>Package Template Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Can&apos;t edit package template</shortDescription>
+        <value>Only Package Template Owner can edit this Record</value>
+    </labels>
+    <labels>
+        <fullName>Can_t_reach_the_server</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Can’t reach the server.</shortDescription>
+        <value>Can’t reach the server.</value>
+    </labels>
+    <labels>
+        <fullName>Canada_production</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Canada production</shortDescription>
+        <value>Canada Production</value>
+    </labels>
+    <labels>
+        <fullName>Canada_production_URL</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Canada production URL</shortDescription>
+        <value>https://apps.e-signlive.ca/</value>
+    </labels>
+    <labels>
+        <fullName>Canada_sandbox</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Canada sandbox</shortDescription>
+        <value>Canada Sandbox</value>
+    </labels>
+    <labels>
+        <fullName>Canada_sandbox_URL</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Canada sandbox URL</shortDescription>
+        <value>https://sandbox.e-signlive.ca/</value>
+    </labels>
+    <labels>
+        <fullName>CancelBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CancelBtn</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>CannotActivateWithoutApprovals</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CannotActivateWithoutApprovals</shortDescription>
+        <value>Please add at least one signature block on a document</value>
+    </labels>
+    <labels>
+        <fullName>CannotSendPackageWithNoDocuments</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CannotSendPackageWithNoDocuments</shortDescription>
+        <value>You cannot send a package that has no document with a signature block</value>
+    </labels>
+    <labels>
+        <fullName>CanvasAppError_NoMatching</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CanvasAppError NoMatching</shortDescription>
+        <value>Please configure the canvas app name in the settings.</value>
+    </labels>
+    <labels>
+        <fullName>CanvasAppNoPopupWarning</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CanvasAppNoPopupWarning</shortDescription>
+        <value>If the e-Signlive form didnt not open, try accessing it from the desktop and then try again from your mobile device.</value>
+    </labels>
+    <labels>
+        <fullName>Change_Field_Value</fullName>
+        <categories>History Entry</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Change Field Value</shortDescription>
+        <value>Changed &lt;b&gt;{0}&lt;/b&gt; from &lt;b&gt;{1}&lt;/b&gt; to &lt;b&gt;{2}&lt;/b&gt;, for &lt;b&gt;{3}&lt;/b&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>Changes_Saved</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Changes Saved</shortDescription>
+        <value>The changes were saved successfully!</value>
+    </labels>
+    <labels>
+        <fullName>CloseBtn</fullName>
+        <categories>Buttons</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CloseBtn</shortDescription>
+        <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>Configurable</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Configurable</shortDescription>
+        <value>Configurable</value>
+    </labels>
+    <labels>
+        <fullName>Configuration</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Configuration</shortDescription>
+        <value>Configuration</value>
+    </labels>
+    <labels>
+        <fullName>Configuration_Missing</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Configuration Missing</shortDescription>
+        <value>There are some configurations missing. Please set the Permitted file extensions and try again.</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmBtn</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ConfirmBtn</shortDescription>
+        <value>Confirm</value>
+    </labels>
+    <labels>
+        <fullName>Confirm_Delete</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Confirm Delete</shortDescription>
+        <value>To move this e-SignLiveTM Package to the Recycle Bin, click Continue. You can recover the deleted package by selecting Undelete in the Salesforce Recycle Bin.</value>
+    </labels>
+    <labels>
+        <fullName>Confirm_Template_Delete</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Confirm Template Delete</shortDescription>
+        <value>To permanently delete this Package Template, click Continue. You won&apos;t be able to recover it later.</value>
+    </labels>
+    <labels>
+        <fullName>Confirm_Unlock</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Confirm Unlock</shortDescription>
+        <value>Please confirm that you want to unlock</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmationBeforeDeletionMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmationBeforeDeletionMsg</shortDescription>
+        <value>Are you sure?</value>
+    </labels>
+    <labels>
+        <fullName>Connect</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Connect</shortDescription>
+        <value>Connect</value>
+    </labels>
+    <labels>
+        <fullName>ConnectBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConnectBtn</shortDescription>
+        <value>Connect</value>
+    </labels>
+    <labels>
+        <fullName>Connect_Method_API_Key</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Connect Method API Key</shortDescription>
+        <value>e-Signlive Account Api key</value>
+    </labels>
+    <labels>
+        <fullName>Connect_Method_Credentials</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Connect Method Credentials</shortDescription>
+        <value>e-Signlive Credentials</value>
+    </labels>
+    <labels>
+        <fullName>ConnectedByLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConnectedByLbl</shortDescription>
+        <value>Connected By</value>
+    </labels>
+    <labels>
+        <fullName>ConnectionExceptionMsg</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConnectionExceptionMsg</shortDescription>
+        <value>e-SignLive App is not connected to e-SignLive service. Please contact your System Administrator.</value>
+    </labels>
+    <labels>
+        <fullName>Connection_Method</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Connection Method</shortDescription>
+        <value>Connection Method</value>
+    </labels>
+    <labels>
+        <fullName>ContactEmailLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ContactEmailLbl</shortDescription>
+        <value>Email</value>
+    </labels>
+    <labels>
+        <fullName>ContactEmailRequiredMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ContactEmailRequiredMsg</shortDescription>
+        <value>Contact Email is required</value>
+    </labels>
+    <labels>
+        <fullName>ContactPhoneLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ContactPhoneLbl</shortDescription>
+        <value>Phone</value>
+    </labels>
+    <labels>
+        <fullName>ContactSystemAdminMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact System Admin</shortDescription>
+        <value>Please contact your administrator if access is necessary.</value>
+    </labels>
+    <labels>
+        <fullName>Contents</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Contents</shortDescription>
+        <value>Contents</value>
+    </labels>
+    <labels>
+        <fullName>ContinueBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ContinueBtn</shortDescription>
+        <value>Continue</value>
+    </labels>
+    <labels>
+        <fullName>Convention_Fields_Label</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Convention Fields Label</shortDescription>
+        <value>Convention Field Names</value>
+    </labels>
+    <labels>
+        <fullName>Convention_Id_Required</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Convention Id Required</shortDescription>
+        <value>Convention ID required  if you provide a Send=1</value>
+    </labels>
+    <labels>
+        <fullName>CreateBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CreateBtn</shortDescription>
+        <value>Create</value>
+    </labels>
+    <labels>
+        <fullName>CreateFromTemplateLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CreateFromTemplateLbl</shortDescription>
+        <value>Create From Template</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_1</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 1</shortDescription>
+        <value>&lt;br/&gt;To create a custom button inside a custom object:
+&lt;br/&gt;
+&lt;ol type=&quot;1&quot;&gt;
+&lt;li&gt;In Setup, click &lt;a href=&quot;/p/setup/custent/CustomObjectsPage?setupid=CustomObjects&quot;&gt;Create-&gt;Objects&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Click the object&apos;s name.&lt;/li&gt;
+&lt;li&gt;In the &lt;b&gt;Buttons, Links and Actions&lt;/b&gt; section, click &lt;b&gt;New Button or Link&lt;/b&gt;.&lt;/li&gt;
+&lt;li&gt;Select &lt;b&gt;Detail&lt;/b&gt;.&lt;/li&gt;
+&lt;li&gt;Type a name and label for the new button.&lt;/li&gt;
+&lt;li&gt;Paste in the following code: 
+&lt;br/&gt;&lt;pre&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; /apex/esl__Package?ParentId={!OBJECTNAME.Id}&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+Use the parameters below to customize the button created above:
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;table border=&quot;1&quot;&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_10</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 10</shortDescription>
+        <value>&lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;
+        &lt;td&gt;The name of the package, URL encoded&lt;/td&gt;
+        &lt;td&gt;Name=My%20Package&lt;/td&gt;
+        &lt;td&gt;Name={!Contact.Name}%20Package&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Description&lt;/td&gt;
+        &lt;td&gt;The description of the package, URL encoded.&lt;/td&gt;
+        &lt;td&gt;Description=The%20Package%20Description&lt;/td&gt;
+        &lt;td&gt;Description={!Contact.FirstName}%20{!Contact.LastName}-The%20Package%20Description&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_11</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 11</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;InPersonSigning&lt;/td&gt;
+        &lt;td&gt;true or false, set the in person signing value&lt;/td&gt;
+        &lt;td&gt;InPersonSigning=true&lt;/td&gt;
+        &lt;td&gt;InPersonSigning={!Contact.InPersonSigning__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Documents&lt;/td&gt;
+        &lt;td&gt;list of id separated by coma. Those ids can be salesforce attachment or documents. Create a package document with the binary of that attachment or document and related name in the same order as the list.&lt;/td&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_12</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 12</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;EmailMessageObjectField&lt;/td&gt;
+        &lt;td&gt;Set the email message of the package using a field from a custom object. Needs to be a field in the object defined in EmailMessageObjectName like Name or Description__c. Require EmailMessageObjectName and EmailMessageObjectId&lt;/td&gt;
+        &lt;td&gt;EmailMessageObjectName=Account&amp;EmailMessageObjectField=Name&amp;EmailMessageObjectId=001g000000T9wTR&lt;/td&gt;
+        &lt;td&gt;EmailMessageObjectName=Account&amp;EmailMessageObjectField=Name&amp;EmailMessageObjectId={!Account.Id}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_13</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 13</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;SignerX&lt;/td&gt;
+        &lt;td&gt;X is a number from 1 to infinity. The value can be a lead id, contact id, user id or an email address. If an email address is provided, parameter SignersXFirstName and SignerXLastName are required.&lt;/td&gt;
+        &lt;td&gt;Signer1=003g000000OLhpk or Signer1=support@silanis.com&amp;Signer1FirstName=John&amp;Signer1LastName=Doe&lt;/td&gt;
+        &lt;td&gt;Signer1={!Account.Main_Contact__c} or Signer1={!Contact.Email}&amp;Signer1FirstName={!Contact.FirstName}&amp;Signer1LastName={!Contact.LastName}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_14</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 14</shortDescription>
+        <value>&lt;tr&gt; 
+&lt;td&gt;AutoPrepare&lt;/td&gt; 
+&lt;td&gt;AutoPrepare the package if a convention is specified. Set the value to true or false or &quot;0&quot; or &quot;1&quot;&lt;/td&gt; 
+&lt;td&gt;AutoPrepare=true&lt;/td&gt; 
+&lt;td&gt;AutoPrepare={!Account.AutoPreparePackage__c}&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td&gt;Insert&lt;/td&gt; 
+&lt;td&gt;Allow salesforce value to be pushed as default value in eSignLive. Set the value to true or false or &quot;0&quot; or &quot;1&quot;&lt;/td&gt; 
+&lt;td&gt;Insert=true&lt;/td&gt; 
+&lt;td&gt;Insert={!Account.InsertValueInPackage__c}&lt;/td&gt; 
+&lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_15</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 15</shortDescription>
+        <value>&lt;tr&gt; 
+&lt;td&gt;WriteBack&lt;/td&gt; 
+&lt;td&gt;Allow value entered by signers while signing to update salesforce records Set the value to true or false or &quot;0&quot; or &quot;1&quot;&lt;/td&gt; 
+&lt;td&gt;WriteBack=true&lt;/td&gt; 
+&lt;td&gt;WriteBack={!Account.WriteValueInPackage__c}&lt;/td&gt; 
+&lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_2</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 2</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;&lt;b&gt;Parameter Name&lt;/b&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;b&gt;Description&lt;/b&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;b&gt;Static sample&lt;/b&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;b&gt;Dynamic sample&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;TemplateId&lt;/td&gt;
+        &lt;td&gt;The package template id. Create ad-hoc if not provided. Any field specified in the url will override the value of the template. Template needs to be active.&lt;/td&gt;
+        &lt;td&gt;TemplateId=a0Ag0000007r4nS&lt;/td&gt;
+        &lt;td&gt;TemplateId={!Account.Package_Template__c}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_2_5</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create_Custom_Button_2.5</shortDescription>
+        <value>&lt;td&gt;Documents=015g0000000Cm1f,00Pg0000001eg9H&lt;/td&gt;
+        &lt;td&gt;Documents={!Account.DocumentId__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Send&lt;/td&gt;
+        &lt;td&gt;Indicate if the package must be sent after creation. Require a default convention or the convention id parameter and a signer label for at least of of the signers.&lt;/td&gt;
+        &lt;td&gt;Send=1 or Send=true&lt;/td&gt;
+        &lt;td&gt;Send={!Account.AutomaticallySend__c}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_2_6</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create_Custom_Button_2.6</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;ConventionId&lt;/td&gt;
+        &lt;td&gt;The Convention Id that will be used to prepare the package and send it. ConventionId will be mandatory if no default convention has been set in the custom settings.&lt;/td&gt;
+        &lt;td&gt;ConventionId=a0Rg00000033spu&lt;/td&gt;
+        &lt;td&gt;ConventionId={!Account.Convention__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;retUrl&lt;/td&gt;
+        &lt;td&gt;Url the user will be sent to once the package has been sent. Need to have Send=1 or Send=true. Needs to be URL encoded&lt;/td&gt;
+        &lt;td&gt;retUrl=%2Fhome%2Fhome.jsp&lt;/td&gt;
+        &lt;td&gt;retUrl=%2F{!Account.Id}&lt;/td&gt;
+        
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_3</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 3</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;DescriptionObjectName&lt;/td&gt;
+        &lt;td&gt;Set the description of the package using a field from a custom object. Needs to be an object name like Account or Package__c. Require DescriptionObjectField and DescriptionObjectId&lt;/td&gt;
+        &lt;td&gt;DescriptionObjectName=Account&amp;DescriptionObjectField=Name&amp;DescriptionObjectId=001g000000T9wTR&lt;/td&gt;
+        &lt;td&gt;DescriptionObjectName=Account&amp;DescriptionObjectField=Name&amp;DescriptionObjectId={!Account.Id}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;DescriptionObjectField&lt;/td&gt;
+        &lt;td&gt;Set the description of the package using a field from a custom object. Needs to be a field in the object defined in DescriptionObjectName like Name or Description__c. Require DescriptionObjectName and DescriptionObjectId&lt;/td&gt;
+        &lt;td&gt;DescriptionObjectName=Account&amp;DescriptionObjectField=Name&amp;DescriptionObjectId=001g000000T9wTR&lt;/td&gt;
+        &lt;td&gt;DescriptionObjectName=Account&amp;DescriptionObjectField=Name&amp;DescriptionObjectId={!Account.Id}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_4</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create_Custom_Button_4</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;DescriptionObjectId&lt;/td&gt;
+        &lt;td&gt;Set the description of the package using a field from a custom object. Needs to be the Id of an sObject of the type defined in DescriptionObjectName. Require DescriptionObjectName and DescriptionObjectField&lt;/td&gt;
+        &lt;td&gt;DescriptionObjectName=Account&amp;DescriptionObjectField=Name&amp;DescriptionObjectId=001g000000T9wTR&lt;/td&gt;
+        &lt;td&gt;DescriptionObjectName=Account&amp;DescriptionObjectField=Name&amp;DescriptionObjectId={!Account.Id}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_5</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 5</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;ExpiryDate&lt;/td&gt;
+        &lt;td&gt;The package expiration date (YYYYMMDD).&lt;/td&gt;
+        &lt;td&gt;ExpiryDate=20151230&lt;/td&gt;
+        &lt;td&gt;ExpiryDate={!Contact.ExpiryDate__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;EmailMessage&lt;/td&gt;
+        &lt;td&gt;The email message content.&lt;/td&gt;
+        &lt;td&gt;EmailMessage=Content%20of%20the%20email%20to%20send&lt;/td&gt;
+        &lt;td&gt;EmailMessage={!Account.CustomEmail__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Language&lt;/td&gt;
+        &lt;td&gt;Language of the package. (Only english is currently available)&lt;/td&gt;
+        &lt;td&gt;Language=en&lt;/td&gt;
+        &lt;td&gt;Language={!Contant.CommunicationLanguage__c}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_6</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 6</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;EmailMessageObjectName&lt;/td&gt;
+        &lt;td&gt;Set the email message of the package using a field from a custom object. Needs to be an object name like Account or Package__c. Require EmailMessageObjectField and EmailMessageObjectId&lt;/td&gt;
+        &lt;td&gt;EmailMessageObjectName=Account&amp;EmailMessageObjectField=Name&amp;EmailMessageObjectId=001g000000T9wTR&lt;/td&gt;
+        &lt;td&gt;EmailMessageObjectName=Account&amp;EmailMessageObjectField=Name&amp;EmailMessageObjectId={!Account.Id}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_7</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 7</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;EmailMessageObjectId&lt;/td&gt;
+        &lt;td&gt;Set the email message of the package using a field from a custom object. Needs to be the Id of an sObject of the type defined in EmailMessageObjectName. Require EmailMessageObjectName and EmailMessageObjectField&lt;/td&gt;
+        &lt;td&gt;EmailMessageObjectName=Account&amp;EmailMessageObjectField=Name&amp;EmailMessageObjectId=001g000000T9wTR&lt;/td&gt;
+        &lt;td&gt;EmailMessageObjectName=Account&amp;EmailMessageObjectField=Name&amp;EmailMessageObjectId={!Account.Id}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_8</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 8</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;SignerXFirstName&lt;/td&gt;
+        &lt;td&gt;Set the first name of the signer at index x to specified value. Only available for external email signers.&lt;/td&gt;
+        &lt;td&gt;Signer1=support@silanis.com&amp;Signer1FirstName=John&amp;Signer1LastName=Doe&lt;/td&gt;
+        &lt;td&gt;Signer1={!Contact.Email}&amp;Signer1FirstName={!Contact.FirstName}&amp;Signer1LastName={!Contact.LastName}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;SignerXLastName&lt;/td&gt;
+        &lt;td&gt;Set the last name of the signer at index x to specified value. Only available for external email signers.&lt;/td&gt;
+        &lt;td&gt;Signer1=support@silanis.com&amp;Signer1FirstName=John&amp;Signer1LastName=Doe&lt;/td&gt;
+        &lt;td&gt;Signer1={!Contact.Email}&amp;Signer1FirstName={!Contact.FirstName}&amp;Signer1LastName={!Contact.LastName}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_8_5</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 8 5</shortDescription>
+        <value>&lt;tr&gt;
+&lt;td&gt;SignerXPhone&lt;/td&gt;
+&lt;td&gt;Set phone of the signer at index x to specified value. Only available for external email signers.&lt;/td&gt;
+&lt;td&gt;Signer1=support@silanis.com&amp;Signer1FirstName=John&amp;Signer1LastName=Doe&amp;Signer1Phone=8675309&lt;/td&gt;
+&lt;td&gt;Signer1={!Contact.Email}&amp;Signer1FirstName={!Contact.FirstName}&amp;Signer1LastName={!Contact.LastName}&amp;Signer1Phone={!Contact.Mobile}&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SignerXLabel&lt;/td&gt;
+&lt;td&gt;Set signer label associated with signer. Need to be the Id of the signer label object in the related convention (default convention or the one specified in ConventionId)&lt;/td&gt;
+&lt;td&gt;Signer1=003g000000OLhpk&amp;Signer1Label=a0Tg0000001uMIf&lt;/td&gt;
+&lt;td&gt;Signer1={!Contact.Id}&amp;Signer1Label={!Contact.SignerLabel__c}&lt;/td&gt;
+&lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_8_6</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create_Custom_Button_8_6</shortDescription>
+        <value>&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td&gt;SignerXAllowDelegation&lt;/td&gt; 
+&lt;td&gt;You can allow a Signer to assign someone else to sign the e-SignPackage™ instead of the original Signer that is defined by you. The Signer will then be asked to enter the email address and full name of the person to sign along with an optional email message to send to the new Signer. You will be notified of this change of Signer and will also be CC’d on the email message (if used). Valid values are: 1, 0, true or false&lt;/td&gt; 
+&lt;td&gt;Signer1=003g000000OLhpk&amp;Signer1AllowDelegation=true&lt;/td&gt; 
+&lt;td&gt;Signer1={!Contact.Id}&amp;Signer1AllowDelegation=1&lt;/td&gt; 
+&lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_9</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button 9</shortDescription>
+        <value>&lt;tr&gt;
+        &lt;td&gt;EnforceSigningOrder&lt;/td&gt;
+        &lt;td&gt;true or false. Set the enforce signing order flag.&lt;/td&gt;
+        &lt;td&gt;EnforceSigningOrder=true&lt;/td&gt;
+        &lt;td&gt;EnforceSigningOrder={!Account.EnforceSigningOrder__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;ParentId&lt;/td&gt;
+        &lt;td&gt;id of the parent object. To be stored in the ParentId text field. Automatically populate the parent type and the related lookup field if possible.&lt;/td&gt;
+        &lt;td&gt;ParentId=001g000000T9wTR&lt;/td&gt;
+        &lt;td&gt;ParentId={!Account.Id}&lt;/td&gt;
+    &lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_9_1</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create_Custom_Button_9_1</shortDescription>
+        <value>&lt;tr&gt; 
+&lt;td&gt;enableReminders&lt;/td&gt; 
+&lt;td&gt;Enable the automatic reminder feature for that package. Set the value to true or false&lt;/td&gt; 
+&lt;td&gt;enableReminders=true&lt;/td&gt; 
+&lt;td&gt;enableReminders={!Account.RemindersEnabled__c}&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td&gt;sendReminderDays&lt;/td&gt; 
+&lt;td&gt;Number of days before the first reminder is sent&lt;/td&gt; 
+&lt;td&gt;sendReminderDays=2&lt;/td&gt; 
+&lt;td&gt;sendReminderDays={!Account.SendReminderDays__c}&lt;/td&gt; 
+&lt;/tr&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_9_2</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create_Custom_Button_9_2</shortDescription>
+        <value>&lt;tr&gt; 
+&lt;td&gt;repeatReminderDays&lt;/td&gt; 
+&lt;td&gt;Interval in days between each reminder&lt;/td&gt; 
+&lt;td&gt;repeatReminderDays=1&lt;/td&gt; 
+&lt;td&gt;repeatReminderDays={!Account.RepeatReminders__c}&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td&gt;totalReminders&lt;/td&gt; 
+&lt;td&gt;Maximum number of reminders to be sent&lt;/td&gt; 
+&lt;td&gt;totalReminders=10&lt;/td&gt; 
+&lt;td&gt;totalReminders={!Account.TotalReminders__c}&lt;/td&gt; 
+&lt;/tr&gt;
+&lt;/table&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Create_Custom_Button_Full</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create Custom Button Full</shortDescription>
+        <value>&lt;br&gt;
+A button using multiple parameters may look like this :
+&lt;pre&gt;
+/apex/esl__Package?ParentId={!Account.Id}&amp;TemplateId=a0Ag0000007r4nS&amp;Name={!Account.Name}%20Agreement&amp;Documents=015g0000000Cm1f&amp;Signer1={!Account.MainContact__c}&amp;Signer1Label=a0Tg0000001uMIf&amp;ConventionId=a0Rg00000033spu&amp;enableReminders=true&lt;/pre&gt;</value>
+    </labels>
+    <labels>
+        <fullName>CreatedByLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CreatedByLbl</shortDescription>
+        <value>Created By</value>
+    </labels>
+    <labels>
+        <fullName>Created_from_Template</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Created from Template</shortDescription>
+        <value>Created from Template</value>
+    </labels>
+    <labels>
+        <fullName>Creating</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Creating Action Status</shortDescription>
+        <value>Creating...</value>
+    </labels>
+    <labels>
+        <fullName>Custom_Button</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Custom Button</shortDescription>
+        <value>Custom Button</value>
+    </labels>
+    <labels>
+        <fullName>DateLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DateLbl</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
+        <fullName>Deactivate</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Deactivate</shortDescription>
+        <value>Deactivate</value>
+    </labels>
+    <labels>
+        <fullName>Deactivating</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Deactivating Action Status</shortDescription>
+        <value>Deactivating..</value>
+    </labels>
+    <labels>
+        <fullName>Default_Insert_Value</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Default Insert Value</shortDescription>
+        <value>Default Insert Value</value>
+    </labels>
+    <labels>
+        <fullName>Default_Signer_Tooltip</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Default Signer Tooltip</shortDescription>
+        <value>The user who creates a Package is automatically added to the transaction as its “default signer”. They cannot be removed from the transaction. The default signer can choose either to be one of the signers of the Package, or simply to review the Package.</value>
+    </labels>
+    <labels>
+        <fullName>Default_Template_Signer_Tooltip</fullName>
+        <categories>Tooltips</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Default Template Signer Tooltip</shortDescription>
+        <value>The user who creates a Template is automatically added to the transaction as its “default signer”. They cannot be removed from the Template. When a user creates a Package from the Template, that user becomes the default signer of the Package. The Template creator does not appear in the Package.</value>
+    </labels>
+    <labels>
+        <fullName>Delegation_Tooltip</fullName>
+        <categories>Signer Delegation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Delegation Tooltip</shortDescription>
+        <value>A signer can delegate another person to sign their document packages for them. The delegating signer must provide an email address and full name for the delegatee, and can optionally provide an email message to the new signer. Both signers will be notified of the change of signer, and will be CC’d on the email message (if applicable).</value>
+    </labels>
+    <labels>
+        <fullName>DeleteBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DeleteBtn</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>DeleteError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DeleteError</shortDescription>
+        <value>You cannot delete an active package template.</value>
+    </labels>
+    <labels>
+        <fullName>Delete_Completed_Package</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Delete Completed Package</shortDescription>
+        <value>You cannot delete a package whose status is Completed. If you need to delete this package, ask your Admin to enable you to delete completed packages.</value>
+    </labels>
+    <labels>
+        <fullName>Deleting</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Deleting Action Status</shortDescription>
+        <value>Deleting...</value>
+    </labels>
+    <labels>
+        <fullName>Description_too_long</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Description too long</shortDescription>
+        <value>&quot;Description&quot; value is too long (max = 255 characters).</value>
+    </labels>
+    <labels>
+        <fullName>DetailsLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DetailsLbl</shortDescription>
+        <value>Details</value>
+    </labels>
+    <labels>
+        <fullName>Disable_Reminders</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Disable Reminders</shortDescription>
+        <value>Disable Reminders</value>
+    </labels>
+    <labels>
+        <fullName>Disconnect</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Disconnect</shortDescription>
+        <value>Disconnect</value>
+    </labels>
+    <labels>
+        <fullName>DocumentOrderLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DocumentOrderLbl</shortDescription>
+        <value>Document Order</value>
+    </labels>
+    <labels>
+        <fullName>DocumentOrderNotDefinedExceptionMsg</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DocumentOrderNotDefinedExceptionMsg</shortDescription>
+        <value>Document order should be defined for all the documents. Please enter the numerical order of the documents (e.g. 1, 2, 3,...)</value>
+    </labels>
+    <labels>
+        <fullName>DocumentSignerLimitPageMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Document Signer Limit Message</shortDescription>
+        <value>Only {0} {1} per Package/Package Template are allowed.</value>
+    </labels>
+    <labels>
+        <fullName>Document_Error_1</fullName>
+        <categories>Document Error Handling</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Document Error 1</shortDescription>
+        <value>The following documents were deleted, due to the following reasons:</value>
+    </labels>
+    <labels>
+        <fullName>Document_Error_2</fullName>
+        <categories>Document Error Handling</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Document Error 2</shortDescription>
+        <value>You can fix the problems, and add them to the package again.</value>
+    </labels>
+    <labels>
+        <fullName>Document_Object_Required_Params</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Document Object Required Params</shortDescription>
+        <value>When using DescriptionObjectName, DescriptionObjectField or DescriptionObjectId all three of them are required.</value>
+    </labels>
+    <labels>
+        <fullName>Document_Row_Message</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Value used to know a descriptive message by row</shortDescription>
+        <value>Document</value>
+    </labels>
+    <labels>
+        <fullName>Documents</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Documents</shortDescription>
+        <value>Documents</value>
+    </labels>
+    <labels>
+        <fullName>DocumentsLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DocumentsLbl</shortDescription>
+        <value>Documents</value>
+    </labels>
+    <labels>
+        <fullName>Documents_Max_Size</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Documents Max Size</shortDescription>
+        <value>You can only add up to {0} Documents. You have {1}</value>
+    </labels>
+    <labels>
+        <fullName>DownloadOriginalDocumentLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DownloadOriginalDocumentLbl</shortDescription>
+        <value>Download Original Document</value>
+    </labels>
+    <labels>
+        <fullName>DownloadSignedDocumentLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DownloadSignedDocumentLbl</shortDescription>
+        <value>Download Signed Document</value>
+    </labels>
+    <labels>
+        <fullName>Download_Package</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Download Package</shortDescription>
+        <value>Download Package</value>
+    </labels>
+    <labels>
+        <fullName>DragAndDropDocToolTipLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DragAndDropDocToolTipLbl</shortDescription>
+        <value>Drag and Drop to change the Document Order</value>
+    </labels>
+    <labels>
+        <fullName>DragAndDropSgnToolTipLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DragAndDropSgnToolTipLbl</shortDescription>
+        <value>Drag and Drop to change the Signing Order</value>
+    </labels>
+    <labels>
+        <fullName>Drop_files_here</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Drop files here</shortDescription>
+        <value>Drop files here.</value>
+    </labels>
+    <labels>
+        <fullName>DuplicateDefaultTemplate</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DuplicateDefaultTemplate</shortDescription>
+        <value>is already set as default template for the Object Type:</value>
+    </labels>
+    <labels>
+        <fullName>ESL_Cannot_Delete_Template</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ESL_Cannot_Delete_Template</shortDescription>
+        <value>Could not delete this template on e-SignLiveTM:</value>
+    </labels>
+    <labels>
+        <fullName>ESL_can_not_delete</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ESL can not delete</shortDescription>
+        <value>Could not delete this package on e-SignLiveTM:</value>
+    </labels>
+    <labels>
+        <fullName>ESL_can_not_restore</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ESL can not restore</shortDescription>
+        <value>Could not restore this package on e-SignLiveTM.</value>
+    </labels>
+    <labels>
+        <fullName>EditAfterSentCompleted</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EditAfterSentCompleted</shortDescription>
+        <value>This Package is completed and cannot be edited.</value>
+    </labels>
+    <labels>
+        <fullName>EditAfterSentConfirmation</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EditAfterSentConfirmation</shortDescription>
+        <value>This package has already been sent. If you edit such a package, it will be unavailable to signers until it is sent again.</value>
+    </labels>
+    <labels>
+        <fullName>EditBtn</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EditBtn</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>EmailLbl</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EmailLbl</shortDescription>
+        <value>Email</value>
+    </labels>
+    <labels>
+        <fullName>EmailRequiredMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EmailRequiredMsg</shortDescription>
+        <value>Email is required</value>
+    </labels>
+    <labels>
+        <fullName>Email_Message_Object_Required_Params</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Email Message Object Required Params</shortDescription>
+        <value>When using EmailMessageObjectName, EmailMessageObjectField or EmailMessageObjectId all three of them are required.</value>
+    </labels>
+    <labels>
+        <fullName>Email_Message_too_long</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Email Message too long</shortDescription>
+        <value>Email message value is too long (max = 1024 characters).</value>
+    </labels>
+    <labels>
+        <fullName>Enable_Reminders_Help</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enable Reminders Help</shortDescription>
+        <value>Check to enable reminders for this package</value>
+    </labels>
+    <labels>
+        <fullName>Enable_Reminders_Template_Help</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enable Reminders Template Help</shortDescription>
+        <value>Check to enable reminders for this template</value>
+    </labels>
+    <labels>
+        <fullName>Enable_package_zip_creation</fullName>
+        <categories>store summary and zip</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enable package .zip creation</shortDescription>
+        <value>Enable package .zip creation</value>
+    </labels>
+    <labels>
+        <fullName>Enabled</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enabled</shortDescription>
+        <value>Enable Reminders</value>
+    </labels>
+    <labels>
+        <fullName>Enabled_by_default</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enabled by default</shortDescription>
+        <value>Enabled by default</value>
+    </labels>
+    <labels>
+        <fullName>Enabled_by_default_Help_Admin</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enabled by default Help Admin</shortDescription>
+        <value>Check to enable reminders when creating a new Package or Template</value>
+    </labels>
+    <labels>
+        <fullName>Endpoint_Url</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Endpoint Url</shortDescription>
+        <value>Endpoint URL</value>
+    </labels>
+    <labels>
+        <fullName>EnforceDocumentOrderLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EnforceDocumentOrderLbl</shortDescription>
+        <value>Enforce Document Order</value>
+    </labels>
+    <labels>
+        <fullName>EnforceSigningOrderLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EnforceSigningOrderLbl</shortDescription>
+        <value>Enforce Signing Order</value>
+    </labels>
+    <labels>
+        <fullName>Enter_Signer_Labels</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enter Signer Labels</shortDescription>
+        <value>Please select at least one signer label when you select a convention and enable Auto-prepare.</value>
+    </labels>
+    <labels>
+        <fullName>Enter_question_details</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enter question details:</shortDescription>
+        <value>Enter question details:</value>
+    </labels>
+    <labels>
+        <fullName>Environment</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Environment</shortDescription>
+        <value>Environment</value>
+    </labels>
+    <labels>
+        <fullName>Error</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error:</shortDescription>
+        <value>Error:</value>
+    </labels>
+    <labels>
+        <fullName>Error_Admin_No_API_Key</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error_Admin_No_API_Key</shortDescription>
+        <value>Unable to retrieve API key. Please retry.</value>
+    </labels>
+    <labels>
+        <fullName>Error_Admin_No_First_Name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error_Admin_No_First_Name</shortDescription>
+        <value>Your Salesforce account doesn&apos;t seem to have an associated First Name. You must specify a First Name to use this feature.</value>
+    </labels>
+    <labels>
+        <fullName>Error_Api_Key_Not_Valid</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error_Api_Key_Not_Valid</shortDescription>
+        <value>The API key is not valid. Please verify that you enter a valid API key.</value>
+    </labels>
+    <labels>
+        <fullName>Error_Connection_Issue</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error_Connection_Issue</shortDescription>
+        <value>Unable to reach the e-SignLive instance you specified. Ensure that the URL is valid, and that you added the Remote Site Settings.</value>
+    </labels>
+    <labels>
+        <fullName>Error_Email_Does_Not_match</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error_Email_Does_Not_match</shortDescription>
+        <value>Your Salesforce account’s email address does not match the e-SignLive account’s credentials. Please verify the e-SignLive API key and email address, and ensure that your Salesforce account’s email address matches your e-SignLive email address (username).</value>
+    </labels>
+    <labels>
+        <fullName>Error_Files</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error Files</shortDescription>
+        <value>There are Document(s) that have errors, please remove them and then continue.</value>
+    </labels>
+    <labels>
+        <fullName>Error_Manager_Account</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error_Manager_Account</shortDescription>
+        <value>You must use your e-SignLive manager account.</value>
+    </labels>
+    <labels>
+        <fullName>Error_Wrong_Username_Password</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error_Wrong_Username/Password</shortDescription>
+        <value>The username and password do not match. &lt;br/&gt;
+Tip: Please verify your e-SignLive username and password.</value>
+    </labels>
+    <labels>
+        <fullName>Evidence_Summary</fullName>
+        <categories>Evidence Summary</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Evidence Summary</shortDescription>
+        <value>Evidence Summary</value>
+    </labels>
+    <labels>
+        <fullName>Expiry_date_in_the_past</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expiry date in the past</shortDescription>
+        <value>Cannot create a package that has expiry date in past or today,select future expiry date.</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Confirmation</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Confirmation Singular</shortDescription>
+        <value>This Package has an e-SignLive field that is not mapped to any Salesforce field in the selected Convention. Are you sure you want to send it now?</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Confirmation_Plural</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Confirmation Plural</shortDescription>
+        <value>This Package has {0} e-SignLive fields that are not mapped to any Salesforce field in the selected Convention. Are you sure you want to send it now?</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Insert_Success</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Insert Success</shortDescription>
+        <value>&lt;b&gt;Insert&lt;/b&gt; performed: {0} Salesforce field values have been successfully inserted in e-SignLive fields</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Insert_Warning</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Insert Warning</shortDescription>
+        <value>&lt;b&gt;Insert&lt;/b&gt; warning: field {0} does not exist in any of the Package’s documents</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Insert_Warning_ESL</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Insert Warning ESL</shortDescription>
+        <value>&lt;b&gt;Insert&lt;/b&gt; warning: The field {0} is not mapped to any Salesforce field in the selected Convention.</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Error</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Error</shortDescription>
+        <value>&lt;b&gt;WriteBack&lt;/b&gt; error:</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Field_Does_Not_Exist</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Field Does Not Exist</shortDescription>
+        <value>&lt;b&gt;WriteBack&lt;/b&gt; error: field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Field_Not_Accessible</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Field Not Accessible</shortDescription>
+        <value>&lt;b&gt;WriteBack&lt;/b&gt; error: field {0} is not accessible.</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Object_Does_Not_Exist</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Object Does Not Exist</shortDescription>
+        <value>&lt;b&gt;WriteBack&lt;/b&gt; error: Package related object does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Status_Delegated</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Status Delegated</shortDescription>
+        <value>Signature Delegated</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Status_Done</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Status Done</shortDescription>
+        <value>Successfully Completed</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Status_Error</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Status Error</shortDescription>
+        <value>Completed with Errors/Warnings</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Status_Skipped</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Status Skipped</shortDescription>
+        <value>Skipped</value>
+    </labels>
+    <labels>
+        <fullName>FieldMapping_Writeback_Success</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FieldMapping Writeback Success</shortDescription>
+        <value>&lt;b&gt;WriteBack&lt;/b&gt; performed: {0} e-SignLive signer field values have been successfully written to Salesforce fields</value>
+    </labels>
+    <labels>
+        <fullName>Field_Mapping</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Field Mapping</shortDescription>
+        <value>Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>Field_Mapping_Edit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Field Mapping Edit</shortDescription>
+        <value>Field Mapping Edit</value>
+    </labels>
+    <labels>
+        <fullName>FileAttachedMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FileAttachedMsg</shortDescription>
+        <value>Document succesfully uploaded</value>
+    </labels>
+    <labels>
+        <fullName>FileChooseErrorMsg</fullName>
+        <categories>Error Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FileChooseErrorMsg</shortDescription>
+        <value>You must choose a file before trying to upload it.</value>
+    </labels>
+    <labels>
+        <fullName>FileNameLengthErrorMsg</fullName>
+        <categories>Error Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FileNameLengthErrorMsg</shortDescription>
+        <value>File name cannot be larger than 70 characters including the extension.</value>
+    </labels>
+    <labels>
+        <fullName>FileReadingErrorMsg</fullName>
+        <categories>Error Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FileReadingErrorMsg</shortDescription>
+        <value>There was an error reading the file.  Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>FileSizeErrorMsg</fullName>
+        <categories>Error Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FileSizeErrorMsg</shortDescription>
+        <value>File must be under 4MB in size.  Your file is too large.  Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>FileTypeErrorMsg</fullName>
+        <categories>Error Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>If uploaded file type is not allowed types.</shortDescription>
+        <value>Uploaded file type is not allowed. Please upload only .doc, .docx, .odt or .pdf type of files.</value>
+    </labels>
+    <labels>
+        <fullName>File_Name_is_Longer_than_80</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>File Name is Longer than 80</shortDescription>
+        <value>File Name is Longer than 80 characters</value>
+    </labels>
+    <labels>
+        <fullName>File_is_not_of_an_allowed_type</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>File is not of an allowed type</shortDescription>
+        <value>File type is not allowed.</value>
+    </labels>
+    <labels>
+        <fullName>File_is_over_size_limit_5mb</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>File is over size limit (5mb)</shortDescription>
+        <value>File exceeds size limit (5 MB).</value>
+    </labels>
+    <labels>
+        <fullName>FirstNameLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FirstNameLbl</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
+        <fullName>Formula_Field_Write_Back</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Formula Field Write Back</shortDescription>
+        <value>The field you selected is a Formula. Write Back is not possible with this field.</value>
+    </labels>
+    <labels>
+        <fullName>GetSilanisAPIKeyLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>GetSilanisAPIKeyLbl</shortDescription>
+        <value>Get e-SignLive API key</value>
+    </labels>
+    <labels>
+        <fullName>GoToListMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>GoToListMsg</shortDescription>
+        <value>Go to list »</value>
+    </labels>
+    <labels>
+        <fullName>HTTP303ErrorMsg</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HTTP303ErrorMsg</shortDescription>
+        <value>The connection did not work.</value>
+    </labels>
+    <labels>
+        <fullName>HelpText_Package_Email_Message_c</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>HelpText_Package_Email_Message__c</shortDescription>
+        <value>Optional text to be added to an email message that will be sent to all signers.</value>
+    </labels>
+    <labels>
+        <fullName>HelpText_Package_In_Person_Signing_c</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>HelpText_Package_In_Person_Signing__c</shortDescription>
+        <value>To enable multiple signers to sign all documents sequentially in a single session, select the “In Person Signing” checkbox.</value>
+    </labels>
+    <labels>
+        <fullName>HelpText_Template_Default_c</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>HelpText_Template_Default__c</shortDescription>
+        <value>To make this the system-wide default template for the related object type, select the Default checkbox.</value>
+    </labels>
+    <labels>
+        <fullName>HistoryLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>History</shortDescription>
+        <value>History</value>
+    </labels>
+    <labels>
+        <fullName>Info</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Info</shortDescription>
+        <value>Info</value>
+    </labels>
+    <labels>
+        <fullName>Information</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Information</shortDescription>
+        <value>Information</value>
+    </labels>
+    <labels>
+        <fullName>Inline_edit_error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Inline edit error</shortDescription>
+        <value>You need to open the record before being able to edit it.</value>
+    </labels>
+    <labels>
+        <fullName>Instructions</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Instructions</shortDescription>
+        <value>Instructions</value>
+    </labels>
+    <labels>
+        <fullName>InsufficientAccessMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>InsufficientAccessMsg</shortDescription>
+        <value>Insufficient Privileges: You do not have the level of access necessary to perform the operation you requested.</value>
+    </labels>
+    <labels>
+        <fullName>InvalidAPIKeyMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>InvalidAPIKeyMsg</shortDescription>
+        <value>Invalid API Key</value>
+    </labels>
+    <labels>
+        <fullName>InvalidDocDataMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid Documents Data</shortDescription>
+        <value>Please click Choose File to select a Document.</value>
+    </labels>
+    <labels>
+        <fullName>InvalidSgnDataMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid Signers Data</shortDescription>
+        <value>Signers data is invalid</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_Auto_Prepare_Value</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid Auto Prepare Value</shortDescription>
+        <value>Invalid &quot;Auto Preapre&quot; value. Expected true or false, or 0 or 1.</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_EnforceSigningOrder_value</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid EnforceSigningOrder value</shortDescription>
+        <value>Invalid &quot;EnforceSigningOrder&quot; value. Expected true or false.</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_InPersonSigning_value</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid InPersonSigning  value</shortDescription>
+        <value>Invalid &quot;InPersonSigning&quot; value. Expected true or false.</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_Insert_Value</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid Insert Value</shortDescription>
+        <value>Invalid &quot;Insert&quot; value. Expected true or false, or 0 or 1.</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_Sent_Param</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid Sent Param</shortDescription>
+        <value>Invalid &quot;Send&quot; value. Expected true or false, or 0 or 1.</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_Write_Back_Value</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid Write Back Value</shortDescription>
+        <value>Invalid &quot;Write Back&quot; value. Expected true or false, or 0 or 1.</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_document_id</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid document id</shortDescription>
+        <value>Invalid Document ID ({0})</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_expiry_date</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid expiry date</shortDescription>
+        <value>Invalid Expiry Date format. You must use &quot;YYYYMMDD&quot;.</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_parent_Id</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid parent Id</shortDescription>
+        <value>Invalid Parent ID</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_signer_id</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid signer id</shortDescription>
+        <value>Invalid Signer ID ({0})</value>
+    </labels>
+    <labels>
+        <fullName>Language_not_valid</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Language not valid</shortDescription>
+        <value>The provided language is not valid.</value>
+    </labels>
+    <labels>
+        <fullName>LastModifiedByLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LastModifiedByLbl</shortDescription>
+        <value>Last Modified By</value>
+    </labels>
+    <labels>
+        <fullName>LastNameLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LastNameLbl</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
+        <fullName>LoadFieldSuggestionsFromPackage</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LoadFieldSuggestionsFromPackage</shortDescription>
+        <value>Load Field Suggestions From Package</value>
+    </labels>
+    <labels>
+        <fullName>LocationLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Location from where the document has been uploaded</shortDescription>
+        <value>Location</value>
+    </labels>
+    <labels>
+        <fullName>Manually_enter_an_answer</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Manually enter an answer</shortDescription>
+        <value>Manually enter an answer</value>
+    </labels>
+    <labels>
+        <fullName>Mapping_Type</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Mapping Type</shortDescription>
+        <value>Mapping Type</value>
+    </labels>
+    <labels>
+        <fullName>MaskAnswer</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>MaskAnswer</shortDescription>
+        <value>Mask the signer&apos;s answer when it is being entered</value>
+    </labels>
+    <labels>
+        <fullName>Missing_Are_required</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Missing Are required</shortDescription>
+        <value>are required values.</value>
+    </labels>
+    <labels>
+        <fullName>Missing_Is_required</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Missing Is required</shortDescription>
+        <value>is a required value.</value>
+    </labels>
+    <labels>
+        <fullName>Name</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Name</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>NameLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NameLbl</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>Name_too_long</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Name too long</shortDescription>
+        <value>Name value is too long (max = 50 characters). To customize your experience, you can use the parameters below.</value>
+    </labels>
+    <labels>
+        <fullName>NewPackageLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NewPackageLbl</shortDescription>
+        <value>New Package</value>
+    </labels>
+    <labels>
+        <fullName>NewPackageTemplateLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NewPackageTemplateLbl</shortDescription>
+        <value>New Package Template</value>
+    </labels>
+    <labels>
+        <fullName>New_Field_Mapping</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>New Field Mapping</shortDescription>
+        <value>New Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>New_Signer</fullName>
+        <categories>Signer Delegation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>New Signer</shortDescription>
+        <value>Delegated Signer : {0}</value>
+    </labels>
+    <labels>
+        <fullName>Next</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
+        <fullName>NoRecordsMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NoRecordsMsg</shortDescription>
+        <value>No records to display</value>
+    </labels>
+    <labels>
+        <fullName>No_Templates</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>There are no templates for this parent type</shortDescription>
+        <value>There are no templates for the selected related object type.</value>
+    </labels>
+    <labels>
+        <fullName>No_files_to_show</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No files to show</shortDescription>
+        <value>No files to show</value>
+    </labels>
+    <labels>
+        <fullName>NoneOption</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NoneOption</shortDescription>
+        <value>--None--</value>
+    </labels>
+    <labels>
+        <fullName>Note_Tooltip</fullName>
+        <categories>Tooltips</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Note Tooltip</shortDescription>
+        <value>Check this box if you want signers to sign in a specific order. You can reorder signers by dragging the crossed-arrows up or down.</value>
+    </labels>
+    <labels>
+        <fullName>OkBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OkBtn</shortDescription>
+        <value>OK</value>
+    </labels>
+    <labels>
+        <fullName>OpportunityLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OpportunityLbl</shortDescription>
+        <value>Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>OriginalDocumentLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OriginalDocumentLbl</shortDescription>
+        <value>Original Document</value>
+    </labels>
+    <labels>
+        <fullName>Owned_by_me</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Owned by me</shortDescription>
+        <value>Owned by me</value>
+    </labels>
+    <labels>
+        <fullName>Owner</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Owner</shortDescription>
+        <value>Owner</value>
+    </labels>
+    <labels>
+        <fullName>OwnerEmailDuplicateMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Package Owner and Signer Email are same.</shortDescription>
+        <value>Signer and Package Owner email should not be same.</value>
+    </labels>
+    <labels>
+        <fullName>PDFFormFieldWithoutSgnCapture</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PDFFormFieldWithoutSgnCapture</shortDescription>
+        <value>At least one PDF Form Field TextTag of type Signature is required on the convention</value>
+    </labels>
+    <labels>
+        <fullName>PackageDeclined</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PackageDeclined</shortDescription>
+        <value>This package has been declined.</value>
+    </labels>
+    <labels>
+        <fullName>PackageDetailLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PackageDetailLbl</shortDescription>
+        <value>Package Detail</value>
+    </labels>
+    <labels>
+        <fullName>PackageEditLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PackageEditLbl</shortDescription>
+        <value>Package Edit</value>
+    </labels>
+    <labels>
+        <fullName>PackageExpired</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PackageExpired</shortDescription>
+        <value>This package has expired.</value>
+    </labels>
+    <labels>
+        <fullName>PackageHasExpiredToUpdate</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PackageHasExpiredToUpdate</shortDescription>
+        <value>You cannot update this package because the Expiry Date is today or in the past, select a future expiry date.</value>
+    </labels>
+    <labels>
+        <fullName>PackageLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PackageLbl</shortDescription>
+        <value>Package</value>
+    </labels>
+    <labels>
+        <fullName>PackageOptedOut</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PackageOptedOut</shortDescription>
+        <value>One or more signers has opted out of this package.</value>
+    </labels>
+    <labels>
+        <fullName>PackageSignersLockedConfirm</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PackageSignersLockedConfirm</shortDescription>
+        <value>One or more signers is currently locked. A locked signer remains locked until the package creator or administrator clicks that signer&apos;s Unlock Signer icon (in the Action column of the Signers section).</value>
+    </labels>
+    <labels>
+        <fullName>PackageTemplateDetailLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PackageTemplateDetailLbl</shortDescription>
+        <value>Package Template Detail</value>
+    </labels>
+    <labels>
+        <fullName>PackageTemplateEditLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PackageTemplateEditLbl</shortDescription>
+        <value>Package Template Edit</value>
+    </labels>
+    <labels>
+        <fullName>Package_Section</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Package Section</shortDescription>
+        <value>Package</value>
+    </labels>
+    <labels>
+        <fullName>Package_Template_Invalid</fullName>
+        <categories>Package</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Package Template Invalid</shortDescription>
+        <value>The Template from which you are trying to create a Package has invalid files, please remove them and try again.</value>
+    </labels>
+    <labels>
+        <fullName>Page</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Page</shortDescription>
+        <value>Page</value>
+    </labels>
+    <labels>
+        <fullName>PageLayoutHdrLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PageLayoutHdrLbl</shortDescription>
+        <value>To add an e-SignLive package&apos;s &quot;related list&quot; to a custom object :
+&lt;br/&gt;
+&lt;ol&gt;
+&lt;li&gt;Open the &lt;a href=&quot;/p/setup/custent/CustomObjectsPage?setupid=CustomObjects&amp;retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DDevTools&quot;&gt;Setup-&gt;Create-&gt;Objects&lt;/a&gt; page&lt;/li&gt;
+&lt;li&gt;Click on the &lt;b&gt;Package&lt;/b&gt; object&lt;/li&gt;
+&lt;li&gt;Click the &lt;b&gt;New&lt;/b&gt; button in the &lt;b&gt;Custom Fields &amp;amp; Relationships&lt;/b&gt; section&lt;/li&gt;
+&lt;li&gt;Select &lt;b&gt;Lookup Relationship&lt;/b&gt; as the field type and click &lt;b&gt;Next&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Choose your custom object type in the &lt;b&gt;Related To&lt;/b&gt; select list and click &lt;b&gt;Next&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Set a &lt;b&gt;Field Label&gt;, &lt;b&gt;Field Name&lt;/b&gt;, &lt;b&gt;Description&lt;/b&gt; and &lt;b&gt;Help Text&lt;/b&gt; then click &lt;b&gt;Next&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Set the desired &lt;b&gt;Field-Level Security&lt;/b&gt; then click &lt;b&gt;Next&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Click &lt;b&gt;Next&lt;/b&gt; again&lt;/li&gt;
+&lt;li&gt;Make sure the &lt;b&gt;Add Related List&lt;/b&gt; checkbox is checked for every page layout you want the related list to appear on&lt;/li&gt;
+&lt;li&gt;Click &lt;b&gt;Save&lt;/b&gt;&lt;/li&gt;
+&lt;/ol&gt;</value>
+    </labels>
+    <labels>
+        <fullName>PageLayoutsTitleLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PageLayoutsTitleLbl</shortDescription>
+        <value>Page Layout</value>
+    </labels>
+    <labels>
+        <fullName>Parent_Id_does_not_exist</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Parent Id does not exist</shortDescription>
+        <value>Invalid Parent ID</value>
+    </labels>
+    <labels>
+        <fullName>Parent_Type</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Parent Type</shortDescription>
+        <value>Related object type</value>
+    </labels>
+    <labels>
+        <fullName>Password_tool_tip</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Password tool tip</shortDescription>
+        <value>Salesforce will not store your e-SignLive password. The password will be used only to retrieve your e-SignLive API key.</value>
+    </labels>
+    <labels>
+        <fullName>PhoneLbl</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PhoneLbl</shortDescription>
+        <value>Phone</value>
+    </labels>
+    <labels>
+        <fullName>Phone_Format_Error</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Phone Format Error</shortDescription>
+        <value>You must enter a valid phone number.</value>
+    </labels>
+    <labels>
+        <fullName>PlaceholdersException</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PlaceholdersException</shortDescription>
+        <value>Please replace placeholder with Signer&apos;s information.</value>
+    </labels>
+    <labels>
+        <fullName>Please_Wait</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Please Wait Action Status</shortDescription>
+        <value>Please Wait...</value>
+    </labels>
+    <labels>
+        <fullName>PopupBlockerMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PopupBlockerMsg</shortDescription>
+        <value>An e-SignLive page is blocked. Please update your browser&apos;s settings to allow pop-ups from this page and try again.</value>
+    </labels>
+    <labels>
+        <fullName>PrepareBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PrepareBtn</shortDescription>
+        <value>Prepare</value>
+    </labels>
+    <labels>
+        <fullName>Preparing</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used while Packge Template is sent to ESilanis</shortDescription>
+        <value>Preparing...</value>
+    </labels>
+    <labels>
+        <fullName>Previous</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Previous</shortDescription>
+        <value>Previous</value>
+    </labels>
+    <labels>
+        <fullName>Providing_TemplateId_and_ConventionId</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Providing TemplateId and ConventionId</shortDescription>
+        <value>Convention ID cannot be parametrized if you provide a Template ID.</value>
+    </labels>
+    <labels>
+        <fullName>Providing_TemplateId_and_Signer_or_Documents</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Providing TemplateId and Signer or Documents</shortDescription>
+        <value>Signers and/or documents cannot be parametrized if you provide a Template ID.</value>
+    </labels>
+    <labels>
+        <fullName>Q_A_Complete_Fields</fullName>
+        <categories>Q&amp;A Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Q&amp;A Complete Fields</shortDescription>
+        <value>In order to complete the question details you must fill both question and answer.</value>
+    </labels>
+    <labels>
+        <fullName>Question</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Question</shortDescription>
+        <value>Question</value>
+    </labels>
+    <labels>
+        <fullName>Read_Only_Field_Write_Back</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Read Only Field Write Back</shortDescription>
+        <value>The field you selected is read-only. Write Back is not possible with this field.</value>
+    </labels>
+    <labels>
+        <fullName>ReasonLabel</fullName>
+        <categories>Package Reason Label</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ReasonLabel</shortDescription>
+        <value>Reason</value>
+    </labels>
+    <labels>
+        <fullName>ReasonLimitExceeded</fullName>
+        <categories>Package Reason Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ReasonLimitExceeded</shortDescription>
+        <value>Error to update reasons from Silanis. More than 100 packages cannot be processed at the same time.</value>
+    </labels>
+    <labels>
+        <fullName>ReasonMessageLabel</fullName>
+        <categories>Package Reason Label</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ReasonMessageLabel</shortDescription>
+        <value>Message</value>
+    </labels>
+    <labels>
+        <fullName>ReasonUserLabel</fullName>
+        <categories>Package Reason label</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ReasonUserLabel</shortDescription>
+        <value>User</value>
+    </labels>
+    <labels>
+        <fullName>RecallBtn</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RecallBtn</shortDescription>
+        <value>Recall</value>
+    </labels>
+    <labels>
+        <fullName>Recent</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Recent</shortDescription>
+        <value>Recent</value>
+    </labels>
+    <labels>
+        <fullName>RefreshConnectionBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RefreshConnectionBtn</shortDescription>
+        <value>Refresh Connection</value>
+    </labels>
+    <labels>
+        <fullName>Related_Object_Type_Caps</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Related Object Type Caps</shortDescription>
+        <value>Related Object Type</value>
+    </labels>
+    <labels>
+        <fullName>Related_list</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Related list</shortDescription>
+        <value>Related List</value>
+    </labels>
+    <labels>
+        <fullName>Related_list_Details</fullName>
+        <categories>Adminpage</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Related list Details</shortDescription>
+        <value>To add an e-SignLive package&apos;s &quot;related list&quot; to a standard object (Account, Opportunity, Contact, Lead):&lt;br&gt;
+&lt;ol&gt;&lt;li&gt;Open the &lt;a href=&quot;/ui/setup/Setup?setupid=Customize&quot;&gt;Setup-&gt;Customize&lt;/a&gt; admin page&lt;/li&gt;
+&lt;li&gt;Click on the object name you want to add the related list to.&lt;/li&gt;
+&lt;li&gt;Click on &lt;b&gt;Page Layouts&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Click on edit beside the page layout you want to add the related list to&lt;/li&gt;
+&lt;li&gt;Click the &lt;b&gt;Related Lists&lt;/b&gt; option at the top&lt;/li&gt;
+&lt;li&gt;Drag the &lt;b&gt;Packages&lt;/b&gt; entry in the layout where you want it to appear&lt;/li&gt;
+&lt;li&gt;Save&lt;/li&gt;
+&lt;/ol&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Related_object_attachment</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Related object attachment</shortDescription>
+        <value>Related object attachment</value>
+    </labels>
+    <labels>
+        <fullName>Related_object_feed_attachment</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Related object feed attachment</shortDescription>
+        <value>Related object feed attachment</value>
+    </labels>
+    <labels>
+        <fullName>Related_object_type</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Related object type</shortDescription>
+        <value>Related object type</value>
+    </labels>
+    <labels>
+        <fullName>Reminders</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reminders</shortDescription>
+        <value>Reminders</value>
+    </labels>
+    <labels>
+        <fullName>Remove</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Remove</shortDescription>
+        <value>Remove</value>
+    </labels>
+    <labels>
+        <fullName>Repeat_reminder_Help</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repeat reminder Help</shortDescription>
+        <value>Number in days between reminders</value>
+    </labels>
+    <labels>
+        <fullName>Repeat_reminder_Help_Admin</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repeat reminder Help Admin</shortDescription>
+        <value>Default number in days between reminders</value>
+    </labels>
+    <labels>
+        <fullName>Repeat_reminders</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repeat reminders</shortDescription>
+        <value>Repeat reminder every M days</value>
+    </labels>
+    <labels>
+        <fullName>Repeat_reminders_default_value</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repeat reminders default value</shortDescription>
+        <value>Repeat reminder every M days</value>
+    </labels>
+    <labels>
+        <fullName>Repetitions</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repetitions</shortDescription>
+        <value>Total # of reminders to send</value>
+    </labels>
+    <labels>
+        <fullName>Repetitions_Help</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repetitions Help</shortDescription>
+        <value>Select how many reminders to send</value>
+    </labels>
+    <labels>
+        <fullName>Repetitions_Help_Admin</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repetitions Help Admin</shortDescription>
+        <value>Default number of reminders to send</value>
+    </labels>
+    <labels>
+        <fullName>Repetitions_default_value</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Repetitions default value</shortDescription>
+        <value>Total # of reminders to send</value>
+    </labels>
+    <labels>
+        <fullName>Retry_eSL_restore</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Retry eSL restore</shortDescription>
+        <value>Retry eSL restore</value>
+    </labels>
+    <labels>
+        <fullName>ReviewBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ReviewBtn</shortDescription>
+        <value>Review / Sign</value>
+    </labels>
+    <labels>
+        <fullName>ReviewOnlyBtn</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ReviewOnlyBtn</shortDescription>
+        <value>Review</value>
+    </labels>
+    <labels>
+        <fullName>Row_Message</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Value used to know a descriptive message by row</shortDescription>
+        <value>Signer</value>
+    </labels>
+    <labels>
+        <fullName>SF_Cannot_Delete_Template</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SF_Cannot_Delete_Template</shortDescription>
+        <value>Could not delete this template:</value>
+    </labels>
+    <labels>
+        <fullName>Salesforce_Field_Path</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Salesforce Field Path</shortDescription>
+        <value>Salesforce Field Path</value>
+    </labels>
+    <labels>
+        <fullName>Salesforce_Field_Type</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Salesforce Field Type</shortDescription>
+        <value>Salesforce Field Type</value>
+    </labels>
+    <labels>
+        <fullName>Salesforce_Object_Field_Reference</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Salesforce Object Field Reference</shortDescription>
+        <value>Salesforce Object Field Reference</value>
+    </labels>
+    <labels>
+        <fullName>SaveBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SaveBtn</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>SaveDocumentsBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SaveDocumentsBtn</shortDescription>
+        <value>Save Documents</value>
+    </labels>
+    <labels>
+        <fullName>SaveSignersBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SaveSignersBtn</shortDescription>
+        <value>Save Signers</value>
+    </labels>
+    <labels>
+        <fullName>Save_and_new</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Save and new</shortDescription>
+        <value>Save &amp; New</value>
+    </labels>
+    <labels>
+        <fullName>Saving</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Saving Action Status</shortDescription>
+        <value>Saving...</value>
+    </labels>
+    <labels>
+        <fullName>Search</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Search</shortDescription>
+        <value>Search</value>
+    </labels>
+    <labels>
+        <fullName>Search_all_files</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Search all files</shortDescription>
+        <value>Search all files...</value>
+    </labels>
+    <labels>
+        <fullName>Select_Documents_from_Salesforce</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Select Documents from Salesforce</shortDescription>
+        <value>Select Documents from Salesforce</value>
+    </labels>
+    <labels>
+        <fullName>Select_Related_Object_Fields</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Select Related Object Fields</shortDescription>
+        <value>Select Related Object Fields</value>
+    </labels>
+    <labels>
+        <fullName>Select_Signer_Field</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Select Signer Field</shortDescription>
+        <value>Select Signer Field</value>
+    </labels>
+    <labels>
+        <fullName>Select_a_Document_Type</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Select a Document Type</shortDescription>
+        <value>Select a Document Type</value>
+    </labels>
+    <labels>
+        <fullName>SelecteSignerTypeMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Used if signer type is not assigned.</shortDescription>
+        <value>Please select Type for Signer.</value>
+    </labels>
+    <labels>
+        <fullName>Selected_Parent_Type</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Selected Parent Type</shortDescription>
+        <value>Select related object type</value>
+    </labels>
+    <labels>
+        <fullName>Selected_files</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Selected Files</shortDescription>
+        <value>Selected Files</value>
+    </labels>
+    <labels>
+        <fullName>SendToESignLiveBtn</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SendToESignLiveBtn</shortDescription>
+        <value>Send</value>
+    </labels>
+    <labels>
+        <fullName>SendWithoutSaveMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SendWithoutSaveMsg</shortDescription>
+        <value>Are you sure? You want to discard the changes to Signers or Documents?</value>
+    </labels>
+    <labels>
+        <fullName>Send_reminder_in_N_days_Help</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Send reminder in N days Help</shortDescription>
+        <value>Number in days before sending the first reminder</value>
+    </labels>
+    <labels>
+        <fullName>Send_reminder_in_N_days_Help_Admin</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Send reminder in N days Help Admin</shortDescription>
+        <value>Default number in days before sending the first reminder</value>
+    </labels>
+    <labels>
+        <fullName>Send_reminders</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Send reminders</shortDescription>
+        <value>Send reminder in N days</value>
+    </labels>
+    <labels>
+        <fullName>Send_reminders_default_value</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Send reminders default value</shortDescription>
+        <value>Send reminder in N days</value>
+    </labels>
+    <labels>
+        <fullName>Sending</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sending Action Status</shortDescription>
+        <value>Sending...</value>
+    </labels>
+    <labels>
+        <fullName>ShowMoreMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ShowMoreMsg</shortDescription>
+        <value>Show more »</value>
+    </labels>
+    <labels>
+        <fullName>Show_Reminders</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show Reminders</shortDescription>
+        <value>Show Reminders</value>
+    </labels>
+    <labels>
+        <fullName>Show_Reminders_Help</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show Reminders Help Admin</shortDescription>
+        <value>Check to show reminders section in Package and Templates</value>
+    </labels>
+    <labels>
+        <fullName>SignBtn</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SignBtn</shortDescription>
+        <value>Sign</value>
+    </labels>
+    <labels>
+        <fullName>SignedDocumentLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SignedDocumentLbl</shortDescription>
+        <value>Signed Document</value>
+    </labels>
+    <labels>
+        <fullName>SignerPhoneIsRequiredMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if signer phone is empty for SMS authentication</shortDescription>
+        <value>Phone is Required</value>
+    </labels>
+    <labels>
+        <fullName>SignerRequiredValuesMsg</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Displayed when required values for Signers are not provided.</shortDescription>
+        <value>First Name, Last Name and Email are required Values.</value>
+    </labels>
+    <labels>
+        <fullName>SignerStatusLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SignerStatusLbl</shortDescription>
+        <value>Signing Status</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Allow_Delegation_Wrong_Value</fullName>
+        <categories>Allow Delegation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer Allow Delegation Wrong Value</shortDescription>
+        <value>{0} invalid value. Only &quot;0&quot;, &quot;1&quot;, &quot;true&quot; or &quot;false&quot; are allowed.</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Completed</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Signer_Completed</shortDescription>
+        <value>You have completed the e-signing transaction.</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Declined</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Signer_Declined</shortDescription>
+        <value>You have declined the e-signing transaction.</value>
+    </labels>
+    <labels>
+        <fullName>Signer_First_Name_value_too_large</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer First Name value too large</shortDescription>
+        <value>{0} value is too long (max 40 char)</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Label_Locked</fullName>
+        <categories>Signers</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer Label Locked</shortDescription>
+        <value>To change signer label, please delete all of the documents.</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Label_SingleUse</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Signer_Label_SingleUse</shortDescription>
+        <value>You cannot select the same signer label for multiple signers</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Last_Name_value_too_large</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer Last Name value too large</shortDescription>
+        <value>{0} value is too long (max 80 char)</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Opted_Out</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Signer_Opted_Out</shortDescription>
+        <value>You have opted-out of the e-signing transaction.</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Phone_and_Name_are_Required</fullName>
+        <categories>Page Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer Phone and Name are Required</shortDescription>
+        <value>First Name, Last Name, Email and Phone are required Values.</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Phone_value_too_large</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer Phone value too large</shortDescription>
+        <value>{0} value is too long (max 15 char)</value>
+    </labels>
+    <labels>
+        <fullName>Signer_Type</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer Type</shortDescription>
+        <value>Signer Type</value>
+    </labels>
+    <labels>
+        <fullName>Signer_message</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer message</shortDescription>
+        <value>Params for SIGNERXFIRSTNAME, SIGNERXLASTNAME, SIGNERXPHONE are only available when SIGNERX is an Email (External user)</value>
+    </labels>
+    <labels>
+        <fullName>Signer_message_2</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer_message 2</shortDescription>
+        <value>A first name and last name are required when you provide an email address for a signer.</value>
+    </labels>
+    <labels>
+        <fullName>Signer_message_3</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signer_message 3</shortDescription>
+        <value>Please select a record on the column Name of the signer.</value>
+    </labels>
+    <labels>
+        <fullName>SignersConventionLbl</fullName>
+        <categories>Signer Label</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SignersConventionLbl</shortDescription>
+        <value>Signer Label</value>
+    </labels>
+    <labels>
+        <fullName>SignersLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SignersLbl</shortDescription>
+        <value>Signers</value>
+    </labels>
+    <labels>
+        <fullName>SignersUniqueIdMsg</fullName>
+        <categories>Message</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SignersUniqueIdMsg</shortDescription>
+        <value>Signers should have a unique email address</value>
+    </labels>
+    <labels>
+        <fullName>Signers_Max_Size</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Signers Max Size</shortDescription>
+        <value>You can only add up to {0} Signers. You have {1}</value>
+    </labels>
+    <labels>
+        <fullName>SigningOrderLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SigningOrderLbl</shortDescription>
+        <value>Signing Order</value>
+    </labels>
+    <labels>
+        <fullName>SigningOrderNotDefinedExceptionMsg</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SigningOrderNotDefinedExceptionMsg</shortDescription>
+        <value>Signing order should be defined for all the signers. Please enter the numerical order of the signers (e.g. 1, 2, 3,...)</value>
+    </labels>
+    <labels>
+        <fullName>Some_error_occurred_while_uploading_file</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Some error occurred while uploading file</shortDescription>
+        <value>Some error occurred while uploading file</value>
+    </labels>
+    <labels>
+        <fullName>TemplateHasExpireToCreate</fullName>
+        <categories>Package Template Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>TemplateHasExpireToCreate</shortDescription>
+        <value>You cannot create a package from an expired template.</value>
+    </labels>
+    <labels>
+        <fullName>TemplateLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TemplateLbl</shortDescription>
+        <value>Template</value>
+    </labels>
+    <labels>
+        <fullName>TemplateUpdateError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>TemplateUpdateError</shortDescription>
+        <value>Unable to update the package on e-SignLive</value>
+    </labels>
+    <labels>
+        <fullName>TextTagStaticPositionPage</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>TextTagStaticPositionPage</shortDescription>
+        <value>The minimum value for the page needs to be bigger than 0</value>
+    </labels>
+    <labels>
+        <fullName>TypeLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TypeLbl</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>US_production</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>US production</shortDescription>
+        <value>US Production</value>
+    </labels>
+    <labels>
+        <fullName>US_production_URL</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>US production URL</shortDescription>
+        <value>https://apps.e-signlive.com/</value>
+    </labels>
+    <labels>
+        <fullName>US_sandbox</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>US sandbox</shortDescription>
+        <value>US Sandbox</value>
+    </labels>
+    <labels>
+        <fullName>US_sandbox_URL</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>US sandbox URL</shortDescription>
+        <value>https://sandbox.e-signlive.com/</value>
+    </labels>
+    <labels>
+        <fullName>UnexpectedError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>UnexpectedError</shortDescription>
+        <value>Unexpected Error. Our technical staff have been notified and will look into the problem. We apologize for any inconvenience this may have caused you.</value>
+    </labels>
+    <labels>
+        <fullName>UnlockLbl</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>UnlockLbl</shortDescription>
+        <value>Unlocking</value>
+    </labels>
+    <labels>
+        <fullName>Unlock_Signer</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Unlock Signer</shortDescription>
+        <value>Unlock Signer</value>
+    </labels>
+    <labels>
+        <fullName>Update</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Update</shortDescription>
+        <value>Update</value>
+    </labels>
+    <labels>
+        <fullName>Upload_local_files</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Upload local files</shortDescription>
+        <value>Upload local files</value>
+    </labels>
+    <labels>
+        <fullName>UploadingLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Uploading</shortDescription>
+        <value>Uploading...</value>
+    </labels>
+    <labels>
+        <fullName>UserFirstName</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>UserFirstName</shortDescription>
+        <value>Your Salesforce account doesn&apos;t seem to have an associated First Name. You must specify a First Name to use this feature.</value>
+    </labels>
+    <labels>
+        <fullName>UserLbl</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>UserLbl</shortDescription>
+        <value>User</value>
+    </labels>
+    <labels>
+        <fullName>User_name_tool_tip</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>User name tool tip</shortDescription>
+        <value>To connect your  Salesforce account to your e-SignLive account, both accounts must have the same email address.</value>
+    </labels>
+    <labels>
+        <fullName>Write_Back_Does_Not_Overwrite_Existing</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Write Back Does Not Overwrite Existing</shortDescription>
+        <value>Write Back Does Not Overwrite Existing</value>
+    </labels>
+    <labels>
+        <fullName>Write_Back_Does_Not_Write_Empty</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Write Back Does Not Write Empty</shortDescription>
+        <value>Write Back Does Not Write Empty</value>
+    </labels>
+    <labels>
+        <fullName>Wrong_Signer_Value</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wrong Signer Value</shortDescription>
+        <value>The Signer param, has to be a valid ID or Email.</value>
+    </labels>
+    <labels>
+        <fullName>Wrong_Template_Id</fullName>
+        <categories>Package URL Params</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Wrong Template Id</shortDescription>
+        <value>Invalid Template ID ({0})</value>
+    </labels>
+    <labels>
+        <fullName>You_are_trying_to_add_more_than_10_files</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You are trying to add more than 10 files</shortDescription>
+        <value>You are trying to add more than 10 files, please select less and try again</value>
+    </labels>
+    <labels>
+        <fullName>You_can_not_add_documents</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You can not add documents</shortDescription>
+        <value>You can not add documents to a package that has been sent</value>
+    </labels>
+    <labels>
+        <fullName>You_can_not_add_signers</fullName>
+        <categories>Package</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You can not add signers</shortDescription>
+        <value>You can not add signers to a package that has been sent</value>
+    </labels>
+    <labels>
+        <fullName>You_can_not_update_package</fullName>
+        <categories>Package Message</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You can not update package</shortDescription>
+        <value>You can not update a package that has been sent</value>
+    </labels>
+    <labels>
+        <fullName>You_cannot_modify_signers_of_a_package_that_has_been_sent</fullName>
+        <categories>Signers</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You cannot modify signers of a package that has been sent.</shortDescription>
+        <value>You cannot modify signers of a package that has been sent.</value>
+    </labels>
+    <labels>
+        <fullName>You_do_not_have_permission_to_Edit_this_record</fullName>
+        <categories>SyncSigner</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You do not have permissions to Edit this record</shortDescription>
+        <value>You do not have permissions to Edit this record</value>
+    </labels>
+    <labels>
+        <fullName>You_have_selected</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You have selected:</shortDescription>
+        <value>You have selected:</value>
+    </labels>
+    <labels>
+        <fullName>You_must_enter_at_least_one_question</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You must enter at least one question.</shortDescription>
+        <value>You must enter at least one question and answer.</value>
+    </labels>
+    <labels>
+        <fullName>cachedMappingTable</fullName>
+        <categories>CachedMapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cachedMappingTable</shortDescription>
+        <value>Signer-Entered Values</value>
+    </labels>
+    <labels>
+        <fullName>defaultInsertVal</fullName>
+        <categories>CachedMapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>defaultInsertVal</shortDescription>
+        <value>Default Insert Value</value>
+    </labels>
+    <labels>
+        <fullName>eSLField</fullName>
+        <categories>CachedMapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>eSLField</shortDescription>
+        <value>e-SignLive Field</value>
+    </labels>
+    <labels>
+        <fullName>e_SignLive</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>e-SignLive</shortDescription>
+        <value>e-SignLive™</value>
+    </labels>
+    <labels>
+        <fullName>e_SignLive_Document_Field_Reference</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>e-SignLive Document Field Reference</shortDescription>
+        <value>e-SignLive Document Field Reference</value>
+    </labels>
+    <labels>
+        <fullName>e_SignLive_Field_Name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>e-SignLive Field Name</shortDescription>
+        <value>e-SignLive Field Name</value>
+    </labels>
+    <labels>
+        <fullName>e_SignLive_Field_Suggestions</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>e-SignLive Field Suggestions</shortDescription>
+        <value>e-SignLive Field Suggestions</value>
+    </labels>
+    <labels>
+        <fullName>e_SignLive_password</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>e-SignLive password</shortDescription>
+        <value>e-SignLive password</value>
+    </labels>
+    <labels>
+        <fullName>e_SignLive_username</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>e-SignLive username</shortDescription>
+        <value>e-SignLive username</value>
+    </labels>
+    <labels>
+        <fullName>emailSessionNotMatch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>emailSessionNotMatch</shortDescription>
+        <value>There was an error, your email does not matches for the API KEY</value>
+    </labels>
+    <labels>
+        <fullName>enterAPIKey</fullName>
+        <categories>Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter API Key</shortDescription>
+        <value>e-SignLive Account API Key</value>
+    </labels>
+    <labels>
+        <fullName>errorSenderNotFound</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errorSenderNotFound</shortDescription>
+        <value>Sender was not found</value>
+    </labels>
+    <labels>
+        <fullName>of</fullName>
+        <categories>DocumentSelection</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>of</shortDescription>
+        <value>of</value>
+    </labels>
+    <labels>
+        <fullName>sfFieldPath</fullName>
+        <categories>CachedMapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sfFieldPath</shortDescription>
+        <value>Salesforce Field Path</value>
+    </labels>
+    <labels>
+        <fullName>signerEnteredVal</fullName>
+        <categories>CachedMapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>signerEnteredVal</shortDescription>
+        <value>Signer-Entered Value</value>
+    </labels>
+    <labels>
+        <fullName>signingStatusNoSignature</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>signingStatusNoSignature</shortDescription>
+        <value>No signature required.</value>
+    </labels>
+    <labels>
+        <fullName>signingStatusSigned</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>signingStatusSigned</shortDescription>
+        <value>All documents are signed.</value>
+    </labels>
+    <labels>
+        <fullName>writeBackStatus</fullName>
+        <categories>CachedMapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>writeBackStatus</shortDescription>
+        <value>Write Back Status</value>
+    </labels>
+</CustomLabels>

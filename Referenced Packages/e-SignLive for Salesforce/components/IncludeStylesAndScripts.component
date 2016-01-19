@@ -1,0 +1,41 @@
+<apex:component allowDML="false">
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/jQueryDT.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/custom-theme/jquery-ui-1.10.4.custom.min.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/fakeConsole.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/jQuery.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/jQueryDT.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/jQueryUI.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/attrchange.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/packageSigner.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/packageReminder.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/packageDocument.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/questionAnswer.js')}"/>  
+
+    <apex:includeScript value="/soap/ajax/29.0/connection.js"/>
+    <script type="text/javascript">
+        //Define all the Custom Labels
+        var confirmationBeforeDeletionMsg = "{!$Label.ConfirmationBeforeDeletionMsg}";
+        var uploading = "{!$Label.UploadingLbl}";
+        var deleting = "{!$Label.Deleting}";
+        var saving = "{!$Label.Saving}";
+        var sending = "{!$Label.Sending}";
+        var preparing = "{!$Label.Preparing}";
+        var fileAttachedMsg = "{!$Label.FileAttachedMsg}";
+        var fileNameLengthErrorMsg = "{!$Label.FileNameLengthErrorMsg}";
+        var fileReadingErrorMsg = "{!$Label.FileReadingErrorMsg}";
+        var fileNameLengthErrorMsg = "{!$Label.FileNameLengthErrorMsg}";
+        var fileChooseErrorMsg = "{!$Label.FileChooseErrorMsg}";
+        var fileSizeErrorMsg = "{!$Label.FileSizeErrorMsg}";
+        var fileTypeErrorMsg = "{!$Label.FileTypeErrorMsg}";
+        var sendWithoutSaveMsg = "{!$Label.SendWithoutSaveMsg}";
+        var popupBlockerMsg = "{!$Label.PopupBlockerMsg}";
+        var pleaseWait = "{!$Label.Please_Wait}";
+        var acceptOnlyToolTip = "{!$Label.Accept_Only_Tooltip}";
+        
+        //Get the API Session ID
+        var sessionId = "{!$Api.Session_ID}";
+
+        //Maximum Attachment Size
+        var maxFileSize = 4300000;
+    </script>
+</apex:component>

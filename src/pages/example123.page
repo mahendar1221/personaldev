@@ -1,0 +1,43 @@
+<apex:page standardController="Account" extensions="MyRendered_cls">
+<apex:form id="frm">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"/>     
+    <script>
+    var j$ = jQuery.noConflict();
+    j$(document).ready(function(){
+        j$("#test1").click(function(){
+            j$("#t").hide();
+        });
+    });
+    </script>   
+    <apex:outputPanel id="editpanel" rendered="{!editpanel}" >
+    <apex:pageBlock title="Edit Page">
+        <apex:pageBlockSection title="Account Edit">
+            <apex:inputField value="{!acc.Name}"/>
+            <apex:inputField value="{!acc.Phone}"/>
+            <apex:inputField value="{!acc.Rating}"/>
+            <apex:inputField value="{!acc.Industry}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockButtons >
+            <apex:commandButton value="Save" action="{!saveButton}"/>
+            <apex:commandButton value="Cancel" action="{!cancelButton}" immediate="true" />
+        </apex:pageBlockButtons>    
+    </apex:pageBlock>
+    </apex:outputPanel>
+        
+    <apex:outputPanel id="Viewpanel"  rendered="{!viewpanel}">    
+    <apex:pageBlock title="View Page">
+        <apex:pageBlockSection title="Account Detail">
+            <apex:outputField value="{!acc.Name}"/>
+            <apex:outputField value="{!acc.Phone}"/>
+            <apex:outputField value="{!acc.Rating}"/>
+            <apex:outputField value="{!acc.Industry}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockButtons id="btn">
+            <apex:commandButton value="Edit" action="{!editButton}"/>
+            
+        </apex:pageBlockButtons> 
+       <apex:commandButton value="test" id="test1" reRender="frm" disabled="{!onclk}" action="{!test1}"/>
+    </apex:pageBlock>
+    </apex:outputPanel>        
+</apex:form>            
+</apex:page>

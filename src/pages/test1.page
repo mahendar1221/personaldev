@@ -1,0 +1,20 @@
+<apex:page controller="list1">
+    <apex:form >
+    <style>
+    ul{
+    list-style: none;}
+    
+    </style>
+        <apex:pageBlock >
+           <table>
+           <apex:datalist value="{!lead}" var="a" style="list-style:none">
+               
+             <ol type="A">       
+                <li> "{!a.name}"</li>
+              </ol>     
+            </apex:datalist>
+           </table>
+        </apex:pageBlock>
+       
+    </apex:form>
+</apex:page>

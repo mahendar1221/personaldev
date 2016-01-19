@@ -1,0 +1,13 @@
+<apex:page controller="inserCollage">
+<apex:form >
+<apex:pageBlock title="Collage Details">
+<apex:pageblockSection title="Collage Information">
+<apex:inputField value="{!coll1.name}"/>
+
+</apex:pageblockSection>
+<apex:pageBlockButtons >
+<apex:commandButton value="Save data" action="{!save}"/>
+</apex:pageBlockButtons>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

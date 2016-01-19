@@ -1,0 +1,1 @@
+{"packageId":"123456789","startInDaysDelay":2,"repetitionsCount":2,"intervalInDays":2,"reminders":[]}

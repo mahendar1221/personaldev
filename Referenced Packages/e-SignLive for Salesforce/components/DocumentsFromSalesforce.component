@@ -1,0 +1,536 @@
+<!-- ************************************************************************
+* VisualForce Component: DocumentsFromSalesforce
+* Created by Juan Mora, 02/16/2015 - C093557
+*
+* - Display an select all the possible Files to create package documents
+*
+* Modifications:
+* - {DevName}, {MM/DD/YYYY} – {Description of changes made post deployment to client}
+*
+************************************************************************  -->
+<apex:component controller="ESL.DocumentsFromSalesforceController"
+    allowDML="true">
+    <apex:attribute name="masterobjectId" description="Master Obj Id"
+        type="id" required="true" assignTo="{!parentId}" />
+
+    <c:IncludeStylesAndScripts />
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/fileSelector.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/fileSelector.js')}" />
+
+    <apex:form id="FindFilesForm">
+        <script>
+            var maxFiles = "{!maxSelectedDocs}";
+            var displayFiles = "{!rowSelected}";
+            var canContinuePivot = "{!canProcessTheNext}";
+            var canContinue = "{!canProcessTheNext}";
+            var allowedExtension = "{!allowedExtensions}";
+            var nameSpace = "{!nameSpace}";
+            var parentId = "{!parentId}"; 
+            var sessionId = "{!SessionId}"; 
+            var maxFileSize = "{!maxFileSize}";
+            var maxFileName = "{!maxFileName}";
+            var confError = "{!confError}";
+            var allowedExtensionsFilter = "{!allowedExtensionsFilter}";
+            var allowedMIMEFilter = "{!allowedMIMEFilter}";
+            var instanceURL = "{!JSENCODE(InstanceUrlForRestAPI)}";
+            
+            var errorPrefix = "{!$Label.Error} "  ;
+            var errorType1 = "{!$Label.File_is_over_size_limit_5mb}";
+            var errorType2 = "{!$Label.File_is_not_of_an_allowed_type}";
+            var sImageURL = "{!URLFOR($Resource.Silanis, 'images/s.gif')}";
+            var someError = "{!$Label.Some_error_occurred_while_uploading_file}";
+            var maxFilesError = "{!$Label.You_are_trying_to_add_more_than_10_files}";
+            var maxFileNameError = "{!$Label.File_Name_is_Longer_than_80}";
+            var confErrorMessage = "{!$Label.Configuration_Missing}";
+        </script>
+
+        <apex:outputPanel layout="block" id="docSelMsg">
+            <apex:inputHidden value="{!hasErrorFiles}" id="hasErrorFiles"
+                       html-class="hasErrorFiles" />
+
+            <apex:pageMessages rendered="{!hasErrorFiles}"/>
+        </apex:outputPanel>    
+        
+        <apex:actionFunction name="setDocumentTypeJS"
+            action="{!setDocumentType}" reRender="availableFilesBlock, fileName"
+            status="processingFileList">
+            <apex:param id="objectName" name="objectName" value=""
+                assignTo="{!selectedType}" />
+            <apex:param id="folderId" name="folderId" value=""
+                assignTo="{!selectedFolder}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="setDocumentOwnedByMeTypeJS"
+            action="{!setDocumentType}" reRender="availableFilesBlock, fileName"
+            status="processingFileList">
+            <apex:param id="objectNameCD" name="objectNameCD" value=""
+                assignTo="{!selectedType}" />
+            <apex:param id="ownedByMe" name="ownedByMe" value=""
+                assignTo="{!ownedByMe}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="attachFileJS" action="{!attachFile}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList">
+            <apex:param id="docId" name="docId" value=""
+                assignTo="{!selectedDocumentId}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="removeFileJS" action="{!removeFile}"
+            reRender="availableFilesBlock, selectedFilesBlock, docSelMsg"
+            status="processingFileList">
+            <apex:param id="selDocId" name="selDocId" value=""
+                assignTo="{!selectedDocumentId}" />
+        </apex:actionFunction>
+
+        <apex:actionFunction name="nextJS" action="{!next}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="firstJS" action="{!first}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="lastJS" action="{!last}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="previousJS" action="{!previous}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="jumpJS" action="{!jump}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+
+        <apex:actionFunction name="nextSelectedJS" action="{!nextSelected}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="firstSelectedJS" action="{!firstSelected}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="lastSelectedJS" action="{!lastSelected}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="previousSelectedJS"
+            action="{!previousSelected}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+            
+        <apex:actionFunction name="jumpSelectedJS" action="{!jumpSelected}"
+            reRender="availableFilesBlock, selectedFilesBlock"
+            status="processingFileList" />
+
+        <apex:actionFunction name="createDocumentsJS"
+            action="{!createDocuments}"
+            reRender="availableFilesBlock, selectedFilesBlock, docSelMsg"
+            status="processingFileList" 
+            oncomplete="return checkBeforeCloseDialogSelectDocs();" />
+
+        <apex:actionFunction name="cancelJS"
+            action="{!cancel}"
+            reRender="availableFilesBlock, selectedFilesBlock, docSelMsg"
+            status="closeDialogStatus"/>
+
+        <apex:actionFunction name="addLocalJS" action="{!addLocal}"
+            reRender="totalSelectedFilesBlock">
+            <apex:param id="localAttachmentId" name="localAttachmentId" value=""
+                assignTo="{!localAttachmentId}" />
+            <apex:param id="localAttachmentName" name="localAttachmentName"
+                value="" assignTo="{!localAttachmentName}" />
+            <apex:param id="localAttachmentMessage" name="localAttachmentMessage"
+                value="" assignTo="{!localAttachmentMessage}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="addLocalJSRefresh" action="{!addLocal}"
+            reRender="selectedFilesBlock" status="processingFileList"
+            oncomplete="return enableAllLinks">
+            <apex:param id="localAttachmentIdRefresh"
+                name="localAttachmentIdRefresh" value=""
+                assignTo="{!localAttachmentId}" />
+            <apex:param id="localAttachmentNameRefresh"
+                name="localAttachmentNameRefresh" value=""
+                assignTo="{!localAttachmentName}" />
+            <apex:param id="localAttachmentMessageRefresh"
+                name="localAttachmentMessageRefresh" value=""
+                assignTo="{!localAttachmentMessage}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="refreshComponentJS" 
+            action="{!refreshComponent}" reRender="FindFilesForm" 
+            status="processingOpenComponent" />
+
+        <apex:actionstatus id="closeDialogStatus"
+            onstart="return closeDialogSelectDocs();" />
+
+        <apex:actionstatus id="processingFileList"
+            onstart="onStartProcessingFileList();"
+            onstop="onStopProcessingFileList();" />
+
+        <apex:actionstatus id="processingOpenComponent"
+            onstart="onStartProcessingFileList();"
+            onstop="onStopProcessingOpenComponent();" />
+            
+        <div id="dragDropFiles" class="dragDropFiles">
+            <article>
+                <div id="holder">
+                    <div id="centerDrag">
+                        <h1>
+                            <apex:outputLabel value="{!$Label.esl__Drop_files_here}" />
+                        </h1>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div id="fileDashboard" class="fileDashboard">
+
+            <!-- Left side menu, Documents types -->
+            <div id="dialog" class="FindFilesDiv">
+                <div id="leftContent" class="leftContent">
+                    <div class="menuWrapper">
+
+                        <div id="searchBoxWrapper" class="searchBoxWrapper">
+                            <div id="searchBox" class="searchBox">
+                                <apex:inputText value="{!fileName}" id="fileName"
+                                    html-placeholder="{!$Label.esl__Search_all_files}"
+                                    styleClass="fileNameInput" />
+
+                                <apex:commandButton id="btn" value="{!$Label.esl__Search}"
+                                    action="{!searchFiles}"
+                                    reRender="availableFilesBlock, selectedFilesBlock"
+                                    status="processingFileList" />
+                            </div>
+                        </div>
+
+                        <ul class="brandSideNav">
+                            <li>
+                                <a class="menu attachment"
+                                onclick="return setDocumentTypeJS('{!attachmentObjectName}');">
+                                    <apex:outputLabel value="{!$Label.esl__Related_object_attachment}"
+                                        styleClass="{!attachmentObjectName}" />
+                                </a>
+                            </li>
+                            <div id="menuSeparator" class="menuSeparator"></div>
+                            <li >
+                                <a class="menu"
+                                onclick="return setDocumentTypeJS('{!feedAttachmentObjectName}');">
+                                    <apex:outputLabel value="{!$Label.esl__Related_object_feed_attachment}"
+                                        styleClass="{!feedAttachmentObjectName}" />
+                            </a>
+                            </li>
+                            <div id="menuSeparator" class="menuSeparator" ></div>
+                            <li><a class="menu content"
+                                onclick="return setDocumentTypeJS('{!contentObjectName}');">
+                                    <apex:outputLabel value="{!$Label.esl__Contents}"
+                                        styleClass="{!contentObjectName}" />
+                            </a>
+                                <ul class="subMenuItems">
+                                    <li><a class="subMenu"
+                                        onclick="return setDocumentOwnedByMeTypeJS('{!recentlyViewedObjectName}','rv');">
+                                            <apex:outputLabel value="{!$Label.esl__Recent}"
+                                                styleClass="setDocumentOwnedByMeTypeJS, {!recentlyViewedObjectName}, rv}" />
+                                    </a></li>
+                                    <li><a class="subMenu"
+                                        onclick="return setDocumentOwnedByMeTypeJS('{!contentObjectName}','yes');">
+                                            <apex:outputLabel value="{!$Label.esl__Owned_by_me}"
+                                                styleClass="setDocumentOwnedByMeTypeJS, {!contentObjectName}, yes" />
+                                    </a></li>
+                                </ul>
+                            </li>
+                            <div id="menuSeparator" class="menuSeparator"></div>
+                            <li><a class="menu"
+                                onclick="return setDocumentTypeJS('{!documentObjectName}');">
+                                    <apex:outputLabel value="{!$Label.esl__Documents}"
+                                        styleClass="{!documentObjectName}" />
+                            </a>
+                                <ul class="subMenuItems">
+                                    <apex:repeat value="{!folders}" var="folder">
+                                        <li><a class="subMenu"
+                                            onclick="return setDocumentTypeJS('{!documentObjectName}', '{!folder.Id}');">
+                                                <apex:outputLabel value="{!folder.name}"
+                                                    styleClass="setDocumentTypeJS, {!documentObjectName}, {!folder.Id}" />
+                                        </a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div id="menuSeparator" class="menuSeparator"></div>
+                        
+                        <div id="addDocumentsLink"
+                            class="addDocumentsLink footerControlDiv">
+                            <a onClick="uploadLocal(); return false;" class="attach">
+                                <apex:outputLabel value="{!$Label.esl__Upload_local_files}" 
+                                    styleClass="uploadLocal"/>
+                            </a>
+                            <input type="file" name="fileInput" id="fileInput" multiple="multiple" accept="{!allowedExtensionsFilter}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="centerContent" class="centerContent">
+                    <apex:outputPanel layout="block" id="availableFilesBlock">
+                        <div class="centerLabel titleDetails">
+                            <h1>
+                                <apex:outputLabel value="{!centerTitle}" />
+                                <apex:inputHidden value="{!selectedType}" id="selectedType"
+                                    html-class="hiddenSelectedType" />
+                                
+                            </h1>
+                        </div>
+
+                        <div class="centerBody">
+                            <div id="searchResultsWrapper" class="searchResultsWrapper">
+                                <div class="tableContainer">
+                                    <apex:dataTable value="{!documents}" var="doc" id="theDocuments"
+                                        rowClasses="odd,even" headerClass="resultsHeader"
+                                        styleClass="searchResultsTable" rows="{!rowSelected}">
+    
+                                        <apex:column width="40px">
+                                            <apex:facet name="header">
+                                                <apex:outputLabel value="{!$Label.esl__Action}" />
+                                            </apex:facet>
+                                            <apex:outputLink onClick="attachFileJS('{!doc}'); return false;"
+                                                disabled="{!disableAttach}" styleCLass="attach">
+                                                <apex:outputLabel value="{!$Label.esl__Attach}"
+                                                    styleClass="{!doc}" />
+                                            </apex:outputLink>
+                                        </apex:column>
+    
+                                        <apex:column width="210px">
+                                            <apex:facet name="header">
+                                                <apex:outputLabel value="{!$Label.esl__Name}" />
+                                            </apex:facet>
+                                            <img class="{!documents[doc].styleClass}" alt="{!documents[doc].Name}" title="{!documents[doc].Name}"
+                                                src="{!URLFOR($Resource.Silanis, 'images/s.gif')}" />
+                                            <div class="fileDetails">
+                                                <apex:outputText value="{!documents[doc].Name}" />
+                                            </div>
+                                                
+                                        </apex:column>
+    
+                                        <apex:column width="80px">
+                                            <apex:facet name="header">
+                                                <apex:outputLabel value="{!$Label.esl__Owner}" />
+                                            </apex:facet>
+                                            <apex:outputText value="{!documents[doc].Owner}" />
+                                        </apex:column>
+    
+                                    </apex:dataTable>
+                                    <apex:outputPanel layout="block" style="margin: 10px;">
+                                        <apex:outputLabel value="{!$Label.esl__No_files_to_show}"
+                                            rendered="{!hasNoResults}" />
+                                    </apex:outputPanel>
+                                </div>
+
+                                <apex:outputPanel layout="block" id="searchResultsFooter"
+                                    styleClass="searchResultsFooter">
+
+                                    <div id="searchResultsRecordDetail"
+                                        class="searchResultsRecordDetail">
+                                        <apex:outputLabel value="{!footerRecordDetails}" />
+                                    </div>
+
+                                    <div id="searchResultsControls" class="searchResultsControls">
+                                        <apex:outputLink onClick="firstJS(); return false;"
+                                            disabled="{!disableFirst}"
+                                            styleCLass="{!IF(disableFirst, 'firstControlDisabled', 'firstControlEnabled')}">&nbsp;</apex:outputLink>
+                                        <apex:outputLink onClick="previousJS(); return false;"
+                                            disabled="{!disablePrevious}">
+                                            <span
+                                                cLass="{!IF(disablePrevious, 'previousControlDisabled', 'previousControlEnabled')}">&nbsp;</span>
+                                            <apex:outputLabel value="{!$Label.esl__Previous}" />
+                                        </apex:outputLink>
+                                        <apex:outputLink onClick="nextJS(); return false;"
+                                            disabled="{!disableNext}">
+                                            <apex:outputLabel value="{!$Label.esl__Next}" />
+                                            <span
+                                                cLass="{!IF(disableNext, 'nextControlDisabled', 'nextControlEnabled')}">&nbsp;</span>
+                                        </apex:outputLink>
+                                        <apex:outputLink onClick="lastJS(); return false;"
+                                            disabled="{!disableLast}"
+                                            styleCLass="{!IF(disableLast, 'lastControlDisabled', 'lastControlEnabled')}">
+                                            &nbsp;</apex:outputLink>
+                                    </div>
+
+                                    <div id="searchResultsPageDetail"
+                                        class="searchResultsPageDetail">
+                                        <apex:outputLabel value="{!$Label.esl__Page}" />
+                                        &nbsp;
+                                        <apex:input value="{!pagination_currentPageDisplay}"
+                                            id="thePageJump" type="number" html-novalidate="novalidate"
+                                            styleClass="thePageJump" html-min="0"
+                                            onkeypress="checkJump(event);" />
+                                        &nbsp;
+                                        <apex:outputLabel value="{!$Label.esl__of}" />
+                                        &nbsp;
+                                        <apex:outputLabel value="{!pagination_maxPage}" />
+
+                                    </div>
+                                </apex:outputPanel>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+
+                <div id="rightContent" class="rightContent">
+                    <apex:outputPanel layout="block" id="selectedFilesBlock">
+                        <div class="centerLabel titleDetails">
+                            <div  style="float: left;">
+                                <h1>
+                                    <apex:outputLabel value="{!$Label.esl__Selected_files}" />
+                                </h1>
+                            </div>
+    
+                            <apex:outputPanel layout="block" id="totalSelectedFilesBlock"
+                                styleClass="totalSelectedFilesBlock"
+                                style="text-align: left;">
+                                <h1>
+                                    &nbsp;<apex:outputLabel value="- {!selectedDocs}/{!maxSelectedDocs}" />
+                                </h1>
+                                <apex:inputHidden value="{!selectedDocs}" id="selectedDocs"
+                                    html-class="hiddenSelectedDocs" />
+                                <script>
+                                    //We need to process the next file only after
+                                    //the viewstate hsa been refreshed, if not
+                                    //we can loos information
+                                    canContinue = "{!canProcessTheNext}";
+                                    
+                                    //When canContinue is diff from canContinue
+                                    //The view stae has been refreshed and we can
+                                    //process the next file
+                                    if(canContinuePivot != canContinue)
+                                    {
+                                        canContinuePivot = "{!canProcessTheNext}";
+                                        canContinue = "{!canProcessTheNext}";
+                                        processFile(files[currentFile]);
+                                    }
+                                </script>
+                            </apex:outputPanel>
+                        </div>
+
+                        <div id="selectedDocsWrapper" class="selectedDocsWrapper">
+                            <div class="tableContainer">
+                                <apex:dataTable value="{!selectedDocumentsForDisplay}" var="selDoc"
+                                    id="theSelectedDocuments" rowClasses="odd,even"
+                                    headerClass="resultsHeader"
+                                    styleClass="searchResultsTable selectedDocsTable"
+                                    rows="{!rowSelected}" first="{!firstSelected}">
+    
+                                    <apex:column >
+                                        <apex:facet name="header">
+                                            <apex:outputLabel value="{!$Label.esl__Action}" />
+                                        </apex:facet>
+                                        <a class="attach" onClick="return removeFileJS('{!selDoc.mapKey}')">
+                                            <apex:outputLabel value="{!$Label.esl__Remove}" styleClass="{!selDoc.mapKey}"/>
+                                        </a>
+                                    </apex:column>
+    
+                                    <apex:column >
+                                        <apex:facet name="header">
+                                            <apex:outputLabel value="{!$Label.esl__Name}" />
+                                        </apex:facet>
+                                        <img class="{!selDoc.styleClass}" alt="{!selDoc.Name}" title="{!selDoc.Name}"
+                                            src="{!URLFOR($Resource.Silanis, 'images/s.gif')}" />
+                                        <div class="fileDetails">
+                                            <apex:outputLabel value="{!selDoc.Name}" />
+                                        </div>
+                                        <div class="errorMessage">
+                                            <apex:outputLabel value="{!selDoc.message}" />
+                                        </div>
+                                    </apex:column>
+    
+                                </apex:dataTable>
+                                <apex:outputPanel layout="block" style="margin: 10px;"
+                                    styleClass="noResults">
+                                    <apex:outputLabel value="{!$Label.esl__No_files_to_show}"
+                                        rendered="{!hasNoSelected}" />
+                                </apex:outputPanel>
+                            </div>
+                        
+
+
+                            <apex:outputPanel layout="block" id="selectedFooter" styleClass="searchResultsFooter selectedResultsPageDetail">
+
+                                <div id="searchResultsRecordDetail"
+                                    class="searchResultsRecordDetail">
+                                    <apex:outputLabel value="{!footerSelectedDetails}" />
+                                </div>
+
+                                <div id="searchSelectedControls" class="searchSelectedControls">
+                                    <apex:outputLink onClick="firstSelectedJS(); return false;"
+                                        disabled="{!disableSelectedFirst}"
+                                        styleCLass="{!IF(disableSelectedFirst, 'firstControlDisabled', 'firstControlEnabled')}">&nbsp;</apex:outputLink>
+                                    <apex:outputLink onClick="previousSelectedJS(); return false;"
+                                        disabled="{!disableSelectedPrevious}">
+                                        <span
+                                            cLass="{!IF(disableSelectedPrevious, 'previousControlDisabled', 'previousControlEnabled')}">&nbsp;</span>
+                                        <apex:outputLabel value="{!$Label.esl__Previous}" />
+                                    </apex:outputLink>
+                                    <apex:outputLink onClick="nextSelectedJS(); return false;"
+                                        disabled="{!disableSelectedNext}">
+                                        <apex:outputLabel value="{!$Label.esl__Next}" />
+                                        <span
+                                            cLass="{!IF(disableSelectedNext, 'nextControlDisabled', 'nextControlEnabled')}">&nbsp;</span>
+                                    </apex:outputLink>
+                                    <apex:outputLink onClick="lastSelectedJS(); return false;"
+                                        disabled="{!disableSelectedLast}"
+                                        styleCLass="{!IF(disableSelectedLast, 'lastControlDisabled', 'lastControlEnabled')}">&nbsp;</apex:outputLink>
+                                </div>
+
+                                <div id="searchResultsPageDetail"
+                                    class="searchResultsPageDetail ">
+                                    <apex:outputLabel value="{!$Label.esl__Page}" />
+                                    &nbsp;
+                                    <apex:input value="{!selected_currentPageDisplay}"
+                                        id="thePageJump2" type="number" html-novalidate="novalidate"
+                                        styleClass="thePageJump2" html-min="0"
+                                        onkeypress="checkJumpSelected(event);" />
+                                    &nbsp;
+                                    <apex:outputLabel value="{!$Label.esl__of}" />
+                                    &nbsp;
+                                    <apex:outputLabel value="{!selected_pages}" />
+
+                                </div>
+                            </apex:outputPanel>
+
+                        </div>
+                    </apex:outputPanel>
+
+                </div>
+
+            </div>
+
+            <div id="footer" class="footerControls">
+                <apex:outputPanel layout="block">
+                    <div id="addDocumentsLink"
+                        class="addDocumentsLink footerControlDiv uploadDocsLink">
+                        <apex:outputLink onClick="createDocumentsJS(); return false;"
+                            disabled="{!disableAttach}" styleCLass="attach">
+                            <apex:outputLabel value="{!$Label.esl__Add_selected_Documents}" 
+                                styleClass="createDocumentsJS"/>
+                        </apex:outputLink>
+                    </div>
+                    <div id="cancelLink" class="cancelLink footerControlDiv">
+                        <apex:outputLink onClick="prepareCancel(); return false;"
+                            disabled="{!disableAttach}" styleCLass="attach">
+                            <apex:outputLabel value="{!$Label.esl__CancelBtn}" 
+                                styleClass="cancelJS"/>
+                        </apex:outputLink>
+                    </div>
+                </apex:outputPanel>
+            </div>
+        </div>
+
+    </apex:form>
+    <div id="blockPageFileSelector" style="display: none;">
+        <div id="pageCurtain">
+            <div id="fixedPageBox">
+                <img src="/img/loading24.gif" class="savingImg" /> <span
+                    id="masterText">{!$Label.Please_Wait}</span>
+            </div>
+        </div>
+    </div>
+</apex:component>

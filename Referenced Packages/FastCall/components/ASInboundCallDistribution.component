@@ -1,0 +1,306 @@
+<apex:component controller="FastCall.ASInboundCallDistributionController" allowDML="true">
+	
+	<script>
+		function validateACDEnabled() {
+        
+            var hasPermission = {!acdAvailable};
+            
+            if (!hasPermission) {
+            
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Inbound call distribution is available in the FastCall Sales+ Edition. <br/>Check out our upgrades.');
+            }
+            else {
+                saveExtensionAutoDial();
+            }
+            
+            return hasPermission;
+        }
+
+	</script>
+	<script id="vmConfig-ivrRow-tpl" type="text/x-jsrender">
+		{{for ivrLst}}
+			<tr>
+				<td class="action-switch">
+					<div class="switch tiny radius" title="Select as VM message">
+  						<input id="{{:Id}}" type="radio" value="{{:Id}}" {{if (Is_default__c && selectedIvr === '') || selectedIvr === Id}}checked{{/if}} name="ivr_select"/>
+  						<label for="{{:Id}}"></label>
+					</div> 
+				</td>
+				<td class="message-txt">
+					{{if Text_message__c !== undefined}} 
+						{{:Text_message__c}}
+					{{else}}
+						{{:Name}}
+					{{/if}}
+				</td>
+				<td class="type-txt">
+					{{:Type__c}}
+				</td>
+				<td class="action-remove">
+					{{if !Is_default__c}}
+						<a href="#" title="Delete" class="btn settings-btn delete-ivr" data-ivr-element="{{:Id}}">
+		                	<i class="icon-remove"></i>
+		                </a>
+	                {{/if}}
+	                {{if Type__c === 'Recording'}}
+						<a href="{{:Audio_URL__c}}" title="Listen" target="_blank" class="btn btn-primary">
+							<i class="icon-play"></i>
+						</a>
+					{{/if}}
+				</td>
+			</tr>
+		{{/for}}
+	</script>
+	<script id="error-message-tpl" type="text/x-jsrender">
+		<div class="alert alert-{{:type}}">
+			<div class="icon-{{:type}}-sign"></div>
+			<div class="settings first last">
+				{{:message}}
+			</div>
+		</div>
+	</script>
+
+	<!-- ACD PANEL -->
+	<apex:outputPanel layout="block" id="acdPanel" styleClass="fc-container w-help">
+		<table>
+	    	<tr>
+		    	<td class="white">
+		        	<div class="inner">
+						
+						<!-- Action Function for updating ACD number -->
+						<apex:actionFunction status="overlayStatus" name="updateAcdNumber" rerender="acdNumbersLstPanel" 
+											 action="{!updateACDPhoneOptions}">
+
+							<apex:param name="acdNumberId" assignto="{!updatePhoneId}" value=""/>
+							<apex:param name="udaptePhoneName" assignto="{!udaptePhoneName}" value=""/>
+							<apex:param name="updateAcdGroup" assignto="{!updateAcdGroup}" value=""/>
+							<apex:param name="updateRecordCall" assignto="{!updateRecordCall}" value=""/>
+							<apex:param name="updateVoicemail" assignto="{!updateVoicemail}" value=""/>
+							<apex:param name="updateVoicemailOwner" assignto="{!updateVoicemailOwner}" value=""/>
+							<apex:param name="updateAcdOption" assignto="{!updateAcdOption}" value=""/>
+							<apex:param name="updateMissedCallsOwner" assignto="{!updateMissedCallsOwner}" value=""/>
+							<apex:param name="updateTimeout" assignto="{!updateTimeout}" value=""/>
+
+						</apex:actionFunction>
+						
+						<!-- ACD Numbers List -->
+						<apex:outputPanel id="acdNumbersLstPanel">
+
+							<!-- ACD message -->
+							<apex:outputPanel rendered="{!NOT(ISBLANK(acdMessage)) && NOT(ISBLANK(acdMessage.text))}" layout="block">
+								<fieldset class="alert alert-{!acdMessage.messageType}">
+									<apex:outputPanel styleClass="icon-{!acdMessage.messageType}-sign" />
+									<apex:outputLabel styleClass="settings first last" value="{!acdMessage.text}" />
+								</fieldset>
+							</apex:outputPanel>
+
+							<fieldset class="disp" style="margin-top:15px;">
+								<table class="acdNumbersTable">
+				                    <tr>
+				                    	<th class="header">Name</th>
+				                 		<th class="header">Phone</th>
+				                 		<th class="header acdGroupColumn">Group</th>
+				                 		<th class="header mediumColumn">Record Calls</th>
+				                 		<th class="header smallColumn">Voicemail</th>
+				                 		<th class="header">ACD Option</th>
+				                 		<th class="header smallColumn">Time out</th>
+				                 	</tr>	
+				                  		<apex:repeat value="{!acdNumbersMap}" var="k">
+				                      		
+				                      		<tr class="acdRow" title="Click to edit" 
+				                      			onclick="ACDConfig.Modal('{!acdNumbersMap[k].Id}','{!acdNumbersMap[k].Name}','{!acdNumbersMap[k].Phone__c}','{!acdNumbersMap[k].ACD_Group__c}',{!acdNumbersMap[k].ACD_Record_Call__c},{!acdNumbersMap[k].ACD_Voicemail__c},'{!acdNumbersMap[k].ACD_Voicemail_Owner__c}','{!acdNumbersMap[k].Inbound_IVR__c}','{!acdNumbersMap[k].ACD_Option__c}','{!acdNumbersMap[k].ACD_Simulring_Owner__c}','{!acdNumbersMap[k].ACD_Timeout__c}');">
+				                      			<td>
+				                      				{!acdNumbersMap[k].Name}
+				                      			</td>
+				                      			<td>
+				                      				{!acdNumbersMap[k].Phone__c}
+				                      			</td>
+				                      			<td>
+				                      				{!IF(ISBLANK(acdNumbersMap[k].ACD_Group__c),'<No Group>',
+				                                	 IF(ISBLANK(acdGroupNamesMap[acdNumbersMap[k].ACD_Group__c]), '', acdGroupNamesMap[acdNumbersMap[k].ACD_Group__c]))}	  
+												</td>
+					                            <td class="mediumLabel">
+					                            	{!IF(acdNumbersMap[k].ACD_Record_Call__c,'Yes','No')}			
+												</td>
+												<td class="smallLabel">
+													{!IF(acdNumbersMap[k].ACD_Voicemail__c,'Yes','No')}
+												</td>
+												<td>
+													{!IF(ISBLANK(acdNumbersMap[k].ACD_Option__c),'Round Robin',
+													acdOptionsMap[acdNumbersMap[k].ACD_Option__c])}
+					                            </td>
+					                            <td class="smallLabel">
+					                            	{!IF(acdNumbersMap[k].ACD_Timeout__c == '','0',acdNumbersMap[k].ACD_Timeout__c)}
+					                            </td>
+				                          	</tr>
+
+				                  		</apex:repeat>	
+				                      </table>
+									
+							</fieldset>
+						</apex:outputPanel>
+
+						<!-- ACD PHONE NUMBER CONFIG MODAL -->
+						<apex:outputPanel styleClass="fc-widget">
+							<div id="acdConfigSaveModal" class="modal hide fade">
+								<div class="modal-header">
+									<a href="#" class="fc-close phoneNumbersModalClose" onclick="ACDConfig.closeModals()" aria-hidden="true">&times;</a>
+									<h3>ACD Config for <span class="acdPhoneNumber"></span></h3>
+								</div>
+								<div class="modal-body">
+									<fieldset>
+										<label class="first settings label-align-right">ACD Phone Name</label>
+										<input id="acdPhoneNameTxt" type="text" class="texbox last settings"/>
+									</fieldset>
+									<fieldset>
+										<label class="first settings label-align-right">Group</label>
+										<apex:selectList styleClass="acdGroupLst textbox last settings select-box-medium" size="1">
+						                	<apex:selectOptions value="{!publicGroupsOtions}"/>  
+						                </apex:selectList> 		    
+									</fieldset>
+									<fieldset>
+										<label class="first settings label-align-right">Record call</label>
+										<div class="switch tiny radius last settings">
+											 <input id="acdRecordCalls" type="checkbox"/>
+												 <label for="acdRecordCalls"></label>
+										</div>
+									</fieldset>
+									<fieldset>
+										<label class="first settings label-align-right">Voicemail</label>
+										<div class="switch tiny radius last settings">
+											 <input id="acdVoicemailEnabled" type="checkbox"/>
+												 <label for="acdVoicemailEnabled"></label>
+										</div>
+										<a href="#" class="vmMessageConfigBtn btn" title="Setup voicemail message">
+											VM Message Config.
+										</a>
+									</fieldset>
+									<fieldset id="acdVmOwnerOpt">
+										<label class="first settings label-align-right">VM calls owner</label>
+										<apex:selectList styleClass="acdVmOwnerlst textbox last settings select-box-medium" size="1">
+						                	<apex:selectOptions value="{!fcUsersOptions}"/>  
+						                </apex:selectList>
+									</fieldset>
+									<fieldset>
+										<label class="first settings label-align-right">ACD option</label>
+										<apex:selectList styleClass="acdOptionLst textbox last settings select-box-medium" size="1">
+						                	<apex:selectOptions value="{!acdOptions}"/>  
+						                </apex:selectList>
+									</fieldset>
+									<fieldset id="acdSimulrinOwnerOpt">
+										<label class="first settings label-align-right">Missed calls owner</label>
+										<apex:selectList styleClass="acdSimulrinOwnerLst textbox last settings select-box-medium" size="1">
+						                	<apex:selectOptions value="{!fcUsersOptions}"/>  
+						                </apex:selectList>
+									</fieldset>
+									<fieldset>
+										<label class="first settings label-align-right">Time out</label>
+										<input id="acdTimeoutTxt" type="number" class="texbox last settings"/>
+									</fieldset>
+									<div class="modal-message-container">
+									</div>
+								</div>
+								<div class="modal-footer">
+									<a id="acdConfigSaveBtn" class="btn btn-primary">Save</a>
+									<a href="#" onclick="ACDConfig.closeModals()" class="btn btn-close">Cancel</a>
+								</div>    
+							</div>
+						</apex:outputPanel>
+
+						<!-- VOICEMAIL CONFIG MODAL -->
+						<apex:outputPanel styleClass="fc-widget">
+							<div id="voicemailConfigModal" class="modal hide fade">
+								<div class="modal-header">
+									<a href="#" class="fc-close phoneNumbersModalClose" onclick="ACDConfig.closeModals()" aria-hidden="true">&times;</a>
+									<h3>Voicemail message for <span class="acdPhoneNumber"></span></h3>
+								</div>
+								<div class="modal-body">
+									<!-- New IVR -->
+									<h2>Create new VM message</h2>
+									<div class="modalRow">
+										<div class="modalCol">
+											<label class="first settings label-align-right">Name</label>
+											<input id="newIvrNameTxt" type="text" class="textbox last settings"/>
+										</div>
+										<div class="modalCol">
+											<label class="first settings label-align-right label-small">Type</label>
+											<select id="newIvrTypeSel" size="1" class="textbox last settings modal-select">
+												<option value="Text">Text</option>
+												<option value="Recording">Recording</option>
+											</select>
+										</div>
+									</div>
+									<div id="textIvrInput" class="modalRow">
+										<div class="modalCol fullwidth">
+											<label class="first settings label-align-right">Text for VM Message</label>
+											<input id="newIvrMessageTxt" type="text" class="textbox last settings"/>
+											<br/>
+											<a id="newIvrSave" class="btn btn-primary" title="Save new VM Message">Save message</a>
+										</div>
+									</div>
+									<div id="recordingIvrInput" class="modalRow">
+										<div class="modalCol fullwidth">
+											<label class="first settings label-align-right">Phone to dial</label>
+											<input id="newIvrPhoneTxt" type="text" class="textbox last settings"/>
+											<apex:selectList styleClass="newIvrPhoneOpt textbox last settings modal-select" size="1">
+						                		<apex:selectOptions value="{!userPhoneOptions}"/>  
+						                	</apex:selectList>
+						                	<br/>
+						                	<a id="newIvrRecord" class="btn btn-primary" 
+						                		title="Record new VM Message">
+						                		Record new message
+						                	</a>
+						                </div>	
+									</div>
+									<div class="modal-message-container">
+									</div>
+									<!-- IVR List -->
+									<h2 class="modal-listHead">Select VM message from the list</h2>
+									<table>
+										<thead id="vmModalMessageLstHead">
+											<tr>
+												<th></th>
+												<th>Name/Message</th>
+												<th>Type</th>
+												<th></th>
+											</tr>
+										</thead>
+									</table>
+									<div id="vmModalMessageLstContainer">
+									<table id="vmModalMessageLst">
+										<tbody>
+											
+										</tbody>
+									</table>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<a id="vmMsgConfigSaveBtn" class="btn btn-primary">Save</a>
+									<a href="#" onclick="ACDConfig.closeModals()" class="btn btn-close">Cancel</a>
+								</div>    
+							</div>
+						</apex:outputPanel>
+
+						<apex:outputPanel rendered="{!NOT(acdAvailable)}" layout="none">
+							<fieldset>
+								<label class="setting-caption subheader alert" style="width: 750px;margin-top: 20px;">
+				                	Inbound call distribution is available in the FastCall Sales+ edition. Please see <a href="http://fastcall.com/products/pricing/" target="_blank">here</a> for more info.
+				                </label>
+							</fieldset>
+						</apex:outputPanel>
+					</div>
+				</td>
+				<td class="green">
+	        		<div class="inner">
+	                    <h1>HELP GUIDE</h1>
+	                    <p>
+	                    	In the FastCall Sales+ Edition inbound phone numbers can be setup to rotate between users (auto call distribution or ACD).
+	                    </p>
+	                </div>                    
+	        	</td>
+			</tr>
+		</table>				
+	</apex:outputPanel>
+
+</apex:component>

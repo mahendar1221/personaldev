@@ -1,0 +1,8 @@
+<apex:page controller="filterSearch">
+<apex:form >
+  Start Date: <apex:inputText value="{!startDate}"/><br/>
+  End Date:   <apex:inputText value="{!EndDate}"/>
+  <apex:commandButton value="search" action="{!Calculate}"/>
+  {!output}
+</apex:form>
+</apex:page>

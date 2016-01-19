@@ -1,0 +1,23 @@
+<apex:page standardController="ESL__Package_Template__c" extensions="ESL.EditPackageTemplateController" action="{!Init}" title="Package">
+
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/package.css')}"/>
+    
+    <apex:repeat value="{!messages}" var="msg" rendered="{!hasMessages}">
+        <apex:pageMessage title="{!msg.title}" detail="{!msg.detail}" summary="{!msg.summary}" severity="{!msg.severity}" strength="{!msg.strength}" escape="false" >
+            <apex:outputPanel layout="block" rendered="{!msg.confirmation}" style="text-align:right;">
+                <apex:outputPanel layout="block" rendered="{!msg.showCancel}">
+                    <button onclick="confirmCancelJS('{!msg.confirmationAction}');" type="button" label="{!$Label.CancelBtn}"
+                        class="confirmButton">{!$Label.CancelBtn}</button>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:pageMessage>
+    </apex:repeat>
+    
+    <apex:form >
+        <!-- joel.ojeda - 03-27-2015 - Actions that will process the confirmation message -->
+        <apex:actionFunction name="confirmCancelJS" action="{!confirmCancel}" reRender="">
+            <apex:param id="actionTypeCancel" name="actionType" value="" assignTo="{!confirmActionType}"/>
+        </apex:actionFunction>
+    </apex:form>
+
+</apex:page>

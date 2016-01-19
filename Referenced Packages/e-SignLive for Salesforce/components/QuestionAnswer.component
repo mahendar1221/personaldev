@@ -1,0 +1,106 @@
+<apex:component controller="ESL.QuestionAnswerController" allowDML="true" >
+
+<!--  <apex:attribute name="signer" description="Signer for the Q&A" type="sObject" assignTo="{!signerRecord}"/> -->
+
+    <apex:actionstatus id="processQA" onstart="onStartQAProcessing();" onstop="onStopQAProcessing();" />
+    <apex:actionstatus id="loadingQA" onstart="onStartQALoading();" onstop="onStopQALoading();" />
+
+    <apex:actionFunction name="refreshSignerJS" 
+            action="{!refreshSigners}" reRender="blockPannel" 
+            status="loadingQA" >
+        <apex:param name="signerId" value=""/>
+    </apex:actionFunction>
+    
+    <apex:actionFunction name="changeAnswerType" action="{!showSFFields}" rerender="qAndA" status="processQA">
+     <apex:param name="answerType" value=""/>
+     <apex:param name="index" value=""/>
+    </apex:actionFunction>
+        
+<!--     <apex:outputPanel styleClass="popupBackground" layout="block"/> -->
+    
+    <apex:outputPanel styleClass="custPopup" layout="block" id="blockPannel">
+     <div id="blockQAC" style="display:none;">
+         <div class="sectionCurtain">
+                 <div class="sectionBox">
+                     <img src="/img/loading24.gif" class="savingImg"/>
+                     <span id="qaActionText">{!$Label.Please_Wait}</span>
+                 </div>
+         </div>
+     </div>            
+        <apex:pageBlock title="{!$Label.esl__Enter_question_details}" id="mainPageBlock" mode="edit">
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="{!IF(ioType == 'READ_ONLY',$Label.esl__CloseBtn,$Label.esl__CancelBtn)}" action="{!cancel}" oncomplete="closeDialogSigners();return false;" reRender="mainPageBlock" status="processQA" />
+                <apex:commandButton value="{!$Label.esl__SaveBtn}" action="{!saveQA}" oncomplete="validateAndClose('{!msg.summary}');" reRender="mainPageBlock" rendered="{!NOT(ioType == 'READ_ONLY')}" status="processQA"/>
+            </apex:pageBlockButtons>
+            
+            <apex:pageMessage title="{!msg.title}" detail="{!msg.detail}" summary="{!msg.summary}" severity="{!msg.severity}" strength="{!msg.strength}" escape="false" rendered="{!msg.summary!=''}" />
+            
+            <apex:outputPanel id="qAndA" layout="block">
+             <apex:variable value="{!0}" var="index" />
+             <apex:pageBlockSection id="inputBlock" columns="2">
+                 <!-- QUESTIONS -->                 
+                  <apex:repeat value="{!questionsAnswers}" var="qa">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$Label.esl__Question}" for="theQuestion" rendered="{!ioType != 'READ_ONLY'}"/>                        
+                        <apex:outputPanel layout="block" styleClass="requiredInput">                                                            
+                                    <apex:outputPanel layout="block" styleClass="requiredBlock" />                                    
+                                    <apex:inputTextarea id="theQuestion" value="{!qa.qa.ESL__Question__c}" label="{!$Label.esl__Question}" rendered="{!NOT(ioType == 'READ_ONLY')}" rows="1" cols="30" />
+                        </apex:outputPanel>  
+                            </apex:pageBlockSectionItem>                          
+                  </apex:repeat>                                     
+                 <!-- ANSWER - with advanced options -->                      
+                 <apex:repeat value="{!questionsAnswers}" var="qa">
+                        <apex:pageBlockSectionItem rendered="{!ioType == 'ADVANCED'}">
+
+                        <apex:outputLabel value="{!$Label.esl__Answer}" for="AdvanceAnswer"/>                            
+                        
+                        <apex:outputPanel layout="block" styleClass="requiredInput">                                                                    
+                            <apex:outputPanel layout="block" styleClass="requiredBlock" />
+                            <apex:outputPanel rendered="{!ioType == 'ADVANCED'}" id="AdvanceAnswer">
+                                <apex:selectList value="{!qa.answerType}" multiselect="false" size="1" onchange="changeAnswerType(event.target.value,{!index});">                        
+                                    <apex:selectOptions value="{!answerOptions}"/>
+                                </apex:selectList>
+                                <apex:variable value="{!index + 1}" var="index" />
+                                <br/>
+                                <apex:selectList value="{!qa.selectedField}" multiselect="false" size="1" rendered="{!qa.qa.ESL__AnswerSfField__c}" label=" " id="fieldsOps" styleClass="salesforceFieldsList">                                
+                                    <apex:selectOptions value="{!salesforceFieldsAndValues}"/>                                                            
+                                </apex:selectList>
+                                <apex:inputField value="{!qa.qa.ESL__Answer__c}" rendered="{!NOT(qa.qa.ESL__AnswerSfField__c)}" label=" " id="freeText"/>    
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+
+                        </apex:pageBlockSectionItem>                        
+                  <!-- ANSWER - Free Text only -->
+                        <apex:pageBlockSectionItem rendered="{!ioType == 'BASIC'}">
+                            <apex:outputLabel value="{!$Label.esl__Answer}" for="theQuestion"/>                            
+                              <apex:outputPanel layout="block" styleClass="requiredInput">                                                                    
+                                    <apex:outputPanel layout="block" styleClass="requiredBlock" />   
+                                    <apex:inputField value="{!qa.qa.ESL__Answer__c}" label="{!$Label.esl__Answer}"
+                                         />
+                                    </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+                 </apex:repeat>
+ 
+                 <!-- MASK ANSWERS -->
+                 <apex:repeat value="{!questionsAnswers}" var="qa">
+                     <apex:inputField value="{!qa.qa.ESL__MaskAnswer__c}" label="{!$Label.esl__MaskAnswer}" rendered="{!NOT(ioType == 'READ_ONLY')}"/>
+                 </apex:repeat>
+             </apex:pageBlockSection>
+            </apex:outputPanel>                          
+            
+            <!-- Read only section -->
+            <apex:pageBlockSection columns="2" rendered="{!ioType == 'READ_ONLY'}">             
+                <apex:repeat value="{!questionsAnswers}" var="qa">
+                    <apex:inputTextarea disabled="true" value="{!qa.qa.ESL__Question__c}" label="{!$Label.esl__Question}" rows="1" cols="30"/>                    
+                </apex:repeat>
+                <apex:repeat value="{!questionsAnswers}" var="qa">
+                    <apex:inputText disabled="true" value="{!qa.qa.ESL__Answer__c}" label="{!$Label.esl__Answer}" />
+                </apex:repeat>
+                <apex:repeat value="{!questionsAnswers}" var="qa">
+                    <apex:inputCheckbox disabled="true" value="{!qa.qa.ESL__MaskAnswer__c}" label="{!$Label.esl__MaskAnswer}"/>                            
+                </apex:repeat>
+            </apex:pageBlockSection>                                                          
+        </apex:pageBlock>        
+    </apex:outputPanel>    
+</apex:component>

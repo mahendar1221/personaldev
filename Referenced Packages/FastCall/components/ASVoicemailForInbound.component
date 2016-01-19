@@ -1,0 +1,44 @@
+<apex:component controller="FastCall.ASVoiceMailForInboundController" allowDML="true">
+	
+<apex:outputPanel layout="block" id="voicemailForInbound" styleClass="fc-container w-help">
+    <table>
+        <tr>
+            <td class="white">
+                <div class="inner">
+              
+                	<apex:actionFunction name="updateVoicemailForInbound" action="{!updateVoicemailForInbound}" status="overlayStatus" rerender="voicemailForInbound"/>
+                	  		
+                	<apex:outputPanel rendered="{!NOT(ISBLANK(inboundVoicemailMessage)) && NOT(ISBLANK(inboundVoicemailMessage.text))}" layout="block">
+                  		<fieldset class="alert alert-{!inboundVoicemailMessage.messageType}">
+                    		<apex:outputPanel styleClass="icon-{!inboundVoicemailMessage.messageType}-sign" />
+                    		<apex:outputLabel styleClass="settings first last" value="{!inboundVoicemailMessage.text}"/>
+                 		</fieldset>
+              		</apex:outputPanel>
+              		
+                    <h1 class="fc-container-header">Voicemail for Inbound</h1>
+                    <fieldset>
+                        <apex:outputLabel styleClass="first settings"
+                     				  value="Enable Voicemail for inbound calls"
+                     				  style="width: 320px;"
+                     				  for="inboundCallVoiceMail"/>
+                 		<apex:inputCheckbox styleClass="last settings settings-checkbox"
+                     				  value="{!voicemailForInboundEnabled}"
+                     				  onclick="updateVoicemailForInbound()"
+                     				  id="inboundCallVoiceMail"/>
+                    </fieldset>
+                    
+                </div>
+            </td>
+            <td class="green">
+                <div class="inner">
+                    <h1>HELP GUIDE</h1>
+                    <p>
+                    	
+                    </p>
+                </div>                    
+            </td>
+        </tr>
+    </table>
+</apex:outputPanel>
+	
+</apex:component>

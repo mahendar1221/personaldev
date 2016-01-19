@@ -1,0 +1,336 @@
+<apex:page docType="html-5.0" standardController="ESL__Package__c" extensions="ESL.PackageController" title="Package" action="{!Initialization}" cache="false">
+	
+     
+  
+    <c:IncludeStylesAndScripts />
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/package.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/package.js')}"/>
+
+    <apex:sectionHeader title="{!IF(NOT(IsReadOnly), $Label.esl__PackageEditLbl, $Label.esl__PackageLbl)}" subtitle="{!IF(packageObj.Id == null, $Label.esl__NewPackageLbl, packageObj.Name)}"/>
+    
+    <apex:form html-novalidate="true" id="mainForm">
+    	<apex:actionFunction name="RerenderForm" action="{!ClearCanvasMode}" rerender="mainForm,pkgDocs,pkgSgns,pkgHistory" status="processing" oncomplete="stopSignerRefresh();"/>
+    	<apex:actionFunction name="stopSignerRefreshNow" action="{!stopSignerRefresh}" rerender="pkgSgns" status="processing"/>
+        <!-- C092331 -->
+        <apex:actionFunction name="refreshInput" action="{!refreshInput}" rerender="customDynamicComponentWrapper" status="lookUpStatus" immediate="true">
+            <apex:param name="prntType" assignTo="{!selectedParent}" value=""/>
+        </apex:actionFunction>
+        
+        <apex:actionStatus onstart="disableLookUp();" onstop="enableLookUp();" id="lookUpStatus"/>
+        <!-- C092331 -->
+        <!-- C092333 -->
+            <apex:actionFunction name="refreshTemplates" action="{!refreshTemplates}" rerender="pkgTempateSection" status="lookUpStatus" immediate="true">
+                <apex:param name="prntTemplatType" assignTo="{!selectedParentTemplate}" value=""/>
+            </apex:actionFunction>
+        <!-- C092333 -->
+        
+
+        <div id="blockPage">
+            <div id="pageCurtain">
+                <div id="fixedPageBox">
+                    <img src="/img/loading24.gif" class="savingImg"/>
+                    <span id="masterText">{!$Label.Please_Wait}</span>
+                </div>
+            </div>
+        </div>
+        
+        <apex:outputPanel id="canvas" title="canvas">
+                    <c:CanvasAppComponent rendered="{!CanvasAppRenderMode!=null}" silanisId="{!packageObj.ESL__Silanis_Package_Id__c}" mode="{!CanvasAppRenderMode}" conventionId="{!packageObj.ESL__Convention__c}"/>
+        </apex:outputPanel>
+        <apex:pageBlock id="packageDetail" mode="{!IF(NOT(IsReadOnly), 'edit', 'detail')}" title="{!IF(NOT(IsReadOnly), $Label.esl__PackageEditLbl, $Label.esl__PackageDetailLbl)}">
+            <apex:outputPanel id="pgPkgMessages">
+                <!-- <apex:pageMessages escape="false" id="pkgMessages" /> -->
+                <input type="hidden" value="{!hasErrors}" id="hasErrorsOnSave" />
+                <apex:commandButton id="backBtn" value="{!$Label.esl__Back}" action="{!Back}" rendered="{!hasPreviousUrl}" immediate="true"/>
+                <!-- joel.ojeda - 04-02-2015 - Show messages from the message handler-->
+                <apex:repeat value="{!messages}" var="msg" rendered="{!hasMessages}">
+                    <apex:pageMessage title="{!msg.title}" detail="{!msg.detail}" summary="{!msg.summary}" severity="{!msg.severity}" strength="{!msg.strength}" escape="false" >
+                        <apex:outputPanel layout="block" rendered="{!msg.confirmation}" style="text-align:right;">
+                            <apex:outputPanel layout="block" rendered="{!msg.showContinue}">
+                                <button onclick="onActionClick('{!msg.statusLabel}');confirmContinueJS('{!msg.confirmationAction}');" type="button" label="{!$Label.ContinueBtn}"
+                                    class="confirmButton">{!$Label.ContinueBtn}</button>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" rendered="{!msg.showCancel}">
+                                <button onclick="onActionClick('{!$Label.esl__Please_Wait}');confirmCancelJS('{!msg.confirmationAction}');" type="button" label="{!$Label.esl__CancelBtn}"
+                                    class="confirmButton">{!$Label.esl__CancelBtn}</button>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageMessage>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:pageBlockButtons location="top">
+                <apex:actionFunction action="{!SavePackageObj}" name="savePackageJS" reRender="pgPkgMessages, packageHeader" oncomplete="onStopProcessing(); preparePackage();"></apex:actionFunction>
+
+                <apex:actionFunction action="{!Prepare}" name="preparePackageJS" reRender="canvas, pgPkgMessages, packageDetail, pkgDocs, pkgSgns, pkgHistory" status="processing"></apex:actionFunction>
+                
+                <!-- j.gaviria actionFunction to Rerender from child component -->
+                <apex:actionFunction action="{!refreshPackage}" name="refreshPackage" reRender="packageTabs"></apex:actionFunction>
+                 
+                <!-- j.gaviria new delete button logic -->                
+                <apex:commandButton value="{!$Label.esl__Retry_eSL_restore}" action="{!retryESLrestore}" rendered="{!packageObj.Id != null && packageObj.ESL__Restore_Pending__c}" reRender="packageDetail,pgPkgMessages" status="processing"/>
+
+                <apex:commandButton id="savePkg" value="{!IF(packageObj.Id != null, $Label.esl__SaveBtn, $Label.esl__Next)}" title="{!IF(packageObj.Id != null, $Label.esl__SaveBtn, $Label.esl__Next)}" action="{!ButtonSave}" rendered="{!IF(((NOT(IsReadOnly) || packageObj.Id == null) && NOT(hasNoAccess)), true, false)}" reRender="packageDetail, pkgDocs, pkgSgns,pkgRmnd,packageHeader, pkgHistory" onclick="captureLookUpDetails(); onActionClick('{!$Label.esl__Saving}');" oncomplete="loadLookupDetails(); removeTabStyles();" status="processing"/>
+
+                <!-- j.gaviria new delete button logic -->
+                <apex:commandButton value="{!$Label.esl__DeleteBtn}" title="{!$Label.esl__DeleteBtn}" action="{!activateDeleteConfirmation}" rendered="{!canDeletePackage}" reRender="pgPkgMessages" oncomplete="disableBtn(this,'{!$Label.esl__DeleteBtn}');" status="processing" immediate="true"/>   
+
+                <apex:commandButton value="{!$Label.esl__CancelBtn}" title="{!$Label.esl__CancelBtn}" action="{!Cancel}" rendered="{!NOT(hasNoAccess)}" immediate="true" onclick="return onCancel();"/>
+
+                 <!-- joel.ojeda add buttons here to activate confirmation messages -->
+                <apex:commandButton id="editBtn" value="{!$Label.esl__RecallBtn}" title="{!$Label.esl__RecallBtn}" action="{!activateEditConfirmation}" reRender="pgPkgMessages" oncomplete="disableBtn(this,'{!$Label.esl__RecallBtn}');" status="processing" rendered="{!canEditPackage}" onclick="onActionClick('{!$Label.esl__Please_Wait}');"/>
+                
+                <apex:commandButton id="reviewBtn" value="{!if(needSignature,$Label.esl__SignBtn,$Label.esl__ReviewOnlyBtn)}" action="{!Review}" rendered="{!IF(packageObj.ESL__Status__c == 'Sent' && showReview, true, false)}" reRender="canvas, packageDetail, pkgDocs, pkgSgns, pkgRmnd, pkgHistory" onclick="onActionClick('{!$Label.esl__Please_Wait}');" status="processing"/>
+
+                <apex:commandButton id="prepareBtn" value="{!$Label.esl__PrepareBtn}" title="{!$Label.esl__PrepareBtn}" rendered="{!IF(NOT(IsReadOnly) && packageObj.Id != null && showPrepare == true, true, false)}" onclick="onActionClick('{!$Label.esl__Preparing}'); preparePackageJS(); return false;"/>
+
+                <!-- <apex:commandButton id="SendToESignLiveBtn" value="{!$Label.esl__SendToESignLiveBtn}" action="{!Send}" rendered="{!IF(packageObj.Status__c == 'Draft' && packageObj.Id != null, true, false)}" reRender="packageDetail, pkgDocs, pkgSgns, pkgHistory" onclick="onActionClick('{!$Label.esl__Sending}');" status="processing"/> -->
+
+                <apex:commandButton id="SendToESignLiveBtn" value="{!$Label.esl__SendToESignLiveBtn}" title="{!$Label.esl__SendToESignLiveBtn}" rendered="{!canSendPackage}" action="{!activateSendConfirmation}" status="processing" onclick="onActionClick('{!$Label.esl__Sending}');" reRender="pgPkgMessages, pkgDocs, pkgSgns, pkgRmnd, packageDetail, pkgHistory"/>
+
+                <apex:actionstatus id="processing" onstart="onStartProcessing();" onstop="onStopProcessing();" />
+                
+                <!-- joel.ojeda - 04-02-2015 - Actions that will process the confirmation message -->
+                <apex:actionFunction name="confirmCancelJS" action="{!confirmCancel}" reRender="pgPkgMessages, packageDetail, pkgDocs, pkgSgns, pkgRmnd, pkgHistory" status="processing">
+                    <apex:param id="actionTypeCancel" name="actionType" value="" assignTo="{!confirmActionType}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="confirmContinueJS" action="{!confirmContinue}" reRender="pgPkgMessages, packageDetail, pkgDocs, pkgSgns, pkgRmnd, pkgHistory" status="processing" immediate="true">
+                    <apex:param id="actionTypeContinue" name="actionType" value="" assignTo="{!confirmActionType}"/>
+                </apex:actionFunction>
+                
+                <!-- joel.ojeda - 02-27-2015 - Action to refresh Signers Component after change Convention -->
+                <apex:actionFunction name="refreshSignerLabels" reRender="packageDetail, pkgSgns" status="processing"/>
+                <!-- joel.ojeda - 03-03-2015 - Action to refresh Convention lookup and Signers Component-->
+                <apex:actionFunction action="{!refreshSignersComponent}" name="reRenderDetails" reRender="packageDetail, pkgSgns" oncomplete="removeTabStyles(); stopSignerRefresh();"/>
+                
+                <!-- xiomara.hernandez - 11-05-2015 - Action to refresh signer status on details and signer components -->
+                <apex:actionFunction action="{!refreshPackageAndSigners}" name="reRenderPackageAndSigners" reRender="packageDetail, pkgSgns" oncomplete="stopSignerRefresh();"/>
+                
+                <!-- joel.ojeda - 05-19-2015 - Action to refresh Package details-->
+                <apex:actionFunction name="refreshDetails" reRender="packageDetail" status="processing"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection rendered="{!IF(packageObj.Id == null && pkgTemplateList != null && pkgTemplateList.size > 0 && NOT(hideCheckboxes), true, false)}" title="Package Creation Type" columns="1">
+            
+                <input type="radio" checked="checked" name="pkgTypeRadio" value="ADHOC" id="adhoc"> 
+                    <span style="font-size: 1.01em; padding-left: 10px">{!$Label.AdhocLbl}</span>
+                </input> 
+            
+                <br />
+            
+                <input type="radio" name="pkgTypeRadio" value="CREATEFROMTEMPLATE" id="createFromTemplate"> 
+                    <span style="font-size: 1.01em; padding-left : 10px">{!$Label.CreateFromTemplateLbl}</span>
+                </input>
+            
+                <apex:actionFunction action="{!PackageCreationTypeChange}" name="pkgCreationType" reRender="pkgTemplate,packageTabs,pgPkgMessages" oncomplete="showPkgTemplate();" status="processing" immediate="true">
+                    <apex:param name="pkgType" assignTo="{!packageCreationType}" value=""/>
+                </apex:actionFunction>
+                <apex:actionFunction action="{!CreatePackageFromTemplate}" name="createFromPackage" status="processing" immediate="true" reRender="pgPkgMessages">
+                    <apex:param name="selectedTempId" assignTo="{!selectedTemplateId}" value=""/>
+                </apex:actionFunction>
+            
+             </apex:pageBlockSection>
+    <apex:tabPanel switchType="client" id="packageTabs" tabClass="activeTab" inactiveTabClass="inactiveTab" rendered="{!NOT(hasNoAccess)}">
+        <apex:tab label="{!$Label.esl__DetailsLbl}" title="{!$Label.esl__DetailsLbl}" name="packageHeader" id="packageHeaderBlockSection">
+            <apex:pageBlockSection rendered="{!NOT(IsReadOnly)}">
+                <apex:inputField id="pkgName" value="{!packageObj.Name}" styleClass="nameInputClass" required="true"/>
+                <apex:outputField value="{!packageObj.OwnerId}"/>
+                <apex:outputField value="{!packageObj.ESL__Status__c}"/>
+                <!-- C092331 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel layout="block" id="customLabel">
+                        <apex:outputLabel value="{!$Label.esl__Related_object_type}" for="parentTypeSelect" rendered="{!NOT(blockParentType)}"/>
+                        <apex:outputLabel value="{!$Label.esl__Related_object_type}" for="parentTypeSelect" rendered="{!blockParentType}"/>
+                    </apex:outputPanel>
+                    
+                    <apex:selectList value="{!selectedParent}" multiselect="false" size="1" onchange=" return refreshInputJS();" id="parentTypeSelect" styleClass="parentTypeSelect" disabled="{!blockParentType}">
+                        <apex:selectOptions value="{!parentTypes}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <!-- C092331 -->
+                <apex:outputField value="{!packageObj.ESL__Signer_Status__c}"/>
+                <!-- C092331 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=" "/>
+                    <apex:outputPanel layout="block" id="customDynamicComponentWrapper" styleClass="customDynamicComponentWrapper">
+                        
+                        <apex:dynamicComponent componentValue="{!DynamicInputField}" id="customDynamicComponent" rendered="{!AND(NOT(blockParentField),NOT(displayParentLink))}"/>
+                        <apex:outputLink value="/{!dynamicParentLink}" id="theLink" rendered="{!displayParentLink}">{!parentName}</apex:outputLink>
+                    
+                        <apex:inputHidden value="{!pageSelectedOptionInfo}" id="pageSelectedOptionInfoHidden" html-class="pageSelectedOptionInfoHidden" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <!-- C092331 -->
+                <apex:inputField value="{!packageObj.ESL__Description__c}" />
+               
+                
+            </apex:pageBlockSection>
+             <apex:pageBlockSection rendered="{!(IsReadOnly)}">
+                <apex:outputField value="{!packageObj.Name}" />
+                <apex:outputField value="{!packageObj.OwnerId}"/>
+                <apex:outputField value="{!packageObj.ESL__Status__c}"/>
+                <!-- C092331 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.esl__Related_object_type}" for="parentTypeSelect"/>
+                    <apex:selectList value="{!selectedParent}" multiselect="false" size="1" id="parentTypeSelectReadOnly" styleClass="parentTypeSelect" disabled="true">
+                        <apex:selectOptions value="{!parentTypes}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <!-- C092331 -->
+                <apex:outputField value="{!packageObj.ESL__Signer_Status__c}"/>
+                <!-- C092331 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=" "/>
+                    <apex:outputPanel layout="block" id="customDynamicComponentWrapper2">
+                        <apex:outputLink value="/{!dynamicParentLink}" id="theLink2" rendered="{!displayParentLink}">{!parentName}</apex:outputLink>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <!-- C092331 -->
+                <apex:inputTextarea disabled="true" value="{!packageObj.ESL__Description__c}" rows="4" cols="25"/>
+            </apex:pageBlockSection>
+            <c:AuditFields masterobject="{!packageObj}" />
+            
+            <!-- <apex:inputHidden value="{!fullReturnURL}" id="fullReturnURL"/> -->
+        </apex:tab>
+        <apex:tab label="{!$Label.esl__AdvancedOptionsTabLbl}" title="{!$Label.esl__AdvancedOptionsTabLbl}" name="advOptions">
+            <apex:pageBlockSection rendered="{!NOT(IsReadOnly)}">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.ESL__Package__c.fields.ESL__Expiry_Date__c.InlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.ESL__Package__c.fields.ESL__Expiry_Date__c.label}" />
+                    <apex:inputField value="{!packageObj.ESL__Expiry_Date__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <!-- Joel Ojeda - 02/12/2015 - Add input field to select Convention -->
+                <apex:pageBlockSectionItem helpText="{!$Label.esl__Auto_prepare_tooltip}" rendered="{!allowEditConvention}">
+                    <apex:outputLabel value="{!$ObjectType.ESL__Package__c.fields.ESL__Convention__c.label}" />
+                    <apex:inputField value="{!packageObj.ESL__Convention__c}"  onchange="activateConventionCheckboxes(this);if('{!packageObj.Id}'!=''){onActionClick('{!$Label.esl__Please_Wait}');refreshSignerLabels();}"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem helpText="{!$Label.esl__Auto_prepare_tooltip}" rendered="{!NOT(allowEditConvention)}">
+                    <apex:outputLabel value="{!$ObjectType.ESL__Package__c.fields.ESL__Convention__c.label}" />
+                    <apex:outputField value="{!packageObj.ESL__Convention__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <!-- Prudhvi 07/18: Moved email message prior to the top for layout adjustments -->
+                <!-- JGaviria 06/22/15: Added help texts that are lost when upgrading versions -->
+                <apex:pageBlockSectionItem helpText="{!$Label.esl__HelpText_Package_Email_Message_c}">  
+                    <apex:outputLabel value="{!$ObjectType.ESL__Package__c.fields.ESL__Email_Message__c.Label}"/>            
+                    <apex:inputField value="{!packageObj.ESL__Email_Message__c}" />                                           
+                </apex:pageBlockSectionItem>  
+                
+                <apex:inputField value="{!packageObj.ESL__AutoPrepare__c}" onchange="if('{!packageObj.Id}'!=''){onActionClick('{!$Label.esl__Please_Wait}');refreshDetails();}"/>
+                
+                <!--<apex:inputField value="{!packageObj.ESL__Language__c}"/>-->
+                <apex:selectList value="{!packageObj.ESL__Language__c}">
+                        <apex:selectOption itemValue="en" itemLabel="English"></apex:selectOption>
+                </apex:selectList>
+                
+                <apex:inputField id="conventionInsert" value="{!packageObj.ESL__Insert__c}"/>
+                <!-- JGaviria 06/22/15: Added help texts that are lost when upgrading versions -->
+                <apex:pageBlockSectionItem helpText="{!$Label.esl__HelpText_Package_In_Person_Signing_c}">  
+                    <apex:outputLabel value="{!$ObjectType.ESL__Package__c.fields.ESL__In_Person_Signing__c.Label}"/>            
+                    <apex:inputField value="{!packageObj.ESL__In_Person_Signing__c}"/>                                           
+                </apex:pageBlockSectionItem>  
+                
+                <apex:inputField id="conventionWriteback" value="{!packageObj.ESL__Writeback__c}"/>
+                
+                <!-- Prudhvi 07/18: Commented the review field from UI as the issue cannot be fixed on Silanis Side -->
+                <!-- apex:inputField value="{!packageObj.Review_Before_Completing__c}"/ -->
+            </apex:pageBlockSection>
+             <apex:pageBlockSection rendered="{!(IsReadOnly)}">
+                <apex:outputField value="{!packageObj.ESL__Expiry_Date__c}" />
+                
+                <!-- Joel Ojeda - 02/12/2015 - Add output field to show Convention -->
+                <apex:pageBlockSectionItem helpText="{!$Label.esl__Auto_prepare_tooltip}">
+                    <apex:outputLabel value="{!$ObjectType.ESL__Package__c.fields.ESL__Convention__c.label}" />
+                    <apex:outputField value="{!packageObj.ESL__Convention__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <!-- Prudhvi 07/18: Moved email message prior to the top for layout adjustments -->
+                <apex:outputField value="{!packageObj.ESL__Email_Message__c}" />
+                <apex:outputField value="{!packageObj.ESL__AutoPrepare__c}"/>  
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="lang" value="Language" />
+                    <apex:outputText id="lang" value="{!if(packageObj.ESL__Language__c=='en','English',packageObj.ESL__Language__c)}"/>
+                </apex:pageBlockSectionItem>
+                <!--<apex:outputField value="{!packageObj.ESL__Language__c}"/>-->
+                              
+                <apex:outputField value="{!packageObj.ESL__Insert__c}"/>
+                <apex:outputField value="{!packageObj.ESL__In_Person_Signing__c}"/>
+                <apex:outputField value="{!packageObj.ESL__Writeback__c}"/>
+                
+                <!-- Prudhvi 07/18: Commented the review field from UI as the issue cannot be fixed on Silanis Side -->
+                <!-- apex:outputField value="{!packageObj.Review_Before_Completing__c}"/ -->
+            </apex:pageBlockSection>
+            <!-- Jesus Gaviria - 02/18/2015 - Add Reminder Component to Page -->
+            <apex:outputPanel rendered="{!IF(showReminderConfig, true, false)}" id="pkgRmnd">
+                <c:PackageReminder masterobject="{!packageObj}" ReminderObj="{!Reminder}" title="{!$Label.esl__Reminders}"  tableId="packageReminderPanel" readonly="{!IsReadOnly}"/>
+            </apex:outputPanel>            
+            
+        </apex:tab>
+    </apex:tabPanel>
+</apex:pageBlock>
+<apex:outputPanel id="pkgTempateSection" style="display: {!IF(displayTemplate == true, 'block', 'none')}">
+    <apex:pageBlock id="pkgTemplate" title="{!$Label.esl__AvailablePackageTemplatesLbl}" >
+    
+        <!-- C092333 -->
+        <apex:outputPanel layout="block" style="margin: 10px;">
+            <apex:outputLabel value="{!$Label.esl__Selected_Parent_Type}" for="parentTypeTemplateSelect"/>
+            &nbsp;
+            <apex:selectList value="{!selectedParentTemplate}" multiselect="false" size="1" onchange="return refreshTemplatesJS();" id="parentTypeTemplateSelect" styleClass="parentTypeTemplateSelect" disabled="{!blockParentType}">
+                <apex:selectOptions value="{!parentTypesTemplate}"/>
+            </apex:selectList>
+        </apex:outputPanel>
+        <!-- C092333 -->
+    
+        <apex:outputPanel layout="block" style="margin: 10px;" rendered="{!NOT(hasTemplates)}">
+            <apex:outputLabel value="{!$Label.esl__No_Templates}" />
+        </apex:outputPanel>
+    
+        <apex:pageBlockTable id="pbtPkgTemplate" value="{!pkgTemplateList}" var="tmpl" rowClasses="rowCls" rendered="{!hasTemplates}">
+            <apex:column headerValue="{!$Label.esl__NameLbl}">
+                <apex:outputLink value="{!URLFOR($Action.Package_Template__c.View, tmpl.Id)}">{!HTMLENCODE(tmpl.Name)} </apex:outputLink>
+            </apex:column>
+            <!--  <apex:column value="{!tmpl.Object__c}"/> -->
+            <apex:column value="{!tmpl.ESL__Default__c}"/>
+            <apex:column value="{!tmpl.ESL__Status__c}"/>
+            <apex:column value="{!tmpl.ESL__Description__c}"/>
+ 
+            <!-- C092464 -->
+            <apex:column value="{!tmpl.ESL__Parent_Type__c}" headerValue="{!$Label.esl__Related_object_type}"/>
+            <!-- C092464 -->
+ 
+            <apex:column headerValue="{!$Label.esl__ActionLbl}">
+                <button style="cursor:pointer;" onclick="onActionClick('{!$Label.Creating}'); createFromPackage('{!tmpl.Id}'); return false;">{!$Label.CreateBtn}</button>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:outputPanel>
+</apex:form>
+<apex:outputPanel rendered="{!IF(packageObj.Id != null, true, false)}" id="pkgDocs">
+    <c:PackageDocument masterobject="{!packageObj}" validateComponent="{!validateComponents}" childobjectname="{!packageDocumentSObjName}" readonly="{!IsReadOnly}" title="{!$Label.esl__DocumentsLbl}"  tableId="packageDocumentGrid" />
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!IF(packageObj.Id != null, true, false)}" id="pkgSgns">
+    <c:PackageSigner masterobject="{!packageObj}" validateComponent="{!validateComponents}" childobjectname="{!packageSignerSObjName}" readonly="{!IsReadOnly}" title="{!$Label.esl__SignersLbl}"  tableId="packageSignerGrid" refreshComponent="{!refreshComponent}" refreshSignersPackage="{!refreshSigners}"/>
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!IF(packageObj.Id != null, true, false)}" id="pkgHistory">
+    <c:ObjectHistory subject="{!packageObj.Id}" sectionTitle="{!$Label.esl__HistoryLbl}" />
+</apex:outputPanel>
+ <script>
+    if(document.getElementById("adhoc") != null)
+    {
+         document.getElementById("createFromTemplate").checked = false;
+         document.getElementById("adhoc").checked = true;
+    }
+	function CanvasAppOverlay_OnClose()
+	{
+        onActionClick('{!$Label.esl__Please_Wait}');
+        RerenderForm();
+    }
+	function stopSignerRefresh()
+	{        
+        stopSignerRefreshNow();
+    }
+ </script>
+
+</apex:page>

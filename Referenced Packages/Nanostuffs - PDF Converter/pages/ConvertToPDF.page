@@ -1,0 +1,27 @@
+<apex:page controller="pdfconvert.ConvertToPDF" renderAs="pdf" action="{!convertToPDF}">
+<style>
+.nanotd
+{
+    text-align: left;
+    font-size: 14px;
+    font-family: Calibri;
+}
+</style>
+    <apex:pageMessages />
+    <table width="100%" cellspacing="0" cellpadding="3" border="1">
+        <tr>
+            <td class="nanotd"><b>Type</b></td>
+            <td class="nanotd"><b>{!objectType}</b></td>
+        </tr>
+        <tr>
+            <td class="nanotd"><b>Id</b></td>
+            <td class="nanotd"><b>{!objectId}</b></td>
+        </tr>
+        <apex:repeat value="{!nameValueMap}" var="index">
+            <tr>
+                <td class="nanotd"><apex:outputText value="{!index}" /></td>
+                <td class="nanotd"><apex:outputText value="{!nameValueMap[index]}" /></td> 
+            </tr> 
+        </apex:repeat>
+    </table>
+</apex:page>

@@ -1,0 +1,85 @@
+<apex:component controller="FastCall.AsMissedCallNotificationController" allowDML="true">
+
+<!-- Missed Call notifications -->
+<apex:outputPanel layout="block" id="missedCallNotificationPanel" styleClass="fc-container w-help">
+    <table>
+        <tr>
+            <td class="white">
+                <div class="inner missedCallNotificationsConfig">
+                	<apex:outputPanel id="missedCallNotificationMessage">
+	                	<apex:outputPanel rendered="{!NOT(ISBLANK(missedCallNotificationMessage)) && NOT(ISBLANK(missedCallNotificationMessage.text))}" layout="block">
+			                  <fieldset class="alert alert-{!missedCallNotificationMessage.messageType}">
+			                      <apex:outputPanel styleClass="icon-{!missedCallNotificationMessage.messageType}-sign" />
+			                      <apex:outputLabel styleClass="settings first last" value="{!missedCallNotificationMessage.text}" />
+			                  </fieldset>
+	              		</apex:outputPanel>
+              		</apex:outputPanel>
+                    <h1 class="fc-container-header">Missed call notification</h1>
+                    <fieldset>
+                    	<apex:outputLabel styleClass="first settings"
+                     				  value="Enable missed call notifications"
+                     				  style="width: 200px;"
+                     				  for="missedCallNotificationChk"/>
+                     	<apex:inputCheckbox id="missedCallNotificationChk" value="{!missedCallNotificationEnabled}"
+                     						styleClass="chkInput last settings checkbox"/>			  
+                    </fieldset>
+                    <apex:outputPanel rendered="{!organizationWideEmailAddressList.size > 0}">
+	                    <fieldset>
+	                    	<apex:outputLabel styleClass="first settings"
+	                     				  value="Sent email from"
+	                     				  style="width: 200px;"
+	                     				  for="missedCallNotificationLst"/>
+	                     	<apex:selectList value="{!missedCallNotificationEmailFrom}" size="1" 
+	                     					 styleClass="last settings textbox" style="width: 530px;">
+            					<apex:selectOptions value="{!orgWideAddressOptions}"/>
+        					</apex:selectList>
+        					<label class="setting-caption last" style="margin-left: 15px;">If you select an Organization-Wide Email Address make sure that It's verified. Otherwise this notification will not be sent</label>
+	                    </fieldset>
+                    </apex:outputPanel>
+                    <fieldset>
+                    	<apex:outputLabel styleClass="first settings"
+                     				  value="Email subject"
+                     				  style="width: 200px;"
+                     				  for="missedCallNotificationSubjectTxt"/>
+                     	<apex:inputText id="missedCallNotificationSubjectTxt" value="{!missedCallNotificationSubject}" 
+                     					styleClass="txtInput last settings textbox" maxlength="255" style="width: 500px;"/>
+                    </fieldset>
+                    <fieldset>
+                    	<apex:outputLabel styleClass="missedCallNotificationBodyTxt first settings"
+                     				  value="Email body"
+                     				  style="width: 200px;vertical-align: top;"
+                     				  for="missedCallNotificationBodyTxt"/>
+                    	<apex:inputTextarea id="missedCallNotificationBodyTxt" value="{!missedCallNotificationBody}" 
+                    						styleClass="missedCallNotificationBodyTxt txtInput last settings textbox" style="width:500px;height:100px;"/>
+                    </fieldset>
+                    <fieldset>
+                    	<apex:outputLabel styleClass="first settings"
+                     				  value="Send copy to"
+                     				  style="width: 200px;"
+                     				  for="missedCallNotificationCcTxt"/>
+                     	<apex:inputText id="missedCallNotificationCcTxt" value="{!missedCallNotificationCcText}" 
+                     					styleClass="txtInput last settings textbox" maxlength="255" style="width:500px;"/>
+                     	<label class="setting-caption last" style="margin-left: 15px;">You can set one or more email addresses to send a copy of this notification. FOR EXAMPLE: email1@fastcall.com, email2@fastcall.com (comma-separated values)</label>						  
+                    </fieldset>
+                    <fieldset>
+                    	<a id="saveMissedCallEmailSettingsBtn" href="#" class="btn settings-btn" style="margin-left: 604px;">
+                    		Save email settings
+                    	</a>
+                    </fieldset>
+                    <apex:actionFunction name="updateMissedCallNotificationSettings" action="{!saveMissedCallNotificationSettings}" 
+                    					 status="overlayStatus" rerender="missedCallNotificationMessage"/>
+                </div>
+            </td>
+            <td class="green">
+                <div class="inner">
+                    <h1>HELP GUIDE</h1>
+                    <p>
+                    	
+                    </p>
+                </div>                    
+            </td>
+        </tr>
+    </table>
+</apex:outputPanel> <!-- / Missed Call notifications -->
+
+</apex:component>

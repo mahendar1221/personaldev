@@ -1,0 +1,28 @@
+<apex:page showHeader="false" standardStylesheets="false" docType="html-5.0" language="en-US"  >
+    <div class=".col-md-6 .col-md-offset-3">
+    <apex:form styleClass="form-control">
+        <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap-3.1.1-dist/css/bootstrap.min.css')}" />
+        <apex:includeScript value="{!URLFOR($Resource.bootstrap, 'bootstrap-3.1.1-dist/css/bootstrap.js')}"/>
+        <apex:pageBlock >
+            
+            <apex:outputPanel styleClass="form-control">
+                <apex:pageBlockSection >
+                    first name <apex:inputText styleClass=".col-md-6 .col-md-offset-3" />
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            
+            <apex:outputPanel >
+                <apex:pageBlockSection >
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            
+             <apex:outputPanel >
+                <apex:pageBlockSection >
+                     <apex:commandButton styleClass="btn btn-Danger btn-lg " value="testabutton"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+       
+    </apex:form>
+    </div>
+</apex:page>

@@ -1,0 +1,19 @@
+<apex:page showHeader="false">
+<!-- On this page, we receive several parameters -->
+<!-- package - The package Silanis ID -->
+<!-- signer - The Salesforce Signer ID -->
+<!-- email - The email of the Signer -->
+<!-- status - The status of the package. For example, PACKAGE_OPT_OUT, SIGNER_COMPLETE, etc. -->
+<!-- I think the status we get, are the strings from the event notification (EventNotificationFactory) -->
+
+<center>
+	<apex:outputPanel layout="block" style="height:100vh">
+		<apex:outputPanel layout="block" style="position: relative; top: 50%; transform: translateY(-50%);">
+			<apex:outputLabel rendered="{!$CurrentPage.parameters.status == 'PACKAGE_OPT_OUT'}" value="{!$Label.esl__Signer_Opted_Out}"/>
+			<apex:outputLabel rendered="{!$CurrentPage.parameters.status == 'PACKAGE_DECLINE'}" value="{!$Label.esl__Signer_Declined}"/>
+			<apex:outputLabel rendered="{!$CurrentPage.parameters.status == 'SIGNER_COMPLETE'}" value="{!$Label.esl__Signer_Completed}"/>
+			<apex:outputLabel value="Please click X to close this window"/>
+		</apex:outputPanel>
+	</apex:outputPanel>
+</center>
+</apex:page>

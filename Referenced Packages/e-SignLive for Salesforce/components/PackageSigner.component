@@ -1,0 +1,508 @@
+<apex:component controller="ESL.PackageSignerController" allowDML="true">
+    <apex:attribute name="masterobject" description="Master Obj Id" type="sObject" required="true" assignTo="{!masterSObj}"/>
+    <apex:attribute name="childobjectname" description="Master Obj Id" type="String" required="true" assignTo="{!sObjName}"/>
+    <apex:attribute name="title" description="Pass in the title of the Page Block" type="String" required="true"/>
+    <apex:attribute name="readonly" description="Pass in true or false" type="Boolean" required="true"/>
+    <apex:attribute name="tableId" description="Unique Id for the table" type="String" required="true"/>
+    <apex:attribute name="validateComponent" description="Validate data" type="boolean" assignTo="{!validate}"/>
+    <apex:attribute name="refreshComponent" description="Validate data" type="boolean" required="false" default="false"/>
+    <apex:attribute name="refreshSignersPackage" description="Validate data" type="boolean" required="false" default="false" assignTo="{!refreshSigners}"/> 
+
+    <apex:form >                       
+    <div id="blockSgn" style="display:none;">
+        <div class="sectionCurtain">
+            <div class="sectionBox">
+                <img src="/img/loading24.gif" class="savingImg"/>
+                <span id="sgnActionText">{!$Label.Please_Wait}</span>
+            </div>
+        </div>
+    </div>
+        <apex:pageBlock title="{!title}" mode="detail" id="pbSgn">
+        <!-- DO NOT DELETE THE DIV THIS SIMULATING A CLICK BEFORE Save Action-->
+        <div id="simulateSaveSgnClick"></div>
+        <!-- Xiomara - EPIC 07 Function to refresh Pop-up data -->
+        <apex:actionFunction name="refreshCachedMappingView" action="{!refreshDiv}" reRender="cachedMapComponent" oncomplete="hideLoading();elementPosition('#cachedMapDiv');">
+            <apex:param name="signerIdHover" value="" assignTo="{!dynamicSignerId}" />
+        </apex:actionFunction>
+       <apex:actionstatus id="cacheDisplay" onstart="showCacheLoader();"/>
+        
+        <!-- DO NOT DELETE THE DIV THIS SIMULATING A CLICK BEFORE Save Action-->
+
+                <!-- jesus.gaviria - 04-30-2015 - Actions that will process the confirmation message -->
+                <apex:actionFunction name="confirmCancelJSSigner" action="{!confirmCancel}"   reRender="pbtSgn,enforceSgnOrder,pgSgnMessages,pkgSgns,tableBlockSection,packageDetail,packageTabs" status="processSgn">
+                    <apex:param id="actionTypeCancel" name="actionType" value="" assignTo="{!confirmActionType}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="confirmContinueJSSigner" action="{!confirmContinue}" oncomplete="signerChanged();" reRender="pkgSgns,pgSgnMessages" status="processSgn">
+                    <apex:param id="actionTypeContinue" name="actionType" value="" assignTo="{!confirmActionType}"/>
+                </apex:actionFunction>
+
+        <apex:outputPanel id="pgSgnMessages">
+            <!-- <apex:pageMessages escape="false"/> -->
+            <!-- joel.ojeda - 04-02-2015 - Show messages from the message handler-->
+                <apex:repeat value="{!messages}" var="msg" rendered="{!hasMessages}">
+                    <apex:pageMessage title="{!msg.title}" detail="{!msg.detail}" summary="{!msg.summary}" severity="{!msg.severity}" strength="{!msg.strength}" escape="false" >
+                        <apex:outputPanel layout="block" rendered="{!msg.confirmation}" style="text-align:right;">
+                            <apex:outputPanel layout="block" rendered="{!msg.showContinue}">
+                                <button onclick="onActionClick('{!IF(msg.confirmationAction == 'unlock',$Label.UnlockLbl,$Label.Saving)}');confirmContinueJSSigner('{!msg.confirmationAction}');" type="button" label="{!$Label.ConfirmBtn}"
+                                    class="confirmButton">{!$Label.ConfirmBtn}</button>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" rendered="{!msg.showCancel}">
+                                <button onclick="onActionClick('{!$Label.esl__Please_Wait}');confirmCancelJSSigner('{!msg.confirmationAction}');" type="button" label="{!$Label.CancelBtn}"
+                                    class="confirmButton">{!$Label.CancelBtn}</button>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageMessage>
+                </apex:repeat>
+        </apex:outputPanel>
+            <apex:pageBlockButtons location="top" rendered="{!NOT(readOnly)}">
+                    <apex:commandButton id="newSgn" status="processSgn" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" 
+                        value="{!$Label.esl__AddSignerBtn}" action="{!addSigner}" title="{!$Label.esl__AddSignerBtn}" onclick="onSgnActionClick('{!$Label.esl__Adding}');" 
+                        oncomplete="showSave();" />
+
+                    <apex:commandButton id="saveSgns" value="{!$Label.esl__SaveSignersBtn}" action="{!save}" title="{!$Label.esl__SaveSignersBtn}"
+                        reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" status="processSgn" 
+                        onclick="onSgnActionClick('{!$Label.esl__Saving}'); j$('#simulateSaveSgnClick').trigger('click');" oncomplete="showSave();signerChanged();"  
+                        style="display:none; color:white; background:#f96302"/>
+                    <!-- apex:commandButton id="saveSgns" value="{!$Label.esl__SaveSignersBtn}" action="{!save}" style="display:none; color:white; background:#f96302"/-->
+
+                    <apex:actionFunction action="{!save}" name="saveSgnAction" status="processSgn" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" oncomplete="reDrawSgnsTable('false');addChangeListener();"/>
+                    <apex:actionFunction action="{!validate}" name="validateAction" status="processSgn" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" oncomplete="reDrawSgnsTable('false');addChangeListener();"/>
+
+                    <apex:actionFunction action="{!updateMasterSObj}" name="pkgSgnUpdateMasterSObj" reRender="pbtSgn, enforceSgnOrder,pgSgnMessages" oncomplete="reDrawSgnsTable('false');addChangeListener();" status="processSgn"/>
+
+                    <apex:actionFunction action="{!reRenderAct}" name="reRenderActSgn" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" status="processSgn" oncomplete="reDrawSgnsTable('true');addChangeListener();"/>
+
+                    <apex:actionFunction action="{!reRenderAct}" name="reRenderActSgnFromPkgTemp" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages"/>
+                    <!-- C102476 - New Action to reRender only signers table-->
+                    <apex:actionFunction name="refreshSgn" reRender="pbtSgn"   oncomplete="onStopSgnProcessing();addChangeListener();"></apex:actionFunction>
+                    <!-- C102476 - Changed to render signers table on the oncomplete / loading status starts before call this and stops after this function-->
+                    <apex:actionFunction action="{!saveCurrentRows}" name="saveCurrentRows" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages"  oncomplete="reDrawSgnsTable('true'); hideSaveSgnsBtn();refreshSgn();signerChanged();">
+                        <apex:param name="pkgSignerId" assignTo="{!modifiedPkgSigner}" value=""/>
+                        <!-- Joel Ojeda . 04/13/2015 . Issue #460 and #653 -->
+                        <!-- New parameter added to indicate that this save -->
+                        <!-- is being executed because the type of the signer -->
+                        <!-- is changing -->
+                        <apex:param name="isChanging" assignTo="{!typeIsChanging}" value=""/>
+                    </apex:actionFunction>
+                    
+                    <apex:actionFunction action="{!refreshRows}" name="refreshRowsJS" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" status="processSgn" oncomplete="reDrawSgnsTable('true');addChangeListener();" />
+
+                    <apex:actionFunction immediate="true" action="{!deleteSigner}" name="delPkgSignerId" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" oncomplete="reDrawSgnsTable('false'); addChangeListener();signerChanged();" status="processSgn">
+                        <apex:param name="pkgSignerId" assignTo="{!delPkgSigner}" value=""/>
+                    </apex:actionFunction>
+
+                   <!-- <apex:actionFunction action="{!unlockSigner}" name="UnlockS" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" oncomplete="reDrawSgnsTable('false'); addChangeListener();" status="processSgn">
+                        <apex:param name="pkgSignerId" assignTo="{!unlockPkgSigner}" value=""/>
+                    </apex:actionFunction> -->
+
+                    <apex:actionstatus id="processSgn" onstart="onStartSgnProcessing();" onstop="onStopSgnProcessing();" />
+                    
+                    <apex:actionFunction name="refreshComponent" status="processSgn" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" oncomplete="reDrawSgnsTable('false');addChangeListener();"/>
+                    
+
+                    
+            </apex:pageBlockButtons>
+
+            <!-- <div class="dataTables_wrapper">
+            <apex:pageBlockSection columns="1">
+                <apex:pageblockTable value="{!SignerList}" var="sObj" rendered="{!NOT(readOnly)}" id="pbtSgn" rowClasses="rowSgn">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="saveSgns" />
+                    <apex:column headerValue="{!$Label.esl__ActionLbl}" >
+                        <apex:commandLink onclick="delPkgSigner('{!sObj['Id']}'); return false;" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages">
+                            <apex:image value="/img/func_icons/remove12_on.gif" width="15" height="15"/>
+                        </apex:commandLink>
+                    <apex:image url="{!URLFOR($Resource.ESL__Silanis, 'images/move.png')}" width="15" height="15" style="padding-left:10px;cursor:move;" title="{!$Label.esl__DragAndDropSgnToolTipLbl}" rendered="{!masterSObj['Enforce_Signing_Order__c']}"/>
+                        <apex:inputHidden value="{!sObj['Signing_Order__c']}" id="sgnOrder"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__TypeLbl}">
+                        <apex:inputField value="{!sObj['Type__c']}" id="type"
+                        onchange="onSgnActionClick('{!$Label.Please_Wait}'); updateLookup(this.value,'{!$Component.contactSection}','{!$Component.userSection}','{!$Component.leadSection}','{!$Component.nameSection}','{!$Component.firstNameSection}','{!$Component.lastNameSection}','{!$Component.authSection}','{!$Component.emailSection}','{!$Component.phoneSection}');"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__NameLbl}">
+                        <apex:outputPanel id="contactSection">
+                            <apex:inputField id="contactInput" value="{!sObj['Contact__c']}"/>
+                            <apex:outputField id="contactOutput" value="{!sObj['Contact__c']}"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="userSection">
+                            <apex:inputField id="userInput" value="{!sObj['User__c']}" />
+                            <apex:outputField id="userOutput" value="{!sObj['User__c']}"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="leadSection">
+                            <apex:inputField id="leadInput" value="{!sObj['Lead__c']}" />
+                            <apex:outputField id="leadOutput" value="{!sObj['Lead__c']}" />
+                        </apex:outputPanel>
+                        <apex:outputPanel id="nameSection">
+                            <apex:outputText id="nameText" value="{!sObj['Name']}" />
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__FirstNameLbl}">
+                        <apex:outputPanel id="firstNameSection">
+                            <apex:inputField id="firstNameInput" value="{!sObj['First_Name__c']}" />
+                            <apex:outputField id="firstNameOutput" value="{!sObj['First_Name__c']}"/>
+                            <apex:outputText id="firstNameText" value="{!sObj['First_Name__c']}" />
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__LastNameLbl}">
+                        <apex:outputPanel id="lastNameSection">
+                            <apex:inputField id="lastNameInput" value="{!sObj['Last_Name__c']}"/>
+                            <apex:outputField id="lastNameOutput" value="{!sObj['Last_Name__c']}"/>
+                            <apex:outputText id="lastNameText" value="{!sObj['Last_Name__c']}" />
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__AuthenticationMethodLbl}">
+                        <apex:outputPanel id="authSection">
+                            <apex:outputField id="authOutput" value="{!sObj['Authentication_Method_v3__c']}" />
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__ContactEmailLbl}">
+                        <apex:outputPanel id="emailSection">
+                            <apex:inputField id="emailInput" value="{!sObj['Email__c']}" />
+                            <apex:outputField id="emailOutput" value="{!sObj['Email__c']}" />
+                            <apex:outputText id="emailText" value="{!sObj['Email__c']}" />
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__ContactPhoneLbl}">
+                        <apex:outputPanel id="phoneSection">
+                            <apex:inputField id="phoneInput" value="{!sObj['Phone__c']}" />
+                            <apex:outputField id="phoneOutput" value="{!sObj['Phone__c']}"/>
+                            <apex:outputText id="phoneText" value="{!sObj['Phone__c']}"/>
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__SigningOrderLbl}" rendered="{!masterSObj['Enforce_Signing_Order__c']}">
+                        <apex:outputText value="{!sObj['Signing_Order__c']}"/>
+                    </apex:column>
+                </apex:pageblockTable>
+                </apex:pageBlockSection>
+            </div> -->
+            <div class="dataTables_wrapper">
+            <apex:pageBlockSection columns="1" id="tableBlockSection">
+                <apex:pageblockTable value="{!SignerList}" var="sObj" rendered="{!NOT(readOnly)}" id="pbtSgn" rowClasses="rowSgn" >
+ 
+                    <!-- <apex:inlineEditSupport event="ondblclick" showOnEdit="saveSgns" hideOnEdit="SendToESignLiveBtn"/> -->  
+                    <!-- C095579 Changed the rendered attribute so the inline edit support is always added to every row
+                                 Since it will be there for the first row we need to change some of the apex:outpufield to apex:outputText-->                  
+                    <apex:inlineEditSupport showOnEdit="saveSgns" event="ondblclick" />                    
+                    <apex:column headerValue="{!$Label.esl__ActionLbl}" style="min-width: 50px">
+                        <apex:commandLink onclick="delPkgSigner('{!sObj['Id']}'); return false;" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" rendered="{!AND(sObj['User__c'] != masterSObj['OwnerId'], OR(NOT(isLocked),AND(isLocked,sObj['SignerLabel__c']==''))) }">
+                            <apex:image value="/img/func_icons/remove12_on.gif" width="15" height="15"/>
+                        </apex:commandLink>
+                        
+                        <apex:image url="{!URLFOR($Resource.ESL__Silanis, 'images/move.png')}" width="15" height="15" style="padding-left:10px;cursor:move;" title="{!$Label.esl__DragAndDropSgnToolTipLbl}" rendered="{!masterSObj['Enforce_Signing_Order__c']}"/>
+                        <apex:inputHidden value="{!sObj['Signing_Order__c']}" id="sgnOrder"/>                        
+	                        <apex:commandLink action="{!activateUnlockConfirmation}" reRender="pgSgnMessages" title="{!$Label.esl__Unlock_Signer}" onclick="onActionClick('{!$Label.esl__Please_Wait}');"
+	                                    rendered="{! NOT(isPkgTemplate) && AND(sObj['User__c'] != masterSObj['OwnerId'],sObj['Locked__c'] == true)}" status="processSgn">
+	                                <apex:param name="SignerId" value="{!sObj['Id']}" assignTo="{!unlockPkgSigner}"/>
+	                                <apex:image url="{!URLFOR($Resource.ESL__Silanis,'images/unlock-xxl.png')}" width="15" height="15" style="padding-left:10px;"/>
+	                        </apex:commandLink>                       
+                    </apex:column>
+                    <!-- daniel.terraza - issue 2824 -->
+                    <!-- This column has a min-width so that the Owner tag, and  -->
+                    <!-- the help text appear next to each other, under any resolution  -->
+                    <apex:column headerValue="{!$Label.esl__TypeLbl}" style="min-width:56px">
+                        <apex:outputPanel rendered="{!(sObj['User__c'] != masterSObj['OwnerId'])}">
+                            <apex:inputField value="{!sObj['Type__c']}" id="type" 
+                            onchange="onSgnActionClick('{!$Label.Please_Wait}'); updateLookup(this.value,
+                            '{!$Component.contactSection}', '{!$Component.userSection}', '{!$Component.leadSection}','{!$Component.nameSection}', '{!$Component.firstNameSection}', '{!$Component.lastNameSection}',
+                            '{!$Component.contactInput}', '{!$Component.userInput}', '{!$Component.leadInput}', '{!$Component.firstNameInput}', '{!$Component.lastNameInput}', '{!$Component.emailInput}','{!$Component.phoneInput}','{!$Component.firstNameText}', '{!$Component.lastNameText}', '{!$Component.emailText}', '{!$Component.phoneText}','{!sObj['Id']}');addChangeListener();return false;"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!(sObj['User__c'] == masterSObj['OwnerId'])}">
+                            <apex:outputText value="{!$Label.esl__Owner}"/>
+                            <apex:outputPanel id="ownerHelpText" rendered="{!(sObj['User__c'] == masterSObj['OwnerId'])}">
+                                <span class="helpButton" id="example-title-_help">
+                                    <img src="/s.gif" class="helpOrb"/>
+                                    <script type="text/javascript">
+                                        if("{!isPkgTemplate}" == "true")
+                                        {
+                                            sfdcPage.setHelp('example-title', '{!$Label.Default_Template_Signer_Tooltip}');
+                                        }
+                                        else
+                                        {
+                                            sfdcPage.setHelp('example-title', '{!$Label.Default_Signer_Tooltip}');
+                                        }
+                                    </script>
+                                </span>
+                            </apex:outputPanel>                            
+                        </apex:outputPanel>
+                    </apex:column>
+
+                    <!-- Changes for Task #2305 display field that allows delegation to a signer
+                        The Allow Delegation checkbox should be enabled if:
+                        The master object (package or package template) is in status: Prepared
+                        The type of the signer is not Placeholder
+                        The Signer is not the Owner (Not specified but testing on ESL we found no way of doing it)
+                    -->
+                    <apex:column headerValue="{!$Label.esl__Allow_Signature_Delegation}" title="{!$Label.esl__Delegation_Tooltip}" >
+                        <apex:outputField value="{!sObj['AllowDelegation__c']}"  rendered="{!AND(sObj['Type__c'] != PlaceholderType, displayAllowDelegation, sObj['User__c'] != masterSObj['OwnerId'])}" title="{!$Label.esl__AllowDelegationTooltip}">
+                            <apex:inlineEditSupport showOnEdit="saveSgns"/>
+                        </apex:outputField>
+                        
+                        <apex:inputCheckbox value="{!sObj['AllowDelegation__c']}" rendered="{!OR(sObj['Type__c'] == PlaceholderType, NOT(displayAllowDelegation), sObj['User__c'] == masterSObj['OwnerId'])}" disabled="true" title="{!$Label.esl__AllowDelegationTooltip}"/>
+                    </apex:column>
+                    
+                    <apex:column headerValue="{!$Label.esl__NameLbl}">
+                        <apex:outputPanel id="contactSection" rendered="{!IF(sObj['Type__c'] == 'Contact', true, false)}">
+                            <apex:inputField value="{!sObj['Contact__c']}"
+                            id="contactInput" 
+                            onchange="saveCurrentRowsJS('',false);"
+                            rendered="{!IF(sObj['Contact__c'] == null, true, false)}"/>
+	                        <apex:outputField rendered="{!IF(sObj['Contact__c'] != null, true, false)}" value="{!sObj['Contact__c']}">
+	                            <apex:inlineEditSupport disabled="true"/>
+	                        </apex:outputField>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="userSection" rendered="{!IF(sObj['User__c'] != masterSObj['OwnerId'] && sObj['Type__c'] == 'User', true, false)}">
+                            <apex:inputField value="{!sObj['User__c']}"
+                            id="userInput"
+                            onchange="saveCurrentRowsJS('',false);" 
+                            rendered="{!IF(sObj['User__c'] == null, true, false)}"/>
+                            <apex:outputField rendered="{!IF(sObj['User__c'] != null, true, false)}" value="{!sObj['User__c']}">
+                                <apex:inlineEditSupport disabled="true"/>
+                            </apex:outputField>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="leadSection" rendered="{!IF(sObj['Type__c'] == 'Lead', true, false)}">
+                            <apex:inputField value="{!sObj['Lead__c']}"
+                            id="leadInput"
+                            onchange="saveCurrentRowsJS('',false);" 
+                            rendered="{!IF(sObj['Lead__c'] == null, true, false)}"/>
+                            <apex:outputField rendered="{!IF(sObj['Lead__c'] != null, true, false)}" value="{!sObj['Lead__c']}">
+                               <apex:inlineEditSupport disabled="true"/>
+                            </apex:outputField> 
+                        </apex:outputPanel>        
+                        <!-- C095579 instead of having the rerender on the apex:inlineditsupport 
+                                    we set a panel with an outputtext with the complement condition of the outputfield   -->                                          
+                        <apex:outputPanel id="OwneruserSection" rendered="{!IF(sObj['User__c'] == masterSObj['OwnerId'] && sObj['Type__c'] == 'User', true, false)}">
+                            <apex:outputText value="{!sObj['First_Name__c']+' '+sObj['Last_Name__c']}" 
+                            id="OwneruserOutput"
+                            rendered="{!IF(sObj['User__c'] != '' || sObj['User__c'] != null, true, false)}" />
+                        </apex:outputPanel>                        
+                                              
+                        <!-- 
+                        <apex:outputPanel id="nameSection" rendered="{!IF(sObj['Type__c'] == 'External Email', true, false)}">
+                            <apex:outputText value="{!sObj['Name']}"
+                            rendered="{!IF(sObj['Name'] != '' || sObj['Name'] != null, true, false)}" />
+                        </apex:outputPanel>
+                        -->
+                        <apex:outputPanel id="nameSection" rendered="{!IF(sObj['Type__c'] == 'External Email', true, false)}">
+                            <apex:outputText value="{!sObj['First_Name__c']} {!sObj['Last_Name__c']}"
+                            rendered="{!IF(sObj['First_Name__c'] != '' || sObj['First_Name__c'] != null || sObj['Last_Name__c'] != '' || sObj['Last_Name__c'] != null, true, false)}" />
+                        </apex:outputPanel>
+                        <apex:outputPanel id="placeholderSection" rendered="{!IF(sObj['Type__c'] == 'Placeholder', false, false)}">
+                            <apex:outputText value="{!sObj['Name']}"
+                            rendered="{!IF((sObj['Name'] != '' || sObj['Name'] != null)&& sObj['Role_Id__c'] != null, true, false)}" />
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__FirstNameLbl}">
+                    <apex:outputPanel id="firstNameSection">
+                        <apex:inputField id="firstNameInput" value="{!sObj['First_Name__c']}" rendered="{!IF((sObj['First_Name__c'] == '' || sObj['First_Name__c'] == null) && sObj['Type__c'] == 'External Email', true, false)}" onchange="showSaveSgnsBtn();"/>
+                        <apex:outputField value="{!sObj['First_Name__c']}" rendered="{!IF((sObj['First_Name__c'] != '' || sObj['First_Name__c'] != null) && sObj['Type__c'] == 'External Email', true, false)}" >
+                             <apex:inlineEditSupport showOnEdit="saveSgns"/>
+                        </apex:outputField>
+                        <apex:outputText id="firstNameText" value="{!sObj['First_Name__c']}" rendered="{!IF((sObj['Type__c'] != '' || sObj['Type__c'] != null)&& sObj['Type__c'] != 'External Email', true, false)}" />
+                    </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__LastNameLbl}">
+                    <apex:outputPanel id="lastNameSection">
+                        <apex:inputField id="lastNameInput" value="{!sObj['Last_Name__c']}" rendered="{!IF((sObj['Last_Name__c'] == '' || sObj['Last_Name__c'] == null) && sObj['Type__c'] == 'External Email', true, false)}" onchange="showSaveSgnsBtn();"/>
+                        <apex:outputField value="{!sObj['Last_Name__c']}" rendered="{!IF((sObj['Last_Name__c'] != '' || sObj['Last_Name__c'] != null) && sObj['Type__c'] == 'External Email', true, false)}">
+                              <apex:inlineEditSupport showOnEdit="saveSgns"/>
+                        </apex:outputField>
+                        <apex:outputText id="lastNameText" value="{!sObj['Last_Name__c']}" rendered="{!IF((sObj['Type__c'] != '' || sObj['Type__c'] != null) && sObj['Type__c'] != 'External Email', true, false)}" />
+                    </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__AuthenticationMethodLbl}">
+                        <!-- <apex:inputField id="authMethodInput" value="{!sObj['Authentication_Method_v3__c']}" onchange="showSaveSgnsBtn();"/> -->
+                        <!-- <apex:inputField id="authMethodInput" value="{!sObj['Authentication_Method_v3__c']}" rendered="{!IF(sObj['Authentication_Method_v3__c'] == '' || sObj['Authentication_Method_v3__c'] == null, true, false)}" onchange="showSaveSgnsBtn();"/> -->
+
+                        <apex:outputField id="authMethodOutput" value="{!sObj['Authentication_Method_v3__c']}" rendered="{!And(sObj['Type__c'] != 'Placeholder',(sObj['User__c'] != masterSObj['OwnerId']))}">
+                            <apex:inlineEditSupport showOnEdit="saveSgns"/>
+                        </apex:outputField>
+                        
+                        <apex:commandLink id="theIconQA" rendered="{!IF(sObj['Type__c'] == 'Placeholder',false,true)}" onclick="openSignerDialog('{!sObj['Id']}');return false;"  style="{!if(sObj['Authentication_Method_v3__c'] == 'Q&A','','display:none;')}" status="processSgn">                        
+                            <apex:image value="/img/icon/custom51_100/pencil16.png" width="15" height="15"/>
+                        </apex:commandLink>                                                  
+
+                        <apex:outputText id="OwnerauthMethodOutput" value="{!sObj['Authentication_Method_v3__c']}" rendered="{!(sObj['User__c'] == masterSObj['OwnerId'])}"/>
+<!--                         <apex:commandLink onclick="delPkgSigner('{!sObj['Id']}'); return false;" reRender="pbtSgn,enforceSgnOrder,pgSgnMessages" rendered="{!(sObj['Authentication_Method_v3__c'] == 'Q&A')}"> -->
+                        
+                                
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__ContactEmailLbl}">
+                        <apex:inputField id="emailInput" value="{!sObj['Email__c']}" rendered="{!IF((sObj['Email__c'] == '' || sObj['Email__c'] == null) && sObj['Type__c'] != 'Placeholder' && sObj['Type__c'] != '', true, false)}" onkeydown="showSaveSgnsBtn();"/>
+                        <apex:outputField id="emailText" value="{!sObj['Email__c']}" rendered="{!IF(sObj['User__c'] != masterSObj['OwnerId'] && (sObj['Email__c'] != '' || sObj['Email__c'] != null), true, false)}" >
+                            <apex:inlineEditSupport showOnEdit="saveSgns"/>
+                        </apex:outputField>
+                        <apex:outputText id="OwneremailText" value="{!sObj['Email__c']}" rendered="{!IF(sObj['User__c'] == masterSObj['OwnerId'] && (sObj['Email__c'] != '' || sObj['Email__c'] != null), true, false)}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__ContactPhoneLbl}">
+                        <apex:inputField id="phoneInput" value="{!sObj['Phone__c']}" rendered="{!IF((sObj['Phone__c'] == '' || sObj['Phone__c'] == null) && sObj['Type__c'] != 'Placeholder' && sObj['Type__c'] != '', true, false)}" onkeydown="showSaveSgnsBtn();"/>
+                        <apex:outputField id="phoneText" value="{!sObj['Phone__c']}" rendered="{!IF(sObj['User__c'] != masterSObj['OwnerId'] && (sObj['Phone__c'] != '' || sObj['Phone__c'] != null), true, false)}" >
+                            <apex:inlineEditSupport showOnEdit="saveSgns"/>
+                        </apex:outputField>
+                        <apex:outputText id="OwnerphoneText" value="{!sObj['Phone__c']}" rendered="{!IF(sObj['User__c'] == masterSObj['OwnerId'] && (sObj['Phone__c'] != '' || sObj['Phone__c'] != null), true, false)}" />
+                        <!-- C095579 this hidden outputfield will make the inline edit work the first time when only the owner is in the list -->
+                        <apex:outputPanel style="display:none;">
+                            <apex:outputField id="firstinline" value="{!sObj['Phone__c']}" rendered="{!SignerList.size=1}" />
+                        </apex:outputPanel>
+                    </apex:column>
+                     <apex:column headerValue="{!$Label.esl__SignerStatusLbl}" rendered="{! NOT(isPkgTemplate)}">
+                        <apex:outputText id="signerstatus" value="{!sObj['Signer_Status__c']}"/>
+                     </apex:column>
+                    <apex:column headerValue="{!$Label.esl__SigningOrderLbl}" rendered="{!masterSObj['Enforce_Signing_Order__c']}">
+                        <apex:outputText value="{!sObj['Signing_Order__c']}"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__SignersConventionLbl}" rendered="{!showSignerLabel}">
+                        <apex:outputPanel >
+                            <apex:image value="/img/msg_icons/info16.png" width="15" height="15" style="padding-right:5px;" rendered="{!isLocked}" title="{!$Label.esl__Signer_Label_Locked}"/>
+                            <apex:selectList value="{!sObj['SignerLabel__c']}" multiselect="false" size="1" onchange="showSaveSgnsBtn();" disabled="{!isLocked}">
+                                <apex:selectOptions value="{!labelOptions}"/>
+                            </apex:selectList>
+                        </apex:outputPanel>
+                    </apex:column>
+              
+                </apex:pageblockTable>
+                </apex:pageBlockSection>
+            </div>
+
+            <div class="dataTables_wrapper">   
+            <apex:pageBlockSection columns="1" >
+                        
+                 <apex:pageblockTable value="{!SignerList}" var="sObj" rendered="{!readOnly}"  id="pbtSgn" rowClasses="rowSgn" >                   
+<!--                     <apex:column headerValue="Unlock" style="min-width: 50px" rendered="{!AND(sObj['Locked__c'] == true,sObj['User__c'] != masterSObj['OwnerId'])}"> {!$Resource.myResourceImage} -->
+                        <apex:column headerValue="{!$Label.esl__ActionLbl}" style="min-width: 50px" rendered="{!containsLockedSigners && NOT(isPkgTemplate)}">
+                        <apex:commandLink action="{!activateUnlockConfirmation}" reRender="pgSgnMessages" title="{!$Label.esl__Unlock_Signer}" onclick="onActionClick('{!$Label.esl__Please_Wait}');"
+                                    rendered="{!NOT(isPkgTemplate) && AND(sObj['User__c'] != masterSObj['OwnerId'],sObj['Locked__c'] == true)}" status="processSgn">
+                                <apex:param name="SignerId" value="{!sObj['Id']}" assignTo="{!unlockPkgSigner}"/>
+                                <apex:image url="{!URLFOR($Resource.ESL__Silanis,'images/unlock-xxl.png')}" width="15" height="15" style="padding-left:10px;"/>
+                        </apex:commandLink>  
+                    </apex:column>    
+                    <apex:column headerValue="{!$Label.esl__TypeLbl}" style="min-width:56px">                        
+                        <apex:outputText value="{!$Label.esl__Owner}" rendered="{!(sObj['User__c'] == masterSObj['OwnerId'])}"/>
+                        
+                        <apex:outputPanel id="ownerHelpText" rendered="{!(sObj['User__c'] == masterSObj['OwnerId'])}">
+                            <span class="helpButton" id="example-title-_help">
+                                <img src="/s.gif" class="helpOrb"/>
+                                <script type="text/javascript">
+                                    if("{!isPkgTemplate}" == "true")
+                                    {
+                                        sfdcPage.setHelp('example-title', '{!$Label.Default_Template_Signer_Tooltip}');
+                                    }
+                                    else
+                                    {
+                                        sfdcPage.setHelp('example-title', '{!$Label.Default_Signer_Tooltip}');
+                                    }
+                                </script>
+                            </span>
+                        </apex:outputPanel>                            
+                                              
+                        <apex:outputField value="{!sObj['Type__c']}" rendered="{!(sObj['User__c'] != masterSObj['OwnerId'])}"/>
+                    </apex:column>
+
+                    <!-- Changes for Task #2305 display field that allows delegation to a signer-->
+                    <apex:column headerValue="{!$Label.esl__Allow_Signature_Delegation}" title="{!$Label.esl__Delegation_Tooltip}">
+                        <apex:outputField value="{!sObj['AllowDelegation__c']}" title="{!$Label.esl__AllowDelegationTooltip}" />
+                    </apex:column>
+                    
+                    <apex:column headerValue="{!$Label.esl__NameLbl}">
+                        <apex:outputField value="{!sObj['Contact__c']}" rendered="{!IF(sObj['Type__c'] == 'Contact', true, false)}"/>
+                        <apex:outputField value="{!sObj['User__c']}" rendered="{!IF(sObj['Type__c'] == 'User', true, false)}"/>
+                        <apex:outputField value="{!sObj['Lead__c']}" rendered="{!IF(sObj['Type__c'] == 'Lead', true, false)}"/>
+                        <apex:outputText value="{!IF(AND(sObj['First_Name__c'] != null, sObj['Last_Name__c'] != null), sObj['First_Name__c']+' '+sObj['Last_Name__c'], IF(sObj['Last_Name__c'] != null, sObj['Last_Name__c'], sObj['First_Name__c']))}" rendered="{!IF(sObj['Type__c'] == 'External Email', true, false)}"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__AuthenticationMethodLbl}">
+                        <!-- <apex:inputField id="authMethodInput" value="{!sObj['Authentication_Method_v3__c']}" onchange="showSaveSgnsBtn();"/> -->
+                        <!-- <apex:inputField id="authMethodInput" value="{!sObj['Authentication_Method_v3__c']}" rendered="{!IF(sObj['Authentication_Method_v3__c'] == '' || sObj['Authentication_Method_v3__c'] == null, true, false)}" onchange="showSaveSgnsBtn();"/> -->
+                        <apex:outputField id="authMethodOutput" value="{!sObj['Authentication_Method_v3__c']}" rendered="{!sObj['Type__c'] != 'Placeholder'}">
+                            <apex:commandLink id="theIconQAReadOnly" onclick="openSignerDialog('{!sObj['Id']}');return false;" style="{!if(sObj['Authentication_Method_v3__c'] == 'Q&A','','display:none;')}">
+                                <apex:image value="/img/icon/custom51_100/pencil16.png" width="15" height="15"/>
+                            </apex:commandLink>                                              
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__ContactEmailLbl}">                        
+                        <apex:outputField id="emailText" value="{!sObj['Email__c']}" rendered="{!IF(sObj['Email__c'] != '' || sObj['Email__c'] != null, true, false)}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__ContactPhoneLbl}">
+                        <apex:outputField value="{!sObj['Phone__c']}" />
+                    </apex:column>
+                     <apex:column headerValue="{!$Label.esl__SignerStatusLbl}" rendered="{! NOT(isPkgTemplate)}" styleclass="{!IF(showMappingHover,'HoverPopup','')}">
+                        <apex:outputLink id="signerstatus"  value="{!sObj['Id']}" onclick="return false">{!sObj['Signer_Status__c']}</apex:outputLink>
+                     </apex:column>
+                    <apex:column headerValue="{!$Label.esl__SigningOrderLbl}" rendered="{!masterSObj['Enforce_Signing_Order__c']}">
+                    <apex:outputText value="{!sObj['Signing_Order__c']}"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__SignersConventionLbl}" rendered="{!showSignerLabel}">
+                        <apex:selectList value="{!sObj['SignerLabel__c']}" multiselect="false" size="1" disabled="{!readOnly}">
+                            <apex:selectOptions value="{!labelOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+
+                </apex:pageblockTable> 
+                </apex:pageBlockSection>
+            </div>
+            <apex:outputPanel id="enforceSgnOrder" style="padding-top: 15px;">
+                <apex:outputLabel value="{!$Label.esl__EnforceSigningOrderLbl}" style="font-weight: bold; padding-right: 10px;"/>
+                <apex:inputField id="enforceSigningOrder" value="{!masterSObj['Enforce_Signing_Order__c']}" rendered="{!NOT(readOnly)}" onchange="onEnforceSigningOrderChange(this);"/>
+                <apex:outputField value="{!masterSObj['Enforce_Signing_Order__c']}" rendered="{!readOnly}"/>
+                <span class="helpButton" id="example-title2-_help">
+                <img src="/s.gif" class="helpOrb"/>
+                    <script type="text/javascript">
+                        sfdcPage.setHelp('example-title2', '{!$Label.Note_Tooltip}');                  
+                    </script>
+                </span>
+            </apex:outputPanel>
+        </apex:pageBlock>               
+        <script type="text/javascript">
+            j$( document ).ready(function() {
+                j$( "#signer-dialog-form" ).dialog(
+                {
+                    dialogClass: "no-close, no-Padding",
+                    autoOpen: false,
+                    height: 305,
+                    width: 1000,
+                    resizable: false,
+                    modal: true,
+                    closeOnEscape: false,
+                    close: function( event, ui ) {
+                        if (typeof saveSgnAction == 'function'){ 
+                            saveSgnAction();
+                        }
+                    }
+                }); 
+
+                if('{!validate}' == 'true')
+                {
+                    validateAction(); 
+                }                
+                
+                if('{!refreshComponent}' == 'true')
+                {
+                    //In case of refreshComponent=true, the refreshComponent()
+                    //function includes the registration of the listener
+                    //in its "onComplete" event
+                    refreshComponent();
+                }
+                else{
+                    //moving the registration of the listener to show the 
+                    //"pencil" button here, because we must ensure that it is
+                    //executed after execute all JS code.
+                    addChangeListener();
+                }
+                
+            });
+            //C102476 - New function to start loading before call the actionFunction
+            function saveCurrentRowsJS(signerId, changedType) {
+                onStartSgnProcessing();
+                saveCurrentRows(signerId, changedType);
+            }
+        </script>        
+    </apex:form>
+    
+    <div id="signer-dialog-form" style="display: none;">
+        <apex:form >
+            <c:QuestionAnswer />
+        </apex:form>
+    </div>    
+    
+     <div id="cachedMapDiv" class="cachedMap">
+         <c:CachedMappingView id="cachedMapComponent" signerVal="{!dynamicSignerId}"/>
+     </div>
+    
+</apex:component>

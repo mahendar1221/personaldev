@@ -1,0 +1,661 @@
+<apex:component id="fcWidgetSetupComponent" controller="FastCall.ASFastCallWidgetController" allowDML="true">
+
+<div class="main-pane tab-pane" id="setupFCWidget">
+	
+	<script>
+		function validateTaskSubjectPermission() {
+            var hasPermission = {!isTaskSubjectEnabled};
+            
+            if (!hasPermission) {
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Task Subject modification is not available on this FastCall edition. Visit our page ' +
+                                                'to know more about this and other upgrades.');
+            }
+            
+            return hasPermission;
+        }
+        
+        function validateDispositionPermission() {
+            var hasPermission = {!isDispositionEditionEnabled};
+            
+            if (!hasPermission) {
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Call Disposition modifications are not available on this FastCall edition. Visit our page ' +
+                                                'to know more about this and other upgrades.');
+            }
+            
+            return hasPermission;
+        }
+        
+        function validateTaskSubjectEditEnabled() {
+            var isEnabled = {!isTaskSubjectEditEnabled};
+            if (isEnabled) {
+                updateEditTaskSubject();
+            } else {
+                $j(FastCall.Utils.VF2JQ('{!$Component.fcWidgetSetupComponent.editTaskSubject}')).attr('checked', false);
+                FastCall.Utils.showUpgradeModal($j('#fcModalHolder'),
+                                                'Task subject can be edited from FastCall widget during a call.<br/>Check out the FastCall page to upgrade and see other benefits.');
+            }
+        }
+
+        $j(function () {
+        	// End call option behaviour
+        	$j(FastCall.Utils.VF2JQ('{!$Component.mainForm}')).on('click', '.endCallOptionChk', function(e){
+        		e.preventDefault();
+        		$j('.endCallOptionChk').removeProp('checked');
+        		$j(this).prop('checked', true);
+        		updateEndCallOption();
+        	});
+        });
+	</script>
+	
+	<!-- Call scoring not running warning message (only shown when call scoring batch not running) -->
+	<apex:outputPanel id="scoringNotRunningMsg" layout="none">
+		<apex:outputPanel rendered="{!NOT(isRunning)}" layout="block">
+			<fieldset class="alert alert-warning">
+				<apex:outputPanel styleClass="icon-warning-sign" />
+				<div class="settings first last">
+					FastCall uses a scheduled job to score calls, measure goals &amp; update Lead status. <br/>
+					Please click on the &ldquo;Schedule Job&rdquo; button to schedule this background process.
+				</div>
+				<apex:commandButton styleClass="btn settings-btn"
+									style="display:block;margin-left:35px;"
+								    status="overlayStatus"
+									value="Schedule Job"
+									action="{!start}"
+									rerender="scoringNotRunningMsg,fcScoringPanel" />
+			</fieldset>
+		</apex:outputPanel>
+	</apex:outputPanel>
+	
+	<!-- Tasks -->
+	<apex:outputPanel id="taskConfigPanel" layout="block" styleClass="fc-container w-help">
+                    <table>
+                    <tr>
+                    <td class="white defaultTaskSubject">
+                        <div class="inner">   
+                        	
+                        	<apex:outputPanel id="taskSubjectPanel">
+	                        	<!-- Default Task Subject --> 
+	                            <h1 class="fc-container-header">Default Task subject</h1> 
+	                            <apex:outputPanel rendered="{!NOT(ISBLANK(taskMessage)) && NOT(ISBLANK(taskMessage.text))}" layout="block">
+	                                <fieldset class="alert alert-{!taskMessage.messageType}">
+	                                    <apex:outputPanel styleClass="icon-{!taskMessage.messageType}-sign" />
+	                                    <apex:outputLabel styleClass="settings first last" value="{!taskMessage.text}" />
+	                                </fieldset>
+	                            </apex:outputPanel>
+
+	                            <fieldset>
+	                                <apex:inputText styleClass="textbox last settings"
+	                                    value="{!taskSubjectText}"
+	                                    id="taskSubject"
+	                                    maxLength="255"
+	                                    style="width:350px;"
+	                                    onblur="javascript:if (validateTaskSubjectPermission()){saveTaskSubject();}"/>
+	                                <!-- Task subject on widget -->
+	                                <apex:outputLabel styleClass="first settings" value="Edit Task Subject on Widget" for="editTaskSubject" style="width: 190px;margin-left: 35px;"/>
+				                    <apex:inputCheckbox id="editTaskSubject" styleClass="last settings settings-checkbox" 
+				                    					value="{!editTaskSubject}" onclick="javascript:validateTaskSubjectEditEnabled();"/>
+	                            </fieldset>			                
+				                <apex:actionFunction status="overlayStatus" name="updateEditTaskSubject" 
+				                					 rerender="taskSubjectPanel" action="{!updateEditTaskSubject}"/>
+
+			                </apex:outputPanel>
+			                <!-- Task Picklists -->
+			                <apex:outputPanel layout="none" id="taskPicklistsPanel">
+    							<apex:actionFunction name="saveTaskPicklistFieldsSelection" status="overlayStatus" 
+    												rerender="taskPicklistsPanel" action="{!saveTaskPicklistFieldsSelection}"/>
+				                <h1 class="fc-container-header" style="margin-top:30px;">Task Picklists</h1>
+				                <p>Select the Salesforce Task picklist fields you want to edit from the FastCall widget during a call</p>
+				                
+				                <apex:outputPanel rendered="{!NOT(ISBLANK(taskPicklistMessage)) && NOT(ISBLANK(taskPicklistMessage.text))}" layout="block">
+				                    <fieldset class="alert alert-{!taskPicklistMessage.messageType}">
+				                        <apex:outputPanel styleClass="icon-{!taskPicklistMessage.messageType}-sign" />
+				                        <apex:outputLabel styleClass="settings first last" value="{!taskPicklistMessage.text}" />
+				                    </fieldset>
+				                </apex:outputPanel>
+				                
+				                <table class="taskPicklistsTable">
+				                	<tr>
+				                		<th>
+				                			Field Label
+				                		</th>
+				                		<th>
+				                			Enabled
+				                		</th>
+				                	</tr>	                
+				                	<apex:repeat value="{!taskPicklistFields}" var="picklistField">
+				                		<tr>
+				                			<td style="width:275px;">
+				                				{!picklistField.fieldLabel}	
+				                			</td>
+				                			<td>
+				                				<apex:inputCheckbox styleClass="last settings settings-checkbox" value="{!picklistField.fieldEnabled}" 
+				                									title="{!picklistField.fieldLabel}" onclick="saveTaskPicklistFieldsSelection()"/>
+				                			</td>
+				                		</tr>
+				                	</apex:repeat>           	
+				                </table>
+				            </apex:outputPanel>    
+			                
+			                <!-- Task Details -->
+			                <apex:outputPanel layout="none" id="taskStatusPanel">
+				                <h1 class="fc-container-header" style="margin-top:30px;">Task Status</h1>
+			                    <p>Select the status you want to set for the Task when the call is initiated, in progress and completed.</p>
+			                
+			                    <fieldset>
+			                        <apex:outputLabel styleClass="first settings" value="Calls being initiated" for="taskStatusInitial"/>
+			                        <apex:selectList size="1"
+			                            id="taskStatusInitial"
+			                            styleClass="textbox last settings wide select"
+			                            onchange="javascript:saveTaskStatuses();"
+			                            value="{!taskStatusInitial}">
+			                            <apex:selectOptions value="{!openTaskStatusOptions}"/>
+			                        </apex:selectList>
+			                    </fieldset>
+			        
+			                    <fieldset>
+			                        <apex:outputLabel styleClass="first settings" value="In progress calls" for="taskStatusInProgress"/>
+			                        <apex:selectList size="1"
+			                            id="taskStatusInProgress"
+			                            styleClass="textbox last settings wide"
+			                            onchange="javascript:saveTaskStatuses();"
+			                            value="{!taskStatusInProgress}">
+			                            <apex:selectOptions value="{!openTaskStatusOptions}"/>
+			                        </apex:selectList>
+			                    </fieldset>
+			
+			                    <fieldset>
+			                        <apex:outputLabel styleClass="first settings" value="Terminated calls" for="taskStatusCompleted"/>
+			                        <apex:selectList size="1"
+			                            id="taskStatusCompleted"
+			                            styleClass="textbox last settings wide"
+			                            onchange="javascript:saveTaskStatuses();"
+			                            value="{!taskStatusCompleted}">
+			                            <apex:selectOptions value="{!closedTaskStatusOptions}"/>
+			                        </apex:selectList>
+			                    </fieldset>
+			
+			                    <apex:actionFunction status="overlayStatus" name="saveTaskStatuses" rerender="taskStatusPanel" action="{!saveTaskStatuses}"/>
+			                    <apex:actionFunction status="overlayStatus" name="saveTaskSubject" rerender="taskSubjectPanel" action="{!saveTaskSubject}"/>
+		                    </apex:outputPanel>                                               
+                        </div>                    
+                    </td>
+                    <td class="green">
+                        <div class="inner">
+                            <h1>Help guide</h1>
+                            <p>
+                                Enter a default Subject string for Task records. You can later change this value by editing the Task record.
+                            </p>
+                            <p>
+                            	FastCall can use any picklist field on the native Task object, or a custom picklist from the Activity object. If selected the picklist is presented as a drop-down in the FastCall widget.
+                            </p>
+                            <p>
+                    			FastCall creates Task records for every call you make. You can define the values set on the Task Status field (these are taken from the values defined for this field).
+                    		</p>                              
+                    		<p>
+                        		For more information, check <a href="http://fastcall.com/products/click-to-call/installation-guide/#tab-id-8" target="_blank">here</a>.
+                    		</p>
+                        </div>                    
+                    </td>
+                    </tr>
+                    </table>
+                                             
+    </apex:outputPanel>
+    <!-- / Tasks -->
+	
+	<!-- Call Goals -->
+	<apex:outputPanel id="callGoalsPanel" layout="block" styleClass="fc-container w-help">
+		<table>
+	        <tr>
+	        <td class="white defaultTaskSubject">
+	            <div class="inner">           
+	                
+	                <apex:outputPanel rendered="{!NOT(ISBLANK(callGoalsMessage)) && NOT(ISBLANK(callGoalsMessage.text))}" layout="block">
+	                    <fieldset class="alert alert-{!callGoalsMessage.messageType}">
+	                        <apex:outputPanel styleClass="icon-{!callGoalsMessage.messageType}-sign" />
+	                        <apex:outputLabel styleClass="settings first last" value="{!callGoalsMessage.text}" />
+	                    </fieldset>
+	                </apex:outputPanel>
+
+	                <apex:inputCheckbox id="enableCallGoals" value="{!callGoalsEnabled}" onchange="saveCallGoalsStatus()"/>    
+	                <h1 class="fc-container-header" style="display:inline;">Enable Call Goals</h1>	
+	                
+	                <fieldset>
+	                	<apex:outputLabel styleClass="first settings" style="width:245px;" value="What is your goal for number of calls?" for="goalNumberOfCalls"/>
+	                    <apex:inputText styleClass="textbox last settings wide"
+	                        value="{!goalNumberOfCalls}"
+	                        style="width:30px;"
+	                        id="goalNumberOfCalls"
+	                        maxLength="3"
+	                        onblur="saveCallGoalsStatus()"/>
+	                        <apex:outputLabel styleClass="first settings" style="width:165px;" value="Over how many weeks?" for="goalNumberOfWeeks"/>
+		                    <apex:inputText styleClass="textbox last settings wide"
+		                        value="{!goalNumberOfWeeks}"
+		                        style="width:30px;"
+		                        id="goalNumberOfWeeks"
+		                        maxLength="3"
+		                        onblur="saveCallGoalsStatus()"/>
+	                </fieldset>
+	                <apex:actionFunction status="overlayStatus" name="saveCallGoalsStatus" rerender="callGoalsPanel" action="{!saveCallGoalsStatus}"/>
+	                <apex:inputCheckbox id="enableLeadStatusUpdate" value="{!updateLeadStatusEnabled}" onchange="javascript:saveLeadStatus();"/>
+	                <h1 class="fc-container-header" style="margin-top:25px;display:inline;">Enable Lead Status Update after Call</h1>
+	                <fieldset>
+	                    <ul>
+	                        <li>
+	                            <label>
+	                                Task call duration is greater than&nbsp;
+	                                <apex:inputText styleClass="textbox" style="width: 99px;" maxLength="23" value="{!taskCallDuration}" id="taskCallDurationInput" onblur="javascript:saveLeadStatus();"/>
+	                            </label>
+	                            <label> 
+	                                &nbsp;seconds, change Lead Status to&nbsp;
+	                                <apex:selectList styleClass="textbox" size="1" value="{!taskCallLeadStatus}"
+	                                onchange="javascript:saveLeadStatus();">
+	                                <apex:selectOptions value="{!leadStatusOptions}"/>  
+	                                </apex:selectList> 
+	                            </label>
+	                        </li>
+	                        <li>
+	                            <label>Call Score Call Count is greater than&nbsp;
+	                                <apex:inputText styleClass="textbox" style="width: 99px;" maxLength="23" value="{!callScoreCallCount}" id="callScoreCallCountInput" onblur="javascript:saveLeadStatus();"/>
+	                            </label> 
+	                            <label>&nbsp; and Average Duration is less than&nbsp;
+	                                <apex:inputText styleClass="textbox" style="width: 99px;" maxLength="23" value="{!callScoreAverageDuration}" id="callScoreAverageDurationInput" onblur="javascript:saveLeadStatus();"/>
+	                            </label>
+	                            <label>&nbsp;, <br/><br/>change Lead Status to&nbsp;
+	                                <apex:selectList size="1" styleClass="textbox" value="{!callScoreLeadStatus}" 
+	                                onchange="javascript:saveLeadStatus();">
+	                                <apex:selectOptions value="{!leadStatusOptions}"/>  
+	                                </apex:selectList>
+	                                <br/>
+	                            </label>
+	                        </li>
+	                    </ul>
+	                    <p class="callResultInfoTxt">
+	                    	The statuses shown here are the ones defined for the Lead Status picklist field.
+	                	</p>
+	            	</fieldset>
+	           
+	         	    <apex:actionFunction status="overlayStatus" name="saveLeadStatus" rerender="callGoalsPanel" action="{!saveLeadStatusSettings}"/>
+		            <script>
+		                var callScoringRunning = {!isRunning};
+		                if (!callScoringRunning) {
+		                    $j('#updateLeadStatus').find('input').attr('disabled','disabled');
+		                    $j('#updateLeadStatus').find('select').attr('disabled','disabled');
+		                } else {
+		                    if (!$j(FastCall.Utils.VF2JQ('{!$Component.fcWidgetSetupComponent.enableLeadStatusUpdate}')).is(':checked')) {
+		                        $j('#updateLeadStatus').find('input[type="text"]').attr('disabled','disabled');
+		                        $j('#updateLeadStatus').find('select').attr('disabled','disabled');
+		                    };
+		                    $j(FastCall.Utils.VF2JQ('{!$Component.fcWidgetSetupComponent.enableLeadStatusUpdate}')).on('change', function() {
+		                        $j('#updateLeadStatus').find('input[type="text"]').removeAttr('disabled');
+		                        $j('#updateLeadStatus').find('select').removeAttr('disabled');
+		                    });
+		                }
+		            </script>                                               
+	            </div>                    
+	        </td>
+	        <td class="green">
+	            <div class="inner">
+	                <h1>Call Goals and Lead Status Update after Call</h1>
+	                <p>
+	                    FastCall can count Tasks for you and show progress against a goal. For example 1 of 5; 2 of 5, etc..
+	                </p>
+	                <p>
+	                	When enabled, FastCall will update your Lead Status automatically. For example, update a Lead from "new" to "working"; 
+	                	or "working" to "return to marketing". 
+	                </p>
+	                <p class="note">
+	                	NOTE: The Call Score job should be running for this feature to work.
+	                </p>
+	            </div>                    
+	        </td>
+	        </tr>
+		</table>
+	</apex:outputPanel>
+	<!-- / Call Goals -->
+	 
+	<!-- Call Results -->
+    <apex:outputPanel layout="block" id="dispositionsPanel" styleClass="fc-container w-help" >
+            <div class="inner">
+                <h1 class="fc-container-header">Call Results</h1>
+                <!-- END CALL OPTIONS -->
+                <apex:actionFunction status="overlayStatus" name="updateEndCallOption" 
+                					 rerender="dispositionsPanel" action="{!saveEndCallOption}"/>
+                <fieldset>
+             		<apex:inputCheckbox styleClass="first settings settings-checkbox endCallOptionChk"
+                 				  value="{!callResultEndsCall}"
+                 				  id="callresultEndCall"/>
+                 	<apex:outputLabel styleClass="last settings"
+                 				  value="Use Call Result to end calls"
+                 				  style="width: 320px;"
+                 				  for="callresultEndCall"/>
+                </fieldset>
+                <fieldset style="margin-bottom:20px;">
+             		<apex:inputCheckbox styleClass="first settings settings-checkbox endCallOptionChk"
+                 				  value="{!endCallNoResult}"
+                 				  id="endCallNoResult"/>
+                 	<apex:outputLabel styleClass="last settings"
+                 				  value="Add “End Call” button to widget and log Call Results independently"
+                 				  style="width: 420px;"
+                 				  for="endCallNoResult"/>			  
+                </fieldset>
+
+                <apex:outputPanel rendered="{!NOT(ISBLANK(dispositionMessage)) && NOT(ISBLANK(dispositionMessage.text))}" layout="block">
+                    <fieldset class="alert alert-{!dispositionMessage.messageType}">
+                        <apex:outputPanel styleClass="icon-{!dispositionMessage.messageType}-sign" />
+                        <apex:outputLabel styleClass="settings first last" value="{!dispositionMessage.text}" />
+                    </fieldset>
+                </apex:outputPanel>
+
+                <div class="setting-disps">
+                	<!-- NEW CALL RESULT CONTROLS -->
+                    <fieldset style="margin-bottom:15px;">
+                    	<table class="newCallResultControls">
+                    		<tr>
+                    			<th class="header">New Call Result</th>
+                    			<th>Stops Call Count</th>
+                    			<th class="header">Call Type</th>
+                    			<th class="header">Update Lead Status</th>
+                    			<th class="header">Update Call Score Status</th>
+                    			<th></th>
+                    		</tr>
+                    		<tr>
+                    			<td>
+                    				 <apex:inputText styleClass="textbox first settings narrow"
+                           	 						 maxLength="38"
+                            						 value="{!newCallResultName}"
+                            						 id="callResultName"/>
+                    			</td>
+                    			<td>
+                    				<apex:inputCheckbox id="crStopCallCount" styleClass="first settings settings-checkbox" value="{!newCallResultStopsCallCount}"/>
+                    			</td>
+                    			<td>
+                    				<apex:selectList styleClass="textbox" size="1" value="{!newCallResultType}">
+                                		<apex:selectOptions value="{!callResultTypeOptions}"/>  
+                                	</apex:selectList> 
+                    			</td>
+                    			<td>
+                    				<apex:selectList styleClass="textbox" size="1" value="{!newUpdateLeadStatus}">
+                    					<apex:selectOption itemValue="" itemLabel="< None >"/>
+                                		<apex:selectOptions value="{!leadStatusOptions}"/>  
+                                	</apex:selectList> 
+                    			</td>
+                    			<td>
+                    				<apex:selectList styleClass="textbox" size="1" value="{!newUpdateCallScoreStatus}">
+                    					<apex:selectOption itemValue="" itemLabel="< None >"/>
+                                		<apex:selectOptions value="{!callGoalStatusOptions}"/>  
+                                	</apex:selectList>
+                    			</td>
+                    			<td>
+                    				<a href="javascript:if(validateDispositionPermission()){insertCallResult();}" class="btn settings-btn addCallResult">
+                        				Add <i class="icon-plus"></i>
+                        			</a>
+                    			</td>
+                    		</tr>
+                    	</table>
+                    </fieldset>
+            		
+            		<!-- CALL RESULTS TABS -->
+            		<ul class="nav nav-tabs" id="callResultTabs">
+        				<li class="{!IF(newCallResultType == 'Outbound', 'active', '')}"><a href="#outboundCalls">Outbound</a></li>
+        				<li class="{!IF(newCallResultType == 'Inbound', 'active', '')}"><a href="#inboundCalls">Inbound</a></li>
+        				<li><a href="#automaticCalls">Automatic</a></li>
+    				</ul>
+
+    				<div class="tab-content">
+
+    					<!-- OUTBOUND CALLS -->
+    					<div class="tab-pane{!IF(newCallResultType == 'Outbound', ' active', '')}" id="outboundCalls">
+
+		            		<fieldset class="disp">
+		                    	<table class="callResultList">
+		                        	<tr>
+		                    			<th class="header">Call Result</th>
+		                    			<th class="stopsCallCountCol">Stops Call Count</th>
+		                    			<th class="header">Update Lead Status</th>
+		                    			<th class="header">Update Call Score Status</th>
+		                    			<th class="orderColumn">Order</th>
+		                    			<th class="createTaskColumn comingSoonCell">Do not create task</th>
+		                    		</tr>
+		                    		<apex:variable value="{!1}" var="rowNum"/>
+		                    		<apex:variable value="{!callResultsList['Outbound']}" var="ouboundCallResults"/>	
+		                    		<apex:repeat value="{!ouboundCallResults}" var="callResult">
+		                        		<tr>
+		                        			<td>
+		                        				<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!callResult.Name}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                            	<apex:inputText styleClass="textbox first narrow "
+				                                				style="display:none;"
+				                                				maxlength="38"
+				                                				onblur="updateCallResult('{!callResult.Call_Result_Type__c}')"
+				                                				value="{!callResult.Name}" />
+		                        			</td>
+				                            <td class="stopsCallCountCol">
+				                            	<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!IF(callResult.Stops_Call_Count__c,'Yes','No')}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                            	<apex:inputCheckbox styleClass="settings-checkbox first narrow "
+				                                				style="display:none;"
+				                                				onclick="updateCallResult('{!callResult.Call_Result_Type__c}')"
+				                                				value="{!callResult.Stops_Call_Count__c}" />
+											</td>
+											<td>
+												<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!IF(ISBLANK(callResult.Update_Lead_Status__c), 'No', callResult.Update_Lead_Status__c)}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                                <apex:selectList styleClass="textbox" size="1" value="{!callResult.Update_Lead_Status__c}" style="display:none;" onchange="updateCallResult('{!callResult.Call_Result_Type__c}')">
+		                                			<apex:selectOption itemValue="" itemLabel="< None >"/>
+		                                			<apex:selectOptions value="{!leadStatusOptions}"/>  
+		                                		</apex:selectList> 				  
+											</td>
+											<td>
+												<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!IF(ISBLANK(callResult.Update_Call_Score_Status__c), 'No', callResult.Update_Call_Score_Status__c)}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                                <apex:selectList styleClass="textbox" size="1" value="{!callResult.Update_Call_Score_Status__c}" style="display:none;" onchange="updateCallResult('{!callResult.Call_Result_Type__c}')">
+		                                			<apex:selectOption itemValue="" itemLabel="< None >"/>
+		                                			<apex:selectOptions value="{!callGoalStatusOptions}"/>  
+		                                		</apex:selectList>				  
+											</td>
+											<td>
+												<!-- UP/DOWN CONTROLS -->
+												<apex:outputPanel rendered="{!callResult.Position__c < ouboundCallResults.size - 1}">
+								            		<apex:commandLink title="down" styleClass="btn settings-btn" action="{!sortCallResults}" reRender="dispositionsPanel" status="overlayStatus">
+								            			<span class="icon-arrow-down">&#x25BC;</span>
+								            			<apex:param name="param1" value="down" assignTo="{!sortParam}" />
+								            			<apex:param name="param2" value="{!callResult.Id}" assignTo="{!callResultToSort}"/>
+								            			<apex:param name="param3" value="{!callResult.Call_Result_Type__c}" 
+								            						assignTo="{!targetCallResultType}"/>
+								            		</apex:commandLink>
+								            	</apex:outputPanel>
+								            	
+								            	<apex:outputPanel rendered="{!callResult.Position__c <= ouboundCallResults.size - 1 && 
+								            								 callResult.Position__c > 0}">
+								            		<apex:commandLink title="up" styleClass="btn settings-btn" action="{!sortCallResults}" reRender="dispositionsPanel" status="overlayStatus">
+								            			<span class="icon-arrow-up">&#x25B2;</span>
+								            			<apex:param name="param1" value="up" assignTo="{!sortParam}" />
+								            			<apex:param name="param2" value="{!callResult.Id}" assignTo="{!callResultToSort}"/>
+								            			<apex:param name="param3" value="{!callResult.Call_Result_Type__c}" 
+								            						assignTo="{!targetCallResultType}"/>
+								            		</apex:commandLink>
+								            	</apex:outputPanel>
+					                            <a href="javascript:if(validateDispositionPermission()){
+					                            		 removeCallResult('{!callResult.Id}','{!callResult.Call_Result_Type__c}');}" 
+					                               class="btn settings-btn" title="Remove Call Result">
+					                            	<i class="icon-remove"></i>
+					                            </a>
+				                            </td>
+				                            <td class="comingSoonCell">
+				                            	{!IF(rowNum == 1 , 'Coming Soon', '')}
+				                            </td>
+		                            	</tr>
+		                            	<apex:variable var="rowNum" value="{!rowNum + 1}"/>
+		                    		</apex:repeat>
+		                        </table>
+		                    </fieldset>
+
+	                    </div>
+
+	                    <!--INBOUND CALLS -->
+	                    <div class="tab-pane{!IF(newCallResultType == 'Inbound', ' active', '')}" id="inboundCalls">
+	                    	
+	                    	<fieldset class="disp">
+		                    	<table class="callResultList">
+		                        	<tr>
+		                    			<th class="header">Call Result</th>
+		                    			<th class="stopsCallCountCol">Stops Call Count</th>
+		                    			<th class="header">Update Lead Status</th>
+		                    			<th class="header">Update Call Score Status</th>
+		                    			<th class="orderColumn">Order</th>
+		                    			<th class="createTaskColumn comingSoonCell">Do not create task</th>
+		                    		</tr>
+		                    		<apex:variable value="{!1}" var="rowNumi"/>
+		                    		<apex:variable value="{!callResultsList['Inbound']}" var="inboundCallResults"/>
+		                    		<apex:repeat value="{!inboundCallResults}" var="callResult">
+		                        		<tr>
+		                        			<td>
+		                        				<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!callResult.Name}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                            	<apex:inputText styleClass="textbox first narrow "
+				                                				style="display:none;"
+				                                				maxlength="38"
+				                                				onblur="updateCallResult('{!callResult.Call_Result_Type__c}')"
+				                                				value="{!callResult.Name}" />
+		                        			</td>
+				                            <td class="stopsCallCountCol">
+				                            	<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!IF(callResult.Stops_Call_Count__c,'Yes','No')}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                            	<apex:inputCheckbox styleClass="settings-checkbox first narrow "
+				                                				style="display:none;"
+				                                				onclick="updateCallResult('{!callResult.Call_Result_Type__c}')"
+				                                				value="{!callResult.Stops_Call_Count__c}" />
+											</td>
+											<td>
+												<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!IF(ISBLANK(callResult.Update_Lead_Status__c), 'No', callResult.Update_Lead_Status__c)}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                                <apex:selectList styleClass="textbox" size="1" value="{!callResult.Update_Lead_Status__c}" style="display:none;" onchange="updateCallResult('{!callResult.Call_Result_Type__c}')">
+		                                			<apex:selectOption itemValue="" itemLabel="< None >"/>
+		                                			<apex:selectOptions value="{!leadStatusOptions}"/>  
+		                                		</apex:selectList> 				  
+											</td>
+											<td>
+												<apex:outputLabel title="Click to edit"
+				                                				  styleClass="first settings disp"
+				                                				  value="{!IF(ISBLANK(callResult.Update_Call_Score_Status__c), 'No', callResult.Update_Call_Score_Status__c)}"
+				                                				  onclick="if (validateDispositionPermission()){settingsWidget.editStatus(this);}" />
+				                                <apex:selectList styleClass="textbox" size="1" value="{!callResult.Update_Call_Score_Status__c}" style="display:none;" onchange="updateCallResult('{!callResult.Call_Result_Type__c}')">
+		                                			<apex:selectOption itemValue="" itemLabel="< None >"/>
+		                                			<apex:selectOptions value="{!callGoalStatusOptions}"/>  
+		                                		</apex:selectList>				  
+											</td>
+											<td>
+												<!-- UP/DOWN CONTROLS -->
+												<apex:outputPanel rendered="{!callResult.Position__c < inboundCallResults.size - 1}">
+								            		<apex:commandLink title="down" styleClass="btn settings-btn" action="{!sortCallResults}" reRender="dispositionsPanel" status="overlayStatus">
+								            			<span class="icon-arrow-down">&#x25BC;</span>
+								            			<apex:param name="param1" value="down" assignTo="{!sortParam}" />
+								            			<apex:param name="param2" value="{!callResult.Id}" assignTo="{!callResultToSort}"/>
+								            			<apex:param name="param3" value="{!callResult.Call_Result_Type__c}" 
+								            						assignTo="{!targetCallResultType}"/>
+								            		</apex:commandLink>
+								            	</apex:outputPanel>
+								            	
+								            	<apex:outputPanel rendered="{!callResult.Position__c <= inboundCallResults.size - 1 && 
+								            								 callResult.Position__c > 0}">
+								            		<apex:commandLink title="up" styleClass="btn settings-btn" action="{!sortCallResults}" reRender="dispositionsPanel" status="overlayStatus">
+								            			<span class="icon-arrow-up">&#x25B2;</span>
+								            			<apex:param name="param1" value="up" assignTo="{!sortParam}" />
+								            			<apex:param name="param2" value="{!callResult.Id}" assignTo="{!callResultToSort}"/>
+								            			<apex:param name="param3" value="{!callResult.Call_Result_Type__c}" 
+								            						assignTo="{!targetCallResultType}"/>
+								            		</apex:commandLink>
+								            	</apex:outputPanel>
+					                            <a href="javascript:if(validateDispositionPermission()){
+					                            		 removeCallResult('{!callResult.Id}','{!callResult.Call_Result_Type__c}');}" 
+					                               class="btn settings-btn" title="Remove Call Result">
+					                            	<i class="icon-remove"></i>
+					                            </a>
+				                            </td>
+				                            <td class="comingSoonCell">
+				                            	{!IF(rowNumi == 1 , 'Coming Soon', '')}
+				                            </td>
+		                            	</tr>
+		                            	<apex:variable var="rowNumi" value="{!rowNumi + 1}"/>
+		                    		</apex:repeat>
+		                        </table>
+		                    </fieldset>
+
+	                    </div>
+
+	                     <!-- AUTOMATIC CALL RESULTS -->
+	                    <div class="tab-pane" id="automaticCalls" style="padding-top:20px;">
+	                    	
+	                    	<div class="fc-container-header">Coming soon</div>
+	                    	
+	                    	<fieldset style="margin-top:15px;">
+	                    		<label class="first settings" style="width:100px;">Call time under</label>
+	                    		<input type="number" class="textbox" style="width: 50px;" disabled="disabled"/>
+	                    		<label class="first settings" style="width:50px;"> seconds</label>
+	                    		<select class="textbox wide select" style="width:300px;" disabled="disabled">
+	                    			<option>&lt; Select call result &gt;</option>
+	                    		</select>
+	                    	</fieldset>
+
+	                    	<fieldset style="margin-top:15px;">
+	                    		<label class="first settings" style="width:115px;">Call time between</label>
+	                    		<input type="number" class="textbox" style="width: 50px;" disabled="disabled"/>
+	                    		<label class="first settings" style="width:30px;"> and </label>
+	                    		<input type="number" class="textbox" style="width: 50px;" disabled="disabled"/>
+	                    		<label class="first settings" style="width:50px;"> seconds</label>
+	                    		<select class="textbox wide select" style="width:300px;" disabled="disabled">
+	                    			<option>&lt; Select call result &gt;</option>
+	                    		</select>
+	                    	</fieldset>
+	                    	
+	                    	<fieldset style="margin-top:15px;">
+	                    		<label class="first settings" style="width:100px;">Call time is</label>
+	                    		<input type="number" class="textbox" style="width: 50px;" disabled="disabled"/>
+	                    		<label class="first settings" style="width:60px;"> or longer </label>
+	                    		<select class="textbox wide select" style="width:300px;" disabled="disabled">
+	                    			<option>&lt; Select call result &gt;</option>
+	                    		</select>
+	                    	</fieldset>
+	                    </div>
+
+                    </div> <!-- end of tab container-->
+
+                </div>
+                
+               	<fieldset class="callResultInfoTxt">
+               		Choosing a call result in the FastCall application will end your call. For more information on editing call results, check 
+               		<a href="http://fastcall.com/products/click-to-call/user-guide/#tab-id-2" target="_blank">here</a>.
+                </fieldset>
+                <apex:actionFunction status="overlayStatus" name="insertCallResult" rerender="dispositionsPanel" action="{!insertCallResult}"/>
+                <apex:actionFunction status="overlayStatus" name="updateCallResult" rerender="dispositionsPanel" action="{!updateCallResult}">
+                	<apex:param name="targetResultType" value="" assignTo="{!targetCallResultType}" />
+                </apex:actionFunction>
+                <apex:actionFunction status="overlayStatus" name="removeCallResult" rerender="dispositionsPanel" action="{!removeCallResult}">
+                	<apex:param name="targetResultId" value="" assignTo="{!targetCallResult}" />
+                	<apex:param name="targetResultType" value="" assignTo="{!targetCallResultType}" />
+                </apex:actionFunction>
+                
+            </div>
+        
+    </apex:outputPanel>
+    <!-- / Call Results -->
+	
+</div>
+
+</apex:component>

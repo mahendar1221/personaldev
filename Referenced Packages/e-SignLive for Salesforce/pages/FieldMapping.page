@@ -1,0 +1,125 @@
+<apex:page docType="html-5.0" tabStyle="ESL__Convention__c" standardController="ESL__Field_Mapping__c" extensions="ESL.FieldMappingController" title="{!$Label.esl__Field_Mapping}" action="{!Initialization}">
+	
+	<apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/jQueryDT.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ESL__Silanis, 'css/custom-theme/jquery-ui-1.10.4.custom.min.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/jQuery.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/jQueryDT.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/jQueryUI.js')}"/>	
+    <apex:includeScript value="{!URLFOR($Resource.ESL__Silanis, 'js/fieldMapping.js')}"/>
+    <apex:outPutPanel id="sectionHeaderPanel">
+    	<apex:sectionHeader title="{!IF(NOT(fieldMappingObj.Id == null), $Label.esl__Field_Mapping, $Label.esl__Field_Mapping_Edit)}" subtitle="{!IF(fieldMappingObj.Id == null, $Label.esl__New_Field_Mapping, fieldMappingObj.name)}" />
+    	</apex:outPutPanel>
+    <apex:form id="FMheader">     
+        
+        <apex:pageMessages />
+        
+        <apex:actionFunction name="changedPackageforSuggestion" action="{!fillSuggestions}" rerender="documentSection"/>               
+        <apex:actionFunction name="SuggestionChanged" action="{!CopySuggestion}" rerender="ESLField"/>        
+        <apex:actionFunction action="{!deleteMappingPath}" name="delMappingPathId" reRender="MappinPathsTable,mappingtypeSection">
+            <apex:param name="MappingPathId" assignTo="{!delMappingPath}" value=""/>
+        </apex:actionFunction>    
+        <apex:actionFunction action="{!editMappingPath}" name="editMappingPathId" rerender="documentSection" oncomplete="openSelectFieldDialog();">
+            <apex:param name="MappingPathId" assignTo="{!edMappingPath}" value=""/>
+        </apex:actionFunction>            
+        <apex:actionFunction name="MappingPathAddUpdate" action="{!addUpdateMapPath}" rerender="MappinPathsTable,mappingtypeSection"/>
+        <apex:actionFunction name="changedMappingType" rerender="MappinPathsTable"/> 	   
+    
+        <apex:pageblock title="{!$Label.esl__Field_Mapping_Edit}">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="{!$Label.esl__SaveBtn}" title="{!$Label.esl__SaveBtn}" action="{!SaveRecords}" rendered="{!OR(AND($ObjectType.ESL__Field_Mapping__c.Createable,fieldMappingObj.Id == null),AND($ObjectType.ESL__Field_Mapping__c.Updateable,fieldMappingObj.Id != null))}"/>                
+
+                <apex:commandButton value="{!$Label.esl__Save_and_new}" title="{!$Label.esl__Save_and_new}" action="{!SaveAndNewRecords}" rendered="{!OR(AND($ObjectType.ESL__Field_Mapping__c.Createable,fieldMappingObj.Id == null),AND($ObjectType.ESL__Field_Mapping__c.Updateable,fieldMappingObj.Id != null))}"/>                
+
+                <apex:commandButton value="{!$Label.esl__CancelBtn}" title="{!$Label.esl__CancelBtn}" action="{!Cancel}"/>
+            </apex:pageBlockButtons>
+            <apex:pageblockSection title="{!$Label.esl__Information}" collapsible="false" id="mappingtypeSection">
+                <apex:inputField value="{!fieldMappingObj.Name}" label="{!$Label.esl__Name}" />                          
+                <apex:inputField value="{!fieldMappingObj.ESL__MappingType__c}" rendered="{!AND(MappingPathList!= null,MappingPathList.size==0)}" label="{!$Label.esl__Mapping_Type}" onchange="changedMappingType();"/>	                        
+	            <apex:inputField value="{!fieldMappingObj.ESL__Enabled__c}"/>
+                <apex:outputField value="{!fieldMappingObj.ESL__MappingType__c}" rendered="{!AND(MappingPathList!= null,MappingPathList.size>0)}" label="{!$Label.esl__Mapping_Type}"/>	            
+            </apex:pageblockSection>
+            
+            <apex:pageblockSection title="{!$Label.esl__e_SignLive_Document_Field_Reference}" id="documentSection" collapsible="false">                                
+                <apex:inputField value="{!fieldMappingObj.ESL__ESLFieldName__c}" id="ESLField" label="{!$Label.esl__e_SignLive_Field_Name}"/>           
+                <apex:selectList value="{!eslFieldSelected}" multiselect="false" size="1" label="{!$Label.esl__e_SignLive_Field_Suggestions}" onchange="SuggestionChanged();">
+                    <apex:selectOptions value="{!eslFieldSuggestions}"/>
+                </apex:selectList> 
+                <apex:pageBlockSectionItem />
+                
+                <apex:inputField value="{!fieldMappingObj.ESL__LoadFieldSuggestionsFromPackage__c}" onchange="changedPackageforSuggestion();" label="{!$Label.esl__LoadFieldSuggestionsFromPackage}"/>
+            </apex:pageblockSection>   
+             
+
+             
+            <apex:pageblockSection title="{!$Label.esl__Salesforce_Object_Field_Reference}" collapsible="false" columns="1" id="MappinPathsTable"> 
+                <apex:commandButton value="{!$Label.esl__Add_New}" title="{!$Label.esl__Add_New}" action="{!AddNew}" style="display: block; margin: 0px 65% 0px auto;"
+                oncomplete="openSelectFieldDialog();" rerender="selectfield-dialog-form,FMheader,sectionHeaderPanel" rendered="{!AND($ObjectType.ESL__MappingPath__c.Createable,fieldMappingObj.ESL__MappingType__c != null)}"/>
+                <apex:pageBlockTable value="{!MappingPathList}" var="MapPath" rendered="{!AND(MappingPathList!= null,MappingPathList.size>0)}">
+	                <apex:inlineEditSupport event="onclick" changedStyleClass="myBoldClass"/>
+	                <apex:column headerValue="{!$Label.esl__ActionLbl}" style="min-width: 50px">	             
+                        <apex:commandLink onclick="editMappingPath('{!MapPath.ESL__Path__c}'); return false;" rendered="{!AND($ObjectType.ESL__MappingPath__c.Updateable)}">                       
+                            <apex:image value="/img/icon/custom51_100/pencil16.png" width="15" height="15" />
+                        </apex:commandLink>  	                          
+                        <apex:commandLink id="removeAction"  onclick="delMappingPath('{!MapPath.ESL__Path__c}'); return false;" styleClass="{!MapPath.ESL__Path__c}" rendered="{!AND($ObjectType.ESL__MappingPath__c.Deletable)}">
+                            <apex:image value="/img/func_icons/remove12_on.gif" width="15" height="15" style="padding-left:10px;"/>
+                        </apex:commandLink>        
+                    </apex:column>               	                
+	                <apex:column headerValue="{!if(fieldMappingObj.ESL__MappingType__c == 'Signer',$Label.esl__Signer_Type,$Label.esl__Related_Object_Type_Caps)}">
+	                   <apex:outPutText value="{!MapPath.ESL__ParentType__c}"/>
+	                </apex:column>
+                    <apex:column headerValue="{!$Label.esl__Salesforce_Field_Path}">
+                       <apex:outPutText value="{!MapPath.ESL__Path__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$Label.esl__Salesforce_Field_Type}">
+                       <apex:outPutText value="{!MapPath.ESL__SalesforceFieldType__c}"/>
+                    </apex:column>	     
+                    <apex:column headerValue="{!$Label.esl__Default_Insert_Value}">
+                       <apex:outputField value="{!MapPath.ESL__DefaultInsertValue__c}"/>
+                    </apex:column>	         
+                    <apex:column headerValue="Insert">
+                       <apex:outputField value="{!MapPath.ESL__Insert__c}" />
+                    </apex:column>	                          
+					<apex:column headerValue="Writeback">
+                       <apex:outputField value="{!MapPath.ESL__Writeback__c}"/>
+                    </apex:column>	                          
+					<apex:column headerValue="{!$Label.esl__Write_Back_Does_Not_Overwrite_Existing}">
+                       <apex:outputField value="{!MapPath.ESL__WriteBackSkipExisting__c}" />
+                    </apex:column>	      
+					<apex:column headerValue="{!$Label.esl__Write_Back_Does_Not_Write_Empty}">
+                       <apex:outputField value="{!MapPath.ESL__WriteBackSkipEmpty__c}" />
+                    </apex:column>	 
+					<apex:column headerValue="Disable">
+                       <apex:outputField value="{!MapPath.ESL__Disable__c}"/>
+                    </apex:column>
+                </apex:pageBlockTable>            
+            </apex:pageblockSection>        
+        </apex:pageblock>
+        
+        <script type="text/javascript">        	
+            j$( document ).ready(function() {                        
+            var dWidth = j$(window).width() * 0.85;
+                j$( "#selectfield-dialog-form" ).dialog(
+                {
+                    dialogClass: "no-close, no-Padding",
+                    autoOpen: false,
+                    height: 370,
+                    width: dWidth,
+                    resizable: false,
+                    modal: true,
+                    closeOnEscape: false,
+                    /*close: function( event, ui ) {
+                        if (typeof saveSgnAction == 'function'){ 
+                            saveSgnAction();
+                        }
+                    }*/
+                });
+            });                    
+        </script>         
+
+    </apex:form>
+    <div id="selectfield-dialog-form" style="display: none;">        
+        <c:SelectField sFieldHelper="{!actualSFH}"/>        
+    </div>
+    
+    
+</apex:page>

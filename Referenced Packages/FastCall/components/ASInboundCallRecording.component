@@ -1,0 +1,121 @@
+<apex:component controller="FastCall.ASInboundCallRecordingController" allowDML="true">
+
+<!-- Inbound Call Recording -->
+<apex:outputPanel layout="block" id="inboundCallRecording" styleClass="fc-container w-help">
+    <table>
+        <tr>
+            <td class="white">
+                <div class="inner">
+              
+                	<apex:actionFunction name="refreshRecordDisclosurePanel" status="overlayStatus" rerender="inboundCallRecording"/>
+                	<apex:actionFunction name="recordDisclosure" action="{!recordDisclosure}" status="overlayStatus" rerender="inboundCallRecording"/>
+                	<apex:actionFunction name="updateInboundCallRecordingSettings" action="{!updateInboundCallRecordingSettings}" status="overlayStatus" rerender="inboundCallRecording"/>
+                	
+                		
+                	<apex:outputPanel rendered="{!NOT(ISBLANK(inboundCallRecordingMessage)) && NOT(ISBLANK(inboundCallRecordingMessage.text))}" layout="block">
+                  		<fieldset class="alert alert-{!inboundCallRecordingMessage.messageType}">
+                    		<apex:outputPanel styleClass="icon-{!inboundCallRecordingMessage.messageType}-sign" />
+                    		<apex:outputLabel styleClass="settings first last" value="{!inboundCallRecordingMessage.text}" escape="false" />
+                 		</fieldset>
+              		</apex:outputPanel>
+              		
+                    <h1 class="fc-container-header">Inbound Call Recording</h1>
+                    <fieldset>
+                        <apex:outputLabel styleClass="first settings"
+                     				  value="Enable Inbound Call Recording"
+                     				  style="width: 320px;"
+                     				  for="inboundCallRecChk"/>
+                 		<apex:inputCheckbox styleClass="last settings settings-checkbox"
+                     				  value="{!inboundCallRecordingEnabled}"
+                     				  onclick="updateInboundCallRecordingSettings()"
+                     				  id="inboundCallRecChk"/>
+                    </fieldset>
+                    <fieldset> 				  
+	                    <apex:outputLabel styleClass="first settings"
+	                     				  value="Play a call recording disclosure for inbound calls"
+	                     				  style="width: 320px;"
+	                     				  for="playDisclosureChk"/>
+	                 	<apex:inputCheckbox styleClass="last settings settings-checkbox"
+	                     				  value="{!inboundCallDisclosureEnabled}"
+	                     				  onclick="updateInboundCallRecordingSettings()"
+	                     				  id="playDisclosureChk"/>				  				
+	                </fieldset>
+                    <apex:outputPanel rendered="{!isEmptyDisclosureURL}">
+	                    <fieldset>
+	                    	<apex:outputLabel styleClass="first settings"
+		                                 	  value="Text for disclosure"
+		                                 	  for="phoneToDial"/>
+		                    <apex:inputText styleClass="textbox first settings"
+		                    				style="width: 495px;"
+	                            			maxLength="255"
+	                            			onblur="updateInboundCallRecordingSettings()"
+	                            			value="{!inboundCallDisclosureText}"/>             	  
+	                    </fieldset>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!AND(isEmptyDisclosureText,connectedToTwilio)}">
+	                    <fieldset>
+	                    	
+	                    	<span class="fc-sub-header">Record a disclosure</span>
+	                    	<label class="setting-caption subheader" style="margin-bottom: 8px;">
+		                    	Enter a phone number to call to record it. 
+		                    </label>
+		                    
+		                    <apex:outputLabel styleClass="first settings"
+		                                 value="Phone to dial"
+		                                 for="phoneToDial"/>
+	                         <apex:selectList size="1"
+	                            styleClass="textbox last settings"
+	                            value="{!newDisclosurePhone}"
+	                            id="phoneToDial"
+	                            style="margin-left: 5px;"
+	                            onchange="refreshRecordDisclosurePanel()">
+	                            <apex:selectOptions value="{!userPhoneOptions}"/>
+	                        </apex:selectList>
+	
+	                        <apex:inputText styleClass="textbox first settings"
+	                            			maxLength="80"
+	                            			value="{!newDisclosureOtherPhone}"
+	                            			rendered="{!newDisclosurePhone == 'other'}"/>
+							
+	                        <a href="javascript:recordDisclosure();" class="btn settings-btn">
+	                            Record new message <i class="icon-plus"></i>
+	                        </a>
+	                    </fieldset>
+	                    <apex:outputPanel rendered="{!NOT(isEmptyDisclosureURL)}">
+	                    	<fieldset>
+	                    		<apex:outputLabel styleClass="first settings"
+		                                 		  value="Recorded Disclosure"/>
+		                         <apex:commandLink title="Delete"
+	                                        styleClass="btn settings-btn"
+	                                        action="{!deleteRecordedDisclosure}"
+	                                        status="overlayStatus"
+	                                        rerender="inboundCallRecording">
+                                     <i class="icon-remove"></i>
+                                 </apex:commandLink>
+                                 <apex:outputLink title="Listen"
+                                     styleClass="btn settings-btn"
+                                     style="margin-left: 10px;"
+                                     value="{!inboundCallDisclosureUrl}.mp3"
+                                     target="_blank">
+                                     <i class="icon-play"></i>
+                                 </apex:outputLink>        		  
+	                    	</fieldset>
+	                    </apex:outputPanel>
+                    </apex:outputPanel>
+                    
+                </div>
+            </td>
+            <td class="green">
+                <div class="inner">
+                    <h1>HELP GUIDE</h1>
+                    <p>
+                    	
+                    </p>
+                </div>                    
+            </td>
+        </tr>
+    </table>                 	
+
+</apex:outputPanel> <!-- / Inbound Call Recording -->
+
+</apex:component>

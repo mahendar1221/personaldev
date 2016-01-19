@@ -1,0 +1,29 @@
+<apex:page showHeader="false" standardController="Custom_Login_Credencials__c" standardStylesheets="false">
+ <div class="container">
+     <div class="row">
+          <div class="span12">
+  <apex:form styleClass="simple_form  form-horizontal" >
+      <apex:pageBlock >
+       <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap-3.1.1-dist/css/bootstrap.min.css')}" />
+    
+            <div class="control-group text optional">
+                  <div class="controls">
+          <apex:pageBlockSection columns="1" >
+              
+              <apex:inputField id="nm" styleClass="form-control" value="{!Custom_Login_Credencials__c.name}"/>
+              <apex:inputsecret styleClass="form-control" value="{!Custom_Login_Credencials__c.password__c}"/>
+          </apex:pageBlockSection>
+          </div>
+          </div>       
+           <apex:outputPanel > 
+          <apex:pageBlockSection >
+              
+              <apex:commandButton value="save" action="{!save}" styleClass="btn btn-primary"/>
+          </apex:pageBlockSection>
+          </apex:outputPanel>
+      </apex:pageBlock>
+  </apex:form>
+  </div>
+  </div>
+</div>
+</apex:page>

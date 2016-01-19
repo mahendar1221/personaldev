@@ -1,0 +1,21 @@
+<apex:component controller="ESL.ConventionFieldsController">
+    <apex:attribute name="conventionId" 
+                    description="Id of the convention to show fields" 
+                    type="String" 
+                    required="true" 
+                    assignTo="{!objectId}"/>                                      
+                              
+    <!-- Show list of enabled Mapping Fields -->                
+	<apex:pageBlock title="{!$Label.esl__Convention_Fields_Label}" mode="detail ">
+        <apex:repeat value="{!MappingTypes}" var="type">
+			<apex:pageBlockSection title="{!type}" columns="1" collapsible="false">
+                <apex:repeat value="{!Fields[type]}" var="field">
+                    <apex:pageBlockSectionItem >
+	                    <apex:outputField value="{!field.ESLFieldName__c}" /> 
+	                </apex:pageBlockSectionItem>
+                </apex:repeat>
+			</apex:pageBlockSection>
+		</apex:repeat>
+	</apex:pageBlock>
+    
+</apex:component>

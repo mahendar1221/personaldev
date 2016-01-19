@@ -1,0 +1,932 @@
+<apex:component controller="FastCall.ASPhoneNumbersController" allowDML="true">
+
+	<style>
+		.phoneLabel {
+			font-size: 18px;
+			width: 240px !important;
+		}
+		
+		.phoneNumberUnderLabel {
+			display: block !important;
+		}
+		
+		.rowLinksContainer {
+			float: right;
+			margin-top: 10px;
+			margin-right: 15px;
+		}
+		
+		.phoneInfoContainer {
+			float: left;
+			margin-top: 2px;
+			margin-bottom: 5px;
+		}
+		
+		.phoneInfoContainer label {
+			width: auto !important;
+			min-width: 200px !important;
+		}
+		
+		.rowLink {
+			margin-left: 15px;
+		}
+		
+		.phoneRow {
+			border-bottom: 1px solid rgb(204, 204, 204);
+			width: 753px;
+		}
+		
+		.phoneRow .provision {
+			provision: 785px !important;
+		}
+		
+		.phoneRow:hover {
+			background-color: whitesmoke;
+		}
+		
+		.fc-list .phoneRow:last-child {
+			border-bottom:none;
+		}
+		
+		#phoneNumberTabs {
+			background-color: transparent;
+		}
+		
+		#phoneNumberTabs a {
+			color: rgb(150, 150, 150);
+		}
+		
+		#phoneNumberTabs li.active a {
+			color: #000000;
+		}
+		
+		.phoneNumbersModalClose {
+			font-size: 40px !important;
+			line-height: 30px !important;
+			color: white !important;
+			text-decoration: none !important; 
+			opacity: 1 !important;
+		}
+		
+		.labelNarrow {
+			width: 45px !important;
+		}
+		
+		.labelBold {
+			font-weight: bold !important;
+			width: 65px !important;
+		}
+		
+		.verifiedNumbersList .btn-primary {
+			text-decoration: none;
+			margin-right: 25px;
+		}
+		
+		#verifyCallerIdModal #verificationCodeContainer {
+			text-align: center;
+			font-weight: bold;
+			font-size: 18px;
+		}
+		
+		#provisionPhoneNumberModal .searchTitle	{
+			border-left: 1px solid #CCCCCC;
+			border-right: 1px solid #CCCCCC;
+			border-top: 1px solid #CCCCCC;
+			padding: 8px;
+			font-weight: bold;
+		}
+		
+		#provisionPhoneNumberModal .searchCriteria	{
+			border: 1px solid #CCCCCC;
+			padding-top: 15px;
+		}
+		
+		#provisionPhoneNumberModal .searchCriteria input {
+			width: 145px;
+		}
+		
+		#provisionPhoneNumberModal .searchCriteria input[type=button] {
+			margin-top: 5px;
+			width: 176px;
+		}
+		
+		#provisionPhoneNumberModal .searchCriteria select {
+			width: 175px;
+		}
+		
+		#provisionPhoneNumberModal .twPhoneRow,
+		#assignToUserModal .twPhoneRow {
+			display: block;
+			padding: 10px;
+			text-decoration: none;
+		}
+		
+		#provisionPhoneNumberModal .twPhoneRow:hover,
+		#assignToUserModal .twPhoneRow:hover {
+			background-color: #08C;
+			color: #FFF;
+		}
+		
+		#provisionPhoneNumberModal .twPhoneRow.rowSelected {
+			background-color: #CCCCCC;
+			color: #000000;
+		}
+		
+		#provisionPhoneNumberModal .searchResultsTitle {
+			border-left: 1px solid #CCCCCC;
+			border-right: 1px solid #CCCCCC;
+			border-bottom: 1px solid #CCCCCC;
+			padding: 8px;
+			font-weight: bold;
+		}
+		
+		#provisionPhoneNumberModal .searchResultsBody {
+			border-left: 1px solid #CCCCCC;
+			border-right: 1px solid #CCCCCC;
+			border-bottom: 1px solid #CCCCCC;
+			max-height: 180px;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+		
+		#assignToUserModal .searchResultsBody {
+			border: 1px solid #CCCCCC;
+			max-height: 180px;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+		
+		#provisionPhoneNumberModal .modal-body {
+			max-height: none !important;
+		}
+		
+		#provisionPhoneNumberModal {
+			top: 35%;
+			width: 600px;
+		}
+		
+		#provisionPhoneNumberModal .longLabel {
+			width: 190px !important;
+		}
+		
+		#provisionPhoneNumberModal .longTextArea {
+			width: 255px !important;
+		}
+		
+		#useVerifiedCallerIDModal #setAsOrgDefaultCallerID {
+			width: 145px !important;
+			margin-left: 60px !important;
+		}
+		
+		#useVerifiedCallerIDModal #setAsUserCallerId {
+			width: 192px !important;
+			margin-left: 25px !important;
+		}
+		
+		#useNumberInFastCallModal #setAsOrgWideCaller {
+			width: 192px !important;
+			margin-left: 30px !important;
+		}
+		
+		#useNumberInFastCallModal #setAsUserInbound {
+			width: 95px !important;
+			margin-left: 15px !important;
+		}
+		
+		#useNumberInFastCallModal #setAsACD {
+			width: 50px !important;
+			margin-left: 15px !important;
+		}
+		
+		#assignToUserModal .modal-footer {
+			height: 32px;
+		}
+		
+		#assignToUserModal .modal-footer .modalLoader {
+			margin-top: 0px !important;
+			height:auto !important;
+		}
+		
+		*[id*=twilioNumbersList] .phoneRow {
+			width: 785px !important;
+		}
+	</style>
+	<apex:outputPanel id="phoneNumberSettingsPanel" layout="block">
+		<div class="main-pane tab-pane" id="phoneNumbers">
+		
+			<!-- Check if Phone Numbers Total Sync was executed -->
+			<apex:actionRegion >
+			<apex:outputPanel layout="block" id="phoneNumbersTotalSyncExecutedPanel">
+				<apex:outputPanel layout="block" rendered="{!NOT(phoneNumbersTotalSyncExecuted)}">
+					<fieldset class="alert alert-warning" style="border: 1px solid #e5cd54;color:#6d653c;">
+						<apex:outputPanel styleClass="icon-warning-sign" style="margin-top:8px;"/>
+						<label class="settings first last">
+							As part of an improved phone numbers management, FastCall will fetch the numbers that currently exist on your Twilio FastCall 
+							sub-account (not your master Twilio account).<br/> Click Confirm to proceed.
+						</label>
+						<br/>
+						<apex:commandButton styleClass="btn settings-btn" style="margin-left: 37px;"
+							status="overlayStatus"
+							value="Confirm"
+							action="{!syncPhoneNumbers}"
+							rerender="phoneNumbersTotalSyncExecutedPanel,verifyCallerIdsRefreshPanel,provisionPhonesRefreshPanel" />					
+					</fieldset>
+				</apex:outputPanel>
+				
+				<!-- Sync Phone Numbers message -->
+				<apex:outputPanel rendered="{!NOT(ISBLANK(syncPhoneNumbersMessage)) && NOT(ISBLANK(syncPhoneNumbersMessage.text))}" layout="block">
+					<fieldset class="alert alert-{!syncPhoneNumbersMessage.messageType}">
+						<apex:outputPanel styleClass="icon-{!syncPhoneNumbersMessage.messageType}-sign" />
+						<apex:outputLabel styleClass="settings first last" value="{!syncPhoneNumbersMessage.text}" />
+					</fieldset>
+				</apex:outputPanel> 
+				
+			</apex:outputPanel>
+			</apex:actionRegion>
+			
+			<ul class="nav nav-tabs" id="phoneNumberTabs">
+        		<li class="active"><a href="#verifiedCallerIds">Caller ID</a></li>
+        		<li><a href="#userPhonesTab">User Phones</a></li>
+        		<li><a href="#purchasedNumbers">Inbound Phones</a></li>
+        		<li><a href="#inboundCallDistribution">Inbound Call Distribution</a></li>
+    		</ul>
+    		<!-- DELETE PHONE MODAL -->
+    		<apex:outputPanel styleClass="fc-widget">
+    		<div id="deletePhoneModal" class="modal hide fade">
+    			<div class="modal-header">
+    				<a href="#" class="fc-close phoneNumbersModalClose" data-dismiss="modal" aria-hidden="true">&times;</a>
+    				<h3>Delete Phone Number</h3>
+    			</div>
+    			<div class="modal-body">
+    				<p>Are you sure you want to delete this phone number? After deleting, it won't be available on the FastCall application, and will also be deleted from your Twilio account.</p>
+    				<p class="verifiedNumberAdvice">You can later verify this phone number again.</p>
+    				<p class="twilioNumberAdvice">You may not be able to purchase this same phone number again.</p>
+    				<fieldset>
+    					<label class="first settings">Phone Number</label>
+    					<label class="pnNumber last settings"></label>
+						<br/>		 
+    					<label class="first settings">Label</label>
+    					<label class="pnLabel last settings"></label>
+    				</fieldset>
+    			</div>
+    			<div class="modal-footer">
+    				<a href="#" data-dismiss="modal" class="btn btn-close">Cancel</a>
+    			</div>    
+    		</div>
+    		</apex:outputPanel>
+    		<!-- / DELETE PHONE MODAL -->
+    		
+    		<!-- PHONE NUMBER DETAILS MODAL -->
+    		<apex:outputPanel styleClass="fc-widget">
+    		<div id="phoneDetailsModal" class="modal hide fade">
+    			<div class="modal-header">
+    				<a href="#" class="fc-close phoneNumbersModalClose" data-dismiss="modal" aria-hidden="true">&times;</a>
+    				<h3>Phone Number Details</h3>
+    			</div>
+    			<div class="modal-body">
+    				<fieldset>
+    					<label class="first settings">Phone Number</label>
+    					<label class="pnNumber last settings"></label>
+						<br/>		 
+    					<label class="first settings">Label</label>
+    					<label class="pnLabel last settings"></label>
+    					<br/>
+    					<label class="first settings">Type</label>
+    					<label class="pnType last settings"></label>
+    					<br/>
+    					<label class="first settings">In Use</label>
+    					<label class="pnInUse last settings"></label>
+    					<br/>
+    					<label class="first settings">Is Default</label>
+    					<label class="pnIsDefault last settings"></label>
+    					<br/>
+    					<label class="first settings">Used As</label>
+    					<label class="pnUsedAs last settings"></label>
+    					<br/>
+    					<label class="first settings">Assigned To</label>
+    					<label class="pnAssignedTo last settings"></label>
+    				</fieldset>
+    			</div>
+    			<div class="modal-footer">     
+    				<a href="#" data-dismiss="modal" class="btn btn-close">Cancel</a>
+    			</div>    
+    		</div>
+    		</apex:outputPanel>	
+    		<!-- / PHONE NUMBER DETAILS MODAL -->
+    		
+    		<!-- VERIFY CALLER ID MODAL -->
+   			<apex:outputPanel styleClass="fc-widget">
+	    		<div id="verifyCallerIdModal" class="modal hide fade">
+	    			<div class="modal-header">
+	    				<a class="fc-close phoneNumbersModalClose" href="#" data-dismiss="modal" aria-hidden="true">&times;</a>
+	    				<h3>Verify Caller ID</h3>
+	    			</div>
+	    			<div class="modal-body">
+	    				<fieldset id="callerIdErrorMsg" class="alert alert-error" style="display:none;">
+	    					<span class="icon-error-sign"></span>
+	    					<label class="settings first last">You can now use your number in FastCall.</label>
+	    				</fieldset>
+						<div class="newCidPanel">	                    		                    
+							<fieldset>
+								<apex:outputLabel styleClass="first settings"
+									value="Label"
+									for="newCallerIdName" />	                    	
+								<apex:inputText styleClass="textbox last settings"
+									rendered="{!ISBLANK(newOrgVerifiedCallerIdName) || (NOT(ISBLANK(phoneNumbersMessage))) }"
+									value="{!newOrgVerifiedCallerIdName}"
+									id="newCallerIdName"  />							
+							</fieldset>	                    
+							<fieldset>
+								<apex:outputLabel styleClass="first settings"
+									value="Phone number"
+									for="newCallerIdNumber" />	                    	
+								<apex:inputText styleClass="callerIdNumberTxt textbox last settings"
+									rendered="{!ISBLANK(newOrgVerifiedCallerIdNumber) || (NOT(ISBLANK(phoneNumbersMessage))) }"
+									value="{!newOrgVerifiedCallerIdNumber}"
+									id="newCallerIdNumber"  />
+							</fieldset>
+							<fieldset>  
+								<apex:outputLabel styleClass="first settings"
+									value="Extension"
+									for="newCallerIdExtension" />		                           
+								<apex:inputText styleClass="textbox last settings"
+									rendered="{!ISBLANK(newOrgVerifiedCallerIdExtension) || (NOT(ISBLANK(phoneNumbersMessage))) }"
+									value="{!newOrgVerifiedCallerIdExtension}"  
+									id="newCallerIdExtension" />	                            
+							</fieldset>
+						</div>
+						<apex:outputPanel id="verificationDone" style="display:none;">
+							<div id="verfication-inprogress" style="display:none;">
+								<p>
+									A call will be made to your phone <span id="phoneContainer">{!newOrgVerifiedCallerIdNumber}</span>. The verification code is:
+								</p>
+								<div id="verificationCodeContainer">
+									{!twilioVerificationCode}
+								</div>
+							</div>
+							<div id="verification-done" style="display:none;">
+								<p>
+									Your phone <span>{!newOrgVerifiedCallerIdNumber}</span> is verified on twilio.
+								</p>
+							</div>
+						</apex:outputPanel>
+						<div style="display:none;">
+							<apex:inputText styleClass="userToAssignCallerID" value="{!userToAssignCallerID}" />
+							<apex:inputCheckbox styleClass="callerIDAsDefault" value="{!callerIDAsDefault}" />
+						</div>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<a id="validateCallerId" href="#" class="btn btn-primary">
+	    					Validate
+	    				</a>
+						<apex:commandButton styleClass="btn btn-primary pnDone"
+								status="overlayStatus"
+								oncomplete="$j('#phoneContainer').empty();$j('#verificationCodeContainer').empty();resetCallerIdModal();"
+								value="Done"
+								style="display:none;"
+								rerender="verifyCallerIdsPanel" />		     
+	    				<a href="#" data-dismiss="modal" class="btn btn-close">Cancel</a>
+	    				<div class="modalLoader">
+	    					<div></div>
+	    				</div>
+	    			</div>    
+	    		</div>
+	    	</apex:outputPanel>
+    		<!-- / VERIFY CALLER ID MODAL -->
+    		
+    		<!-- PROVISION PHONE NUMBER MODAL -->
+    		<apex:outputPanel styleClass="fc-widget">
+	    		<div id="provisionPhoneNumberModal" class="modal hide fade">
+	    			<div class="modal-header">
+	    				<a class="fc-close phoneNumbersModalClose" href="#" data-dismiss="modal" aria-hidden="true">&times;</a>
+	    				<h3>Provision Phone Number</h3>
+	    			</div>
+	    			<div class="modal-body">
+	    				<div id="provisionStatus" style="display:none;"></div>
+	    				<p>
+	    					Optionally enter a criteria for the new phone number. Then click &quot;Search&quot;, you'll be shown a list of phone numbers matching your criteria (if any). Then pick one and click on &quot;Provision&quot;, or &quot;Provision &amp; Setup&quot;.
+						</p>
+						<fieldset>
+							<apex:outputLabel styleClass="first settings longLabel"
+								value="Label for new Phone Number" 
+								for="provisionFriendlyName"/>
+							<apex:inputText styleClass="textbox last settings longTextArea"
+								value="{!provisionFriendlyName}"
+								id="provisionFriendlyName"  />
+						</fieldset>
+						<div class="searchTitle">Search Phone Numbers</div>
+						<div class="searchCriteria">
+							<fieldset>
+							<apex:outputLabel styleClass="first settings"
+								value="Country"
+								for="provisionSupportedCountries" />	                    	
+							<apex:selectList id="provisionSupportedCountries" 
+								value="{!provisionIsoCountryCode}" 
+								size="1" 
+								styleClass="textbox last settings selectList">
+								<apex:selectOptions value="{!supportedCountries}"/>
+							</apex:selectList>						
+							</fieldset>
+							<fieldset>
+								<apex:outputLabel styleClass="first settings"
+									value="Area Code"
+									for="provisionAreaCode" />	                    	
+								<apex:inputText styleClass="textbox last settings"
+									value="{!provisionAreaCode}"
+									id="provisionAreaCode" />							
+							</fieldset>	                    
+							<fieldset>
+								<apex:outputLabel styleClass="first settings"
+									value="Contains"
+									for="provisionContains" />	                    	
+								<apex:inputText styleClass="textbox last settings"
+									value="{!provisionContains}"
+									id="provisionContains"  />
+								<apex:commandButton styleClass="btn settings-btn phoneNumberUnderLabel"
+									status="overlayStatus"
+									onclick="$j(this).hide()"
+									oncomplete="displayProvisionList();$j(this).show();"
+									value="Search"
+									action="{!getLocalAvailablePhoneNumbers}"
+									rerender="provisionList"/>		                            
+							</fieldset>
+						</div>
+						<apex:outputPanel id="provisionList" style="display:none;">
+							<div class="searchResultsTitle">
+								Search Results
+							</div>
+							<div class="searchResultsBody">
+								<apex:repeat value="{!availablePhoneNumbers}" var="twilioNumber">
+									<a href="#" 
+									   title="{!twilioNumber.friendlyName}" 
+									   class="twPhoneRow" 
+									   rel="{!twilioNumber.phoneNumber}">
+									   {!twilioNumber.friendlyName}
+									</a>
+								</apex:repeat>
+							</div>
+						</apex:outputPanel>
+						<div style="display:none;">
+							<apex:inputText styleClass="twManagedType" value="{!provisionManagedType}" />
+							<apex:inputText styleClass="twAssignTo" value="{!provisionAssignToUser}" />
+							<apex:inputCheckbox styleClass="twUseInFC" value="{!provisionUseNumberInFastCall}" />
+							<apex:inputText styleClass="twPhoneSelected" value="{!provisionPhoneNumberSelected}" />
+						</div>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<a href="#" data-dismiss="modal" class="btn btn-close">Cancel</a>
+	    				<div class="modalLoader">
+	    					<div></div>
+	    				</div>
+	    			</div>    
+	    		</div>
+	    	</apex:outputPanel>
+    		<!-- / PROVISION PHONE NUMBER MODAL -->
+    		
+    		<!-- USE NUMBER IN FASTCALL MODAL -->
+   			<apex:outputPanel styleClass="fc-widget">
+    			<div id="useNumberInFastCallModal" class="modal hide fade">
+	    			<div class="modal-header">
+	    				<a class="fc-close phoneNumbersModalClose" href="#" data-dismiss="modal" aria-hidden="true">&times;</a>
+	    				<h3>Use Number In FastCall</h3>
+	    			</div>
+	    			<div class="modal-body">
+	    				<p>Would you like to use this phone number as a Caller ID available to all FastCall users, as a Caller ID &amp; Inbound number assigned to a particular FastCall user, or ACD ?</p>
+	    				<a href="#" id="setAsOrgWideCaller" class="first settings btn settings-btn">Organization Wide Caller ID</a>
+	    				<a href="#" id="setAsUserInbound" class="first settings btn settings-btn">User Inbound</a>
+	    				<a href="#" id="setAsACD" class="first settings btn settings-btn">ACD</a>
+	    				<div id="useNumberProcess" style="display:none;"></div>
+	    				<div id="useNumberId" style="display:none;"></div>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<div class="modalLoader">
+	    					<div></div>
+	    				</div>
+	    			</div>    
+	    		</div>
+    		</apex:outputPanel>
+    		<!-- / USE NUMBER IN FASTCALL MODAL -->
+    		
+    		<!-- USE VERIFIED CALLER ID MODAL -->
+   			<apex:outputPanel styleClass="fc-widget">
+    			<div id="useVerifiedCallerIDModal" class="modal hide fade">
+	    			<div class="modal-header">
+	    				<a class="fc-close phoneNumbersModalClose" href="#" data-dismiss="modal" aria-hidden="true">&times;</a>
+	    				<h3>Use verified Caller ID</h3>
+	    			</div>
+	    			<div class="modal-body">
+	    				<p>Would you like to use this verified Caller ID as Org Default, or assign it to a particular FastCall user?</p>
+	    				<a href="#" id="setAsOrgDefaultCallerID" class="first settings btn settings-btn">Use as Org Default</a>
+	    				<a href="#" id="setAsUserCallerId" class="first settings btn settings-btn">Use as User Caller ID</a>
+	    				<div id="verifyNumberId" style="display:none;"></div>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<div class="modalLoader">
+	    					<div></div>
+	    				</div>
+	    			</div>    
+	    		</div>
+    		</apex:outputPanel>
+    		<!-- / USE VERIFIED CALLER ID MODAL -->
+    		
+    		<!-- ASSIGN NUMBER TO USER MODAL -->
+   			<apex:outputPanel styleClass="fc-widget">
+    			<div id="assignToUserModal" class="modal hide fade">
+	    			<div class="modal-header">
+	    				<a class="fc-close phoneNumbersModalClose" href="#" data-dismiss="modal" aria-hidden="true">&times;</a>
+	    				<h3>Assign Number To FastCall User</h3>
+	    			</div>
+	    			<div class="modal-body">
+	    				<div id="processType" style="display:none;"></div>
+	    				<div id="phoneNumber" style="display:none;"></div>
+	    				<p>Select the user who will be using this phone number.</p>
+	    				<apex:outputPanel id="assignToUsersList">
+		    				<apex:outputPanel rendered="{!displayLicensedUsersList == 'true'}">
+		    				<div class="searchResultsBody">
+								<apex:repeat value="{!licensedUsers}" var="user">
+									<a href="#" 
+										 title="{!user.Name}" 
+										 class="twPhoneRow" 
+										 rel="{!user.Id}">
+										 {!user.Name}
+									</a>
+								</apex:repeat>
+							</div>
+							</apex:outputPanel>
+						</apex:outputPanel>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<div class="modalLoader">
+	    					<div></div>
+	    				</div>
+	    			</div>    
+	    		</div>
+    		</apex:outputPanel>
+    		<!-- / ASSIGN NUMBER TO USER MODAL -->
+    		
+    		<div class="tab-content">
+    		
+    		<!-- ACTION FUNCTION FOR VERIFYING CALLER ID -->
+    		<apex:actionFunction status="overlayStatus" name="verifyCallerId" rerender="verifyCallerIdsPanel,verificationDone" action="{!verifyCallerId}" oncomplete="resetCallerIdModal();$j('#verifyCallerIdModal').modal()"/>
+    		<!-- ACTION FUNCTION FOR DELETE VERIFIED PHONE NUMBER -->
+    		<apex:actionFunction status="overlayStatus" name="deleteVerifiedCallerId" rerender="verifyCallerIdsPanel" action="{!deleteVerifiedCallerId}">
+    			<apex:param name="numberIdToDelete" assignTo="{!phoneNumberIdToDelete}" value=""/>
+    		</apex:actionFunction>
+    		<!-- ACTION FUNCTION FOR DELETE TWILIO PHONE NUMBER -->
+    		<apex:actionFunction status="overlayStatus" name="deleteTwilioNumber" rerender="provisionIdsPanel" action="{!deleteTwilioNumber}">
+    			<apex:param name="numberIdToDelete" assignTo="{!phoneNumberIdToDelete}" value=""/>
+    		</apex:actionFunction>
+    		<!-- ACTION FUNCTION FOR SET PHONE NUMBER AS DEFAULT -->
+    		<apex:actionFunction status="overlayStatus" name="setNewDefaultCallerId" rerender="verifyCallerIdsPanel, provisionIdsPanel" action="{!setNewDefaultCallerId}">
+    			<apex:param name="newDefaultCallerId" assignTo="{!newDefaultCallerId}" value=""/>
+    		</apex:actionFunction>
+    		<!-- ACTION FUNCTION FOR RELEASE PHONE NUMBER -->
+    		<apex:actionFunction status="overlayStatus" name="releaseManagedPhoneNumber" rerender="verifyCallerIdsPanel, provisionIdsPanel" action="{!releaseManagedPhoneNumber}">
+    			<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value=""/>
+    		</apex:actionFunction>
+    		<!-- ACTION FUNCTION FOR USE NUMBER IN FASTCALL -->
+    		<apex:actionFunction status="overlayStatus" name="useNumberInFastCall" rerender="verifyCallerIdsPanel, provisionIdsPanel" action="{!useNumberInFastCall}">
+    			<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value=""/>
+    		</apex:actionFunction>
+    		<!-- ACTION FUNCTION FOR USE TWILIO NUMBER IN FASTCALL -->
+    		<apex:actionFunction status="overlayStatus" name="useTwilioNumberInFastCall" rerender="verifyCallerIdsPanel, provisionIdsPanel" action="{!useNumberInFastCall}" oncomplete="displayMultipleInboundPerUserUpgrade();displayACDUpgrade()">
+    			<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value=""/>
+    			<apex:param name="useAsCallerId" assignTo="{!useAsCallerId}" value=""/>
+    			<apex:param name="assignToUserId" assignTo="{!provisionAssignToAnotherUser}" value=""/>
+    			<apex:param name="useAsACD" assignTo="{!isACDNumber}" value=""/> 
+    		</apex:actionFunction>
+    		<apex:actionFunction status="overlayStatus" name="useCallerIdInFastCall" rerender="verifyCallerIdsPanel, provisionIdsPanel" action="{!useNumberInFastCall}">
+    			<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value=""/>
+    			<apex:param name="userToAssignCallerID" assignTo="{!userToAssignCallerID}" value=""/>
+    			<apex:param name="callerIDAsDefault" assignTo="{!callerIDAsDefault}" value=""/>
+    		</apex:actionFunction>
+    		<!-- ACTION FUNCTION FOR REFRESH CALLER ID LIST -->
+    		<apex:actionFunction status="overlayStatus" name="refreshVerifiedCallerIDList" rerender="verifiedCallerIdList"/>
+    		<!-- ACTION FUNCTION FOR REFRESH PROVISION LIST -->
+    		<apex:actionFunction status="overlayStatus" name="refreshProvisionList" rerender="twilioNumbersList"/>
+    		<!-- ACTION FUNCTION FOR PURCHASE PHONE NUMBER -->
+    		<apex:actionFunction status="overlayStatus" name="purchaseIncomingPhoneNumber" action="{!purchaseIncomingPhoneNumber}" rerender="provisionIdsPanel" oncomplete="displayMultipleInboundPerUserUpgrade();displayACDUpgrade()">
+    			<apex:param name="isACDNumber" assignTo="{!isACDNumber}" value=""/>
+    		</apex:actionFunction>			
+			<!-- ACTION FUNCTION FOR REASSIGN PHONE NUMBER -->
+			<apex:actionFunction status="overlayStatus" name="reassignIncomingPhoneNumber" action="{!reassignIncomingPhoneNumber}" rerender="provisionIdsPanel" oncomplete="displayMultipleInboundPerUserUpgrade()">
+					<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value=""/>
+					<apex:param name="assignToUserId" assignTo="{!provisionAssignToAnotherUser}" value=""/> 
+			</apex:actionFunction>
+			<!-- ACTION FUNCTION FOR REFRESH ASSIGN TO USERS LIST -->		
+    		<apex:actionFunction status="overlayStatus" name="refreshassignToUsersList" rerender="assignToUsersList">
+    			<apex:param name="displayLicensedUsersList" assignTo="{!displayLicensedUsersList}" value="true"/>
+    		</apex:actionFunction>
+    		
+    		<div class="tab-pane active" id="verifiedCallerIds">
+   			
+			<!--  Verify Caller Ids -->
+			<apex:outputPanel id="verifyCallerIdsRefreshPanel">
+			<apex:outputPanel layout="block" id="verifyCallerIdsPanel" styleClass="fc-container w-help" 
+							  rendered="{!phoneNumbersTotalSyncExecuted}">
+			<table>
+	        	<tr>
+		            <td class="white">
+		                <div class="inner">
+							<apex:actionFunction status="overlayStatus" name="updateOutgoingCallerId" rerender="verifyCallerIdsPanel" action="{!updatePhoneNumber}">
+								<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value=""/>
+								<apex:param name="phoneNumberTypeToUpdate" assignTo="{!phoneNumberTypeToUpdate}" value=""/>
+								<apex:param name="phoneNumberFieldToUpdate" assignTo="{!phoneNumberFieldToUpdate}" value=""/>
+								<apex:param name="phoneNumberNameToUpdate" assignTo="{!phoneNumberNameToUpdate}" value=""/>
+							</apex:actionFunction>
+							
+							<apex:outputPanel layout="block" id="defaultCallerIdMessage" rendered="{!ISBLANK(outboundPhone)}">
+								<fieldset>
+									<div class="alert alert-warning">
+										<div class="icon-warning-sign"></div>
+										<div class="settings first last">
+										There is no Organization Default Caller ID. Users that don't have a personal Caller ID will not be able to call.
+										</div>
+									</div>
+								</fieldset>
+							</apex:outputPanel>
+						
+							<!-- Phone Numbers message -->
+							<apex:outputPanel rendered="{!NOT(ISBLANK(phoneNumbersMessage)) && NOT(ISBLANK(phoneNumbersMessage.text))}" layout="block">
+								<fieldset class="alert alert-{!phoneNumbersMessage.messageType}">
+									<apex:outputPanel styleClass="icon-{!phoneNumbersMessage.messageType}-sign" />
+									<apex:outputLabel styleClass="settings first last" value="{!phoneNumbersMessage.text}" />
+								</fieldset>
+							</apex:outputPanel>
+							
+							<label class="setting-caption subheader" style="margin-bottom: 5px;margin-left: 5px;">
+			            	Verified numbers can be used as caller ID.
+			            	</label>
+							
+							<!-- LIST HEADER VERIFIED NUMBERS (SEARCH) -->
+							<fieldset class="verifiedNumbersList">
+								<apex:outputPanel rendered="{!allowValidation}">
+									<a href="#verifyCallerIdModal" data-toggle="modal" class="btn btn-primary first settings" title="Verify number with twilio to use as Caller ID">Verify new Caller ID</a>
+								</apex:outputPanel>
+								<label class="first settings labelBold">Filter By</label>
+								<label class="first settings labelNarrow">Usage</label>
+								<apex:selectList id="filterByType" size="1" value="{!verifiedCIdManagedTypeFilter}" styleClass="textbox usageFilterVerifiedCID">
+									<apex:selectOption itemValue="" itemLabel="All"/>
+									<apex:selectOption itemValue="On-Hold" itemLabel="On-Hold"/>
+									<apex:selectOption itemValue="Caller Id" itemLabel="Org-Caller ID"/>
+								</apex:selectList>
+								<label class="first settings labelNarrow">Search</label>
+								<apex:inputText styleClass="textbox last settings searchVerifiedCID" value="{!verifiedCIdTextFilter}"/>						
+							</fieldset>
+							
+							<!-- VERIFIED CALLER ID LIST -->
+							<apex:outputPanel id="verifiedCallerIdList" styleClass="fc-list">
+								<apex:repeat value="{!verifiedCallerIds}" var="verifiedCallerId">
+									<fieldset class="disp phoneRow">
+										<div class="phoneInfoContainer">
+											<apex:outputLabel styleClass="first settings phoneLabel" 			
+												 value="{!verifiedCallerId.Name}"
+												 onclick="editInline(this);" />
+											<apex:inputText styleClass="textbox first settings narrow"
+												style="display:none;"
+												maxlength="255"
+												onblur="updateOutgoingCallerId('{!verifiedCallerId.Id}', 'outgoingCallerId', 'name', this.value);"
+												value="{!verifiedCallerId.Name}" />                                 		 
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+												 value="{!verifiedCallerId.FastCall__Phone__c}" />
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+												 rendered="{!verifiedCallerId.FastCall__Managed_Type__c != 'On-Hold'}"
+												 value="Usage: {!IF(verifiedCallerId.FastCall__Phone_Type__c == 'Org-Verified', 'Org-Wide Caller ID', 'User Caller ID')}" />
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+												 rendered="{!verifiedCallerId.FastCall__Phone_Type__c == 'User-CallerId'}"
+												 value="User: {!verifiedCallerId.User__r.Name}" />	 
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+												 rendered="{!verifiedCallerId.FastCall__Phone__c == outboundPhone}"
+												 value="Is Default: Yes" />	 	 
+										</div>
+										<div class="rowLinksContainer">
+											<a href="javascript:displayPhoneDetailsModal('{!verifiedCallerId.Id}','{!verifiedCallerId.FastCall__Phone__c}','{!verifiedCallerId.Name}','{!verifiedCallerId.Managed_Type__c}','{!verifiedCallerId.Phone_Type__c}','{!verifiedCallerId.User__r.Name}','{!outboundPhone}')" 
+											   class="rowLink"
+											   title="View phone details">
+												Details</a>
+											<apex:outputPanel rendered="{!verifiedCallerId.FastCall__Managed_Type__c != 'Caller Id' && verifiedCallerId.FastCall__Phone__c != outboundPhone}">	
+												<a title="Delete phone" class="rowLink" 
+												   href="javascript:displayUseCallerIdInFastCall('{!verifiedCallerId.Id}');">
+													Use in FastCall
+												</a>
+											</apex:outputPanel>                                    	
+											<apex:commandLink title="Release"
+												value="Release"
+												styleClass="rowLink"
+												action="{!releaseManagedPhoneNumber}"
+												status="overlayStatus"
+												rerender="verifyCallerIdsPanel"
+												rendered="{!verifiedCallerId.FastCall__Managed_Type__c == 'Caller Id'}">
+												
+												<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value="{!verifiedCallerId.Id}"/>
+											</apex:commandLink>                                    								
+											<apex:commandLink title="Set as Org default"
+												value="Set as Org default"
+												styleClass="rowLink"
+												action="{!setNewDefaultCallerId}"
+												status="overlayStatus"
+												rerender="verifyCallerIdsPanel"
+												rendered="{!verifiedCallerId.FastCall__Managed_Type__c == 'Caller Id' && verifiedCallerId.FastCall__Phone__c != outboundPhone}">
+												
+												<apex:param name="newDefaultCallerId" assignTo="{!newDefaultCallerId}" value="{!verifiedCallerId.Id}"/>
+											</apex:commandLink>								
+											<apex:outputPanel rendered="{!verifiedCallerId.FastCall__Managed_Type__c != 'Caller Id' && verifiedCallerId.FastCall__Phone__c != outboundPhone}">
+												<a title="Delete phone" class="rowLink" 
+												   href="javascript:displayDeleteModal('{!verifiedCallerId.Id}','{!verifiedCallerId.FastCall__Phone__c}','{!verifiedCallerId.Name}','{!verifiedCallerId.Phone_Type__c}');">
+													Delete</a>
+											</apex:outputPanel>					
+										</div>																				 
+									</fieldset>              	                                                                         		                    
+								</apex:repeat>
+								
+								<apex:outputPanel styleClass="setting-caption subheader" rendered="{!verifiedCallerIds.size == 0}">
+									No verified Caller IDs where found <apex:outputPanel rendered="{!verifiedCIdManagedTypeFilter != ''}"> with Usage = &quot;{!verifiedCIdManagedTypeFilter}&quot;</apex:outputPanel>
+									<apex:outputPanel rendered="{!verifiedCIdTextFilter != ''}"> and containing &quot;{!verifiedCIdTextFilter}&quot;</apex:outputPanel>
+								</apex:outputPanel>
+							</apex:outputPanel>
+						</div>
+					</td>
+					<td class="green">
+		        		<div class="inner">
+		                    <h1>HELP GUIDE</h1>
+		                    <p>
+		                    	Caller ID can be shared across all users (org default) or phone numbers can be verified for individual users. The "org default" caller ID is set by the admin under the admin tab. 
+		                    	The user caller ID can either be set in the admin tab or the user can verify her own caller ID in the user tab. (required by Twilio)
+		                    </p>
+		                </div>                    
+	        		</td>
+				</tr>
+			</table>				         		
+			</apex:outputPanel> 
+			</apex:outputPanel> 
+			</div> <!-- / Verify Caller Ids -->
+			
+			<div class="tab-pane" id="purchasedNumbers">
+			<!--  Provision -->
+			<apex:outputPanel id="provisionPhonesRefreshPanel">
+			<apex:outputPanel layout="block" id="provisionIdsPanel" styleClass="fc-container w-help" 
+							  rendered="{!phoneNumbersTotalSyncExecuted}">
+				
+			<table>
+	        	<tr>
+	            	<td class="white">
+	                	<div class="inner">
+				
+							<div id="multipleIboundPerUserAllowed" style="display:none;">{!assignToUserNotAllowed}</div>
+							<div id="acdAvailable" style="display:none;">{!acdAvailable}</div>
+							
+							<apex:actionFunction name="setShowManagedType" action="{!setShowManagedType}" rerender="provisionManagedTypePanel"/>
+							<apex:actionFunction name="setShowLicensedUsers" action="{!setShowLicensedUsers}" rerender="provisionAssignToUserPanel"/>	            		
+							
+							<apex:actionFunction status="overlayStatus" name="updateIncomingPhoneNumber" rerender="provisionIdsPanel" action="{!updatePhoneNumber}">
+								<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value=""/>
+								<apex:param name="phoneNumberTypeToUpdate" assignTo="{!phoneNumberTypeToUpdate}" value=""/>
+								<apex:param name="phoneNumberFieldToUpdate" assignTo="{!phoneNumberFieldToUpdate}" value=""/>
+								<apex:param name="phoneNumberNameToUpdate" assignTo="{!phoneNumberNameToUpdate}" value=""/>
+							</apex:actionFunction>	            		
+							
+							<!-- Phone Numbers message -->
+							<apex:outputPanel rendered="{!NOT(ISBLANK(phoneNumbersMessage)) && NOT(ISBLANK(phoneNumbersMessage.text))}" layout="block">
+								<fieldset class="alert alert-{!phoneNumbersMessage.messageType}">
+									<apex:outputPanel styleClass="icon-{!phoneNumbersMessage.messageType}-sign" />
+									<apex:outputLabel styleClass="settings first last" value="{!phoneNumbersMessage.text}" />
+								</fieldset>
+							</apex:outputPanel> 
+							
+							<label class="setting-caption subheader" style="margin-bottom: 5px;margin-left: 5px;">
+								Purchased numbers can be used as caller ID and to receive inbound calls.
+							</label>
+								
+							<!-- LIST HEADER TWILIO NUMBER (SEARCH) -->
+							<fieldset class="verifiedNumbersList">
+								<apex:outputPanel rendered="{!allowValidation}">
+									<a href="#provisionPhoneNumberModal" data-toggle="modal" class="btn btn-primary first settings" title="Provision Phone Number">Provision Phone Number</a>
+								</apex:outputPanel>
+								<label class="first settings labelBold">Filter By</label>
+								<label class="first settings labelNarrow">Usage</label>
+								<apex:selectList id="filterByTypeProvision" size="1" value="{!provisionManagedTypeFilter}" styleClass="textbox usageFilterProvision">
+									<apex:selectOption itemValue="" itemLabel="All"/>
+									<apex:selectOption itemValue="On-Hold" itemLabel="On-Hold"/>
+									<apex:selectOption itemValue="Caller Id" itemLabel="Org-Caller ID"/>
+									<apex:selectOption itemValue="User Inbound" itemLabel="User Inbound"/>
+									<apex:selectOption itemValue="ACD" itemLabel="ACD"/>
+								</apex:selectList>
+								<label class="first settings labelNarrow">Search</label>
+								<apex:inputText styleClass="textbox last settings searchProvision" value="{!provisionTextFilter}"/>						
+							</fieldset>
+							
+							<!-- TWILIO NUMBERS LIST -->
+							<apex:outputPanel id="twilioNumbersList" styleClass="fc-list">
+								<apex:repeat value="{!twilioNumbers}" var="twilioNumber">
+									<fieldset class="disp phoneRow">
+										<div class="phoneInfoContainer">
+											<apex:outputLabel styleClass="first settings phoneLabel" 			
+												 value="{!twilioNumber.Name}"
+												 onclick="editInline(this);" />
+											<apex:inputText styleClass="textbox first settings narrow"
+												 style="display:none;"
+												 maxlength="255"
+												 onblur="updateIncomingPhoneNumber('{!twilioNumber.Id}', 'incomingPhoneNumber', 'name', this.value);"
+												 value="{!twilioNumber.Name}" />	                                 		 
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+												 value="{!twilioNumber.FastCall__Phone__c}" />
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+											     rendered="{!twilioNumber.FastCall__Managed_Type__c != 'On-Hold'}"
+											 	 value="Usage: {!IF(twilioNumber.Managed_Type__c == 'Caller Id','Org-Wide Caller ID',
+											 	 				IF(twilioNumber.Managed_Type__c == 'ACD','ACD','User Caller ID & Inbound'))}" />
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+											 	 rendered="{!twilioNumber.FastCall__Phone__c == outboundPhone}"
+											 	 value="Is Default: Yes" />
+											<apex:outputLabel styleClass="first settings phoneNumberUnderLabel"
+											 	 rendered="{!twilioNumber.FastCall__Managed_Type__c == 'User Inbound'}"
+											 	 value="Assigned To: {!twilioNumber.User__r.Name}" /> 	 	  	 	 
+										</div>
+										<div class="rowLinksContainer">
+											
+											<a href="javascript:displayPhoneDetailsModal('{!twilioNumber.Id}','{!twilioNumber.FastCall__Phone__c}','{!twilioNumber.Name}','{!twilioNumber.Managed_Type__c}','{!twilioNumber.Phone_Type__c}','{!twilioNumber.User__r.Name}','{!outboundPhone}')" 
+										   		class="rowLink"
+										   		title="View phone details">
+												Details</a>
+											
+											<apex:outputPanel rendered="{!twilioNumber.FastCall__Managed_Type__c == 'User Inbound'}">
+												<a href="javascript:displayAssignToUserModal('reassign','{!twilioNumber.Id}');" 
+										   		   class="rowLink"
+										   		   title="Assign Number To Another User">
+												   Reassign User</a>
+											</apex:outputPanel>
+											
+											<apex:outputPanel rendered="{!twilioNumber.FastCall__Managed_Type__c == 'On-Hold' && twilioNumber.FastCall__Phone__c != outboundPhone}">
+												<a href="javascript:displayUseNumberModal('use-in-fastcall','{!twilioNumber.Id}');" 
+												   class="rowLink" 
+												   title="Use number in FastCall">
+												   Use in FastCall</a>                                    
+											</apex:outputPanel>
+											
+											<apex:commandLink title="Release"
+												value="Release"
+												styleClass="rowLink"
+												action="{!releaseManagedPhoneNumber}"
+												status="overlayStatus"
+												rerender="provisionIdsPanel"
+												rendered="{!twilioNumber.Managed_Type__c == 'Caller Id' || 
+															twilioNumber.Managed_Type__c == 'User Inbound' || 
+															twilioNumber.Managed_Type__c == 'ACD'}">
+												
+												<apex:param name="phoneNumberId" assignTo="{!phoneNumberId}" value="{!twilioNumber.Id}"/>
+											</apex:commandLink>                                    
+																																
+											<apex:commandLink title="Set as Org default"
+												value="Set as Org default"
+												styleClass="rowLink"
+												action="{!setNewDefaultCallerId}"
+												status="overlayStatus"
+												rerender="provisionIdsPanel"
+												rendered="{!twilioNumber.FastCall__Managed_Type__c == 'Caller Id' && twilioNumber.FastCall__Phone__c != outboundPhone}">
+												
+												<apex:param name="newDefaultCallerId" assignTo="{!newDefaultCallerId}" value="{!twilioNumber.Id}"/>
+											</apex:commandLink>                                	                                     	 	 
+												 
+											<apex:outputPanel rendered="{!twilioNumber.FastCall__Managed_Type__c != 'Caller Id' && twilioNumber.FastCall__Phone__c != outboundPhone}">
+												<a title="Delete phone" class="rowLink" 
+												   href="javascript:displayDeleteModal('{!twilioNumber.Id}','{!twilioNumber.FastCall__Phone__c}','{!twilioNumber.Name}','{!twilioNumber.Phone_Type__c}');">
+													Delete</a>
+											</apex:outputPanel>		                                         
+										</div>																					 
+									</fieldset>              	                                                                         		                    
+								</apex:repeat>
+							</apex:outputPanel>
+						</div>
+					</td>
+					<td class="green">
+		        		<div class="inner">
+		                    <h1>HELP GUIDE</h1>
+		                    <p>
+		                    	Twilio phone numbers provisioned by FastCall used for inbound call routing. Once the admin provisions the number, the user sets up her own inbound call routing options in the user tab.
+		                    </p>
+		                    <p class="note">
+		                    	NOTE: numbers can not be provisioned directly with Twilio.	
+		                    </p>
+		                </div>                    
+	        		</td>
+				</tr>
+			</table>				       		
+			</apex:outputPanel>
+			</apex:outputPanel>	      		      	
+			</div> <!--  / Provision -->
+			
+			<!-- User Phones -->
+			<div class="tab-pane" id="userPhonesTab">
+				<c:ASUserPhoneTab />
+			</div>
+			<!-- User Phones -->
+			
+			<!-- Inbound call distribution -->
+			<div class="tab-pane" id="inboundCallDistribution">
+				<c:ASInboundCallDistribution />
+			</div>	
+			<!-- Inbound call distribution -->
+			
+			</div>
+		</div>
+	</apex:outputPanel>
+</apex:component>

@@ -1,0 +1,62 @@
+<apex:page standardstylesheets="false" showheader="false" sidebar="false" controller="FastCall.FastCallSoftPhoneController">
+    
+    <head>
+         <style>
+            body {
+                margin: 0px;
+                padding: 0px;
+                font-family: Arial,Helvetica,sans-serif;
+                font-size: 75%;
+                overflow: hidden;
+                background-color: #FFFFFF;
+            }
+        </style>
+        
+        <apex:includeScript value="/support/console/33.0/integration.js"/>
+        <apex:includeScript value="/support/api/33.0/interaction.js"/>
+        <script type="text/javascript" src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js"></script> 
+
+        <!-- LOAD DEVELOPMENT/PACKAGE CONTEXT CSS FILE -->
+        <apex:stylesheet value="{!style}" />
+          
+    </head>
+    <body>
+        <div class="fc-widget">
+            <div class="widget-header {{ headerClickableClass() }}" ng-controller="HeaderController" ng-click="goBack()" 
+                 title="{{ headerClickableClass() != '' ? 'Click to go back' : ''}}" esc-key-back="goBack()">
+           
+                <div class="back-icon {{ fastCallService.goBackTo !== null ? 'sprite-go_previous' : ''}}" ng-if="fastCallService.goBackTo !== null"></div>
+                <div class="title" ng-if="!loadingComplete">FastCall</div>
+                <div class="title" ng-if="loadingComplete">{{ fastCallService.titleBar }}</div>
+            </div>
+            <div class="animateView"></div>
+        </div>
+        <!-- App Modal -->
+        <script type="text/ng-template" id="modal.html">
+            <div class="modal-header">
+                <a class="close" ng-click="modalOptions.ok()">&times;</a>
+                <h3 class="modal-title">{{ modalOptions.headerText }}</h3>
+            </div>
+            <div class="modal-body">
+                <div ng-bind-html="modalOptions.bodyText"></div>
+            </div>
+            <div class="modal-footer">
+                <a href="http://www.fastcall.com/products/click-to-call/pricing.html" target="_blank" class="btn" ng-if="modalOptions.isUpgrade" ng-click="modalOptions.ok()">Upgrade!</a>
+                <a class="btn" ng-if="!modalOptions.isUpgrade" ng-click="modalOptions.ok()">{{ modalOptions.reloadSettings ? 'Reload' : 'Ok' }}</a>
+            </div>
+        </script>
+        <!-- App Javascript Dependencies -->
+        <apex:repeat value="{!js}" var="js">
+            <script src="{!js}"></script>
+        </apex:repeat>
+        <!-- Init App Script -->
+        <script type="text/javascript">
+            // Set Angular ng-view directive attribute since visualforce doesn't allow to 
+            // set attributes without value
+            document.getElementsByClassName('animateView')[0].setAttribute('ng-view','');
+            // Init FastCall Application
+            initApp("{!resolveAppBase}",{!isPackageContext});
+        </script>
+    </body>
+    
+</apex:page>

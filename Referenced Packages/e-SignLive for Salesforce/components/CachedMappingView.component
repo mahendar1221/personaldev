@@ -1,0 +1,29 @@
+<apex:component id="CachedMappingView" controller="ESL.CachedMappingViewController" allowDML="true">
+   <apex:attribute name="signerVal" description="Signer Id" type="String" required="true" assignTo="{!signerId}"/>
+      
+   <script type="text/javascript">
+   //We should run this function everytime this component is used.
+   //Sice rereshin the packagesigners somtimes it will not set properly this
+   //This adds the popup feature on package signers
+       setHoverCachedMapping();
+   </script>
+   <apex:pageBlock title="{!$Label.esl__cachedMappingTable}" mode="detail" id="theBlock">
+
+    <div id="loaderPopup" style="height: 30px;">
+	    <img src="/img/loading24.gif" class="savingImg"/>
+	    <span id="sgnActionText">{!$Label.Please_Wait}</span>
+    </div>
+
+    <div id="tablePopupCacheMap">
+	    <apex:pageBlockSection columns="1" id="tableBlockSection">
+		        <apex:pageblockTable value="{!cachedList}" var="item" id="theTable">
+			        <apex:column headerValue="{!$Label.esl__eSLField}" value="{!item.MappingPath__r.Field_Mapping__r.ESL__ESLFieldName__c}" />
+			        <apex:column headerValue="{!$Label.esl__sfFieldPath}" value="{!item.ESL__Path__c}" />
+			        <apex:column headerValue="{!$Label.esl__defaultInsertVal}" value="{!item.ESL__DefaultInsertValue__c}" />
+			        <apex:column headerValue="{!$Label.esl__signerEnteredVal}" value="{!item.ESL__ESL_Value__c}" />
+			        <apex:column headerValue="{!$Label.esl__writeBackStatus}" value="{!item.ESL__Status__c}" />
+		        </apex:pageblockTable>
+	    </apex:pageBlockSection>
+    </div>
+    </apex:pageBlock>
+</apex:component>

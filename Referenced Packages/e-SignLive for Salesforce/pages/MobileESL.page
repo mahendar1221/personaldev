@@ -1,0 +1,15 @@
+<apex:page controller="ESL.CanvasAppController" showHeader="false" cache="false" action="{!Init}">
+    <div id="Holder" style="width:100%;height:100vh;">
+        <apex:canvasApp id="theCanvasApp" width="100%" height="100vh" developerName="{!CanvasAppName}" scrolling="auto" parameters="{SilanisId:'{!SilanisPackageId}',Mode:'{!DisplayMode}'}"/>
+    </div>
+      <style>
+    #Holder > span
+        {
+            height:100vh;
+        }
+        #Holder > span > div
+        {
+            height:100vh;
+        }
+    </style>
+</apex:page>

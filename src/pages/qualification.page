@@ -1,0 +1,107 @@
+<apex:page standardController="lead" extensions="LeadWithSelectListExample"  standardStylesheets="false" docType="html-5.0" language="en-US" >
+
+  <script type="text/javascript">
+     function ConformationScript()
+      
+            {  
+               alert("Lead Processing");
+             }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+      
+  </script>
+ 
+    <div class="container"> 
+   <div class="container">
+  <h3>Stacked Progress Bars</h3>
+  <p>Create a stacked progress bar by placing multiple bars into the same div with class .progress:</p> 
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" role="progressbar" style="width:30%">
+      Free Space
+    </div>
+    <div class="progress-bar progress-bar-warning" role="progressbar" style="width:35%">
+      Warning
+    </div>
+    <div class="progress-bar progress-bar-danger" role="progressbar" style="width:35%">
+      Danger
+    </div>
+  </div>
+</div>
+            <table class="table table-bordered">
+                        <tr class="active">
+                            <td  class="active">
+                                <b>Customer Name</b>
+                            </td>
+                            <td>
+                                <p  class="bg-success" style="color:red;">{!lead.Name}</p>
+                            </td>
+                        </tr>
+                        <tr class="active">
+                            <td>
+                                <b>Time Zone</b>
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        <tr class="active"> 
+                            <td colspan="2"><br/>
+                                <b style="color:Black;font-size:14px;">
+                                <p>
+                                   After checking the clients # of sessions it has been determined that their next session is Session # 1.<br/>
+                                   Please Confirm to choose an appointment time for their Session # 1 in Next screen.
+                                </p>
+                                <p>
+                                     S1 Session has already been scheduled. Please resolve current` S1 session before next session can be scheduled.   
+                                </p>
+                                <p>
+                                     S2 Session has already been scheduled. Please resolve current S2 session before next session can be scheduled.   
+                                </p>
+                                <p>
+                                   After checking the clients # of sessions it has been determined that they have completed session 1 and should now be scheduled for Session # 2. 
+                                   Please Confirm to choose an appointment time for their Session # 2 in Next screen.
+                                </p>
+                                <p>
+                                   This client has completed their first two sessions so they should now be booked with their primary coach. <br/>
+                                   Please schedule the appointment in the schedule once system and then enter the information from the booking in Next screen.
+                                </p>
+                                                              
+                                </b>
+                            </td>                                                          
+                        </tr>                        
+                      </table>  
+   <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap-3.1.1-dist/css/bootstrap.min.css')}" />
+
+    <apex:form styleclass="form-inline">
+    <apex:pageBlock >
+       <apex:outputPanel styleClass="form-group" >
+      <apex:pageBlockSection >
+           <apex:outputfield value="{!lead.name}"/> <br/>       
+           <apex:outputfield value="{!lead.email}"/><br/>&nbsp;&nbsp;&nbsp;
+           <apex:inputfield value="{!lead.status}" styleclass="form-control"/>
+      </apex:pageBlockSection>
+      <apex:outputLabel for="Lb" > Employment: </apex:outputLabel>
+      <apex:selectList id="Lb" value="{!SelectedValues}"
+         size="1"  styleclass="form-control" dir="" >
+           <apex:selectOptions value="{!AvailableValues}"  />
+      </apex:selectList>
+  <apex:outputLabel for="Lb1" > City:</apex:outputLabel>
+      <apex:selectList id="Lb1" value="{!citySelectedValues}" styleclass="form-control"
+         size="1" required="true" >
+           <apex:selectOptions value="{!cityAvailableValues}"/>
+      </apex:selectList>
+       sas
+            </apex:outputPanel>
+           
+        <apex:pageBlockButtons >
+    
+             <apex:commandButton styleclass="btn btn-primary" value="Process" action="{!SaveAction}" onclick="ConformationScript()"/>&nbsp;&nbsp;&nbsp;
+             <apex:commandButton styleclass="btn btn-warning" value="cancel" action="{!CancelAction}"/>
+        
+        </apex:pageBlockButtons>
+   
+    </apex:pageBlock>
+    
+  </apex:form>
+
+  </div>
+   
+</apex:page>

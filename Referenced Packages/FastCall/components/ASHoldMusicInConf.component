@@ -1,0 +1,39 @@
+<apex:component controller="FastCall.ASHoldMusicInConfController" allowDML="true">
+	
+<apex:outputPanel layout="block" id="holdMusicInConf" styleClass="fc-container w-help">
+    <table>
+        <tr>
+            <td class="white">
+                <div class="inner">
+              
+                	<apex:actionFunction name="updateMusicToUseInConf" action="{!updateMusicToUseInConf}" status="overlayStatus" rerender="holdMusicInConf"/>
+                	  		
+                	<apex:outputPanel rendered="{!NOT(ISBLANK(musicInConfMessage)) && NOT(ISBLANK(musicInConfMessage.text))}" layout="block">
+                  		<fieldset class="alert alert-{!musicInConfMessage.messageType}">
+                    		<apex:outputPanel styleClass="icon-{!musicInConfMessage.messageType}-sign" />
+                    		<apex:outputLabel styleClass="settings first last" value="{!musicInConfMessage.text}"/>
+                 		</fieldset>
+              		</apex:outputPanel>
+              		
+                    <h1 class="fc-container-header">Hold music in conference calls</h1>
+                    <fieldset>
+                        <apex:selectRadio value="{!selectedMusic}" layout="pageDirection" onchange="updateMusicToUseInConf()"> 
+            				<apex:selectOptions value="{!musicGenresOptions}"/>
+            			</apex:selectRadio>
+                    </fieldset> 
+                </div>
+            </td>
+            <td class="green">
+                <div class="inner">
+                    <h1>HELP GUIDE</h1>
+                    <p>
+                    	FastCall uses a conference call with three call legs to enable the VM drop. While the user is in a conference room waiting for the called party to join hold music will play.
+                    	You can select the music file in this section. And find additional info <a href="http://fastcall.com/2014/01/fastcall-voicemail-drop/" target="_blank">here</a>.
+                    </p>
+                </div>                    
+            </td>
+        </tr>
+    </table>
+</apex:outputPanel> <!-- / Hold music in conference calls -->
+
+</apex:component>

@@ -1,0 +1,43 @@
+<apex:page standardController="ESL__Anchor__c" tabStyle="ESL__Convention__c" extensions="ESL.AnchorController">
+    <apex:sectionHeader title="Text Tag" subtitle="{!if(isNull(ESL__Anchor__c.Name),$Label.esl__Anchor_New_Anchor,ESL__Anchor__c.Name)}"/>
+    <apex:form >
+
+    <apex:pageBlock title="Text Tag">
+        <apex:pageMessages />
+        <apex:pageBlockButtons >
+            <apex:commandButton value="Edit" action="{!Edit}"/>
+           <apex:commandButton value="Delete" action="{!DoDelete}" rendered="{!$ObjectType.ESL__Anchor__c.Deletable}"/>
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection title="Informations" collapsible="false">
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Signer_Label__c}"/>
+			<apex:outputField value="{!ESL__Anchor__c.ESL__Anchor_Type__c}"/>
+        </apex:pageBlockSection>
+        <apex:outputPanel id="panels">
+        <apex:pageBlockSection title="{!$Label.esl__Anchor_Type_Acrofield}" collapsible="false" rendered="{!LOWER(ESL__Anchor__c.ESL__Anchor_Type__c) = LOWER($Label.esl__Anchor_Type_Acrofield)}">
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Acrofield_Name__c}"/>
+        </apex:pageBlockSection>
+             <apex:pageBlockSection title="Text Search" collapsible="false" rendered="{!LOWER(ESL__Anchor__c.ESL__Anchor_Type__c) = LOWER($Label.esl__Anchor_Type_Text_Search)}">
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Text__c}"/>
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Index__c}"/>
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Character_Index__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Position" collapsible="false" rendered="{!LOWER(ESL__Anchor__c.ESL__Anchor_Type__c) != LOWER($Label.esl__Anchor_Type_Acrofield)}">
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Top_Offset__c}"/>
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Page__c}" rendered="{!LOWER(ESL__Anchor__c.ESL__Anchor_Type__c) = LOWER($Label.esl__Anchor_Type_Static_Position)}"/>
+            <apex:pageBlockSectionItem rendered="{!LOWER(ESL__Anchor__c.ESL__Anchor_Type__c) != LOWER($Label.esl__Anchor_Type_Static_Position)}">
+            </apex:pageBlockSectionItem>
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Left_Offset__c}"/>
+        </apex:pageBlockSection>
+       
+        <apex:pageBlockSection title="Field Dimension" collapsible="false" rendered="{!LOWER(ESL__Anchor__c.ESL__Anchor_Type__c) != LOWER($Label.esl__Anchor_Type_Acrofield)}">
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Width__c}"/>
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Height__c}"/>
+        </apex:pageBlockSection>
+            <apex:pageBlockSection title="e-SignLive Field" collapsible="false" >
+            <apex:outputField value="{!ESL__Anchor__c.ESL__Visual_Type__c}"/>
+            <apex:outputField value="{!ESL__Anchor__c.ESL__ESLFieldName__c}" rendered="{!AND(ESL__Anchor__c.ESL__Visual_Type__c!='',contains(ESL__Anchor__c.ESL__Visual_Type__c,'Input - '),LOWER(ESL__Anchor__c.ESL__Anchor_Type__c) != LOWER($Label.esl__Anchor_Type_Acrofield))}"/>
+        </apex:pageBlockSection>
+        </apex:outputPanel>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>
